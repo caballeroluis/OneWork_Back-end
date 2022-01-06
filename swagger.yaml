@@ -1,0 +1,126 @@
+openapi: 3.0.0
+info:
+  title: OneWork API
+  description: ""
+  version: 0.0.1
+
+paths:
+  /login:
+    post:
+      summary: Returns a token for a valid users.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string        
+      tags:
+        - Login
+    
+      responses:
+        '200':    # status code
+          description: A JSON object with token
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  token: 
+                    type: string
+        '400':    
+          description: Username or password incorrect
+        '500':
+          description: Error
+
+  /user:
+    post:
+      summary: Register a new user
+      requestBody:
+        content:
+          multipart/form-data:
+            schema: 
+              type: object
+              required:
+                - username
+                - email
+                - password
+              properties:
+                username:
+                  type: string
+                  minimum: 6
+                  description: Username with minimum 6 characters
+                email:
+                  type: string
+                  format: email
+                  description: Valid User e-mail
+                role:
+                  type: number
+                  minimum: 1
+                  maximum: 1
+                  default: 1
+                  description: role default 1. Only a super-administrator assign another role
+                nickname:
+                  type: string
+                  description: The nickName of user
+                password:
+                  type: string
+                  format: password
+                  minimum: 8
+                  maximum: 20
+                  description: The password require min. 1 uppercase 1 lowercase and 1 digit min 8 max 20 characters
+               
+      tags:
+        - User Register 
+
+      responses:
+        '200':    # status code
+          description: A JSON object with data
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/RegisterUser'
+        '403':    
+          description: The user does not have privileges for this action
+        '422':
+          description: Unprocessable Entinty
+
+  /user:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Returns the user by decrypting the token or by Id.
+      parameters:
+      - in: path
+        name: 
+        schema:
+          type: string
+        required: true
+        description: 
+      - in: header
+        name: 
+        schema:
+          type: string
+      - in: query
+        name: 
+        description: 
+        schema:
+          type: 
+          enum:
+
+      tags:
+        
+      responses:
+        '200':    # status code
+          description: A JSON object with data
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/getUser'
+        '403':    
+          description: The user does not have privileges for this action
+        '422':
+          description: Unprocessable Entinty
