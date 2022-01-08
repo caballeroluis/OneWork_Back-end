@@ -10,8 +10,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 
+app.use(require('./routes/index'));
 
-app.use(require('./routes/index'))
 
 mongoose.connect('mongodb://localhost:27017/OneWork', { useNewUrlParser: true }, (err, res) => {
   if( err ) throw err;

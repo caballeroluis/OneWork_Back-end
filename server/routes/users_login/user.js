@@ -2,15 +2,17 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../../models/user');
 const verifyToken = require('../../middlewares/authentication');
-const verifyRoleInitial = require('../../middlewares/verifyRole');
+const { verifyRoleInitial, verifyOwnIdOrAdmin, verifyAdmin } = require('../../middlewares/verifyRole');
 
 
 const app = express();
 
 // Queda pendiente de definir de que forma se van a introducir los usuarios.
-// Por ahora pueden ser creados cualquier tipo de usuario mientras que sea worker o recruiter
+// Por ahora pueden ser creados cualquier tipo de usuario mientras que se cree un worker o un recruiter
 
 app.post('/user', verifyRoleInitial, function (req, res) {
+
+    // TODO: El usuario tiene que poder subir su propia imagen.
 
     let body = req.body;
     const salt = 11;
@@ -50,7 +52,7 @@ app.post('/user', verifyRoleInitial, function (req, res) {
     });
 });
 
-app.get('/user', verifyToken, (req, res) => {
+app.get('/user', [verifyToken, verifyAdmin], (req, res) => {
 
     User.find({}, (err, data) => {
 
@@ -69,15 +71,39 @@ app.get('/user', verifyToken, (req, res) => {
 
 })
 
-app.put('/user/:id', verifyToken, function (req, res) {
+app.get('/user/:id', [verifyToken, verifyOwnIdOrAdmin], (req, res) => {
+
+    let params = req.params;
+
+    console.log(params);
+
+    User.findOne({_id: params.id}, (err, data) => {
+
+        if( err ) {
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+        }
+       
+        res.json({
+            ok: true,
+            user: data,
+        })
+    })
+
+})
+
+
+app.put('/user/:id', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
+
+    // TODO: El usuario no puede modificar su propio estado o rol.
+    // TODO: El usuario tiene que poder modificar su propia imagen.
 
     let id = req.params.id;
-    let body = _.pick(req.body, ['username', 'email', 'role', 'state', '_id']);
-
+    let body = _.pick(req.body, ['username', 'email', 'role', 'state']);
   
     User.findByIdAndUpdate(id, body, {new: true, runValidators: true}, (err, userDB) => {
-
-
 
       if( err ) {
         return res.status(400).json({

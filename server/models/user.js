@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
-let rolesValidos = {
+let validRoles = {
     values: ['ADMIN_ROLE', 'RECRUITER_ROLE', 'WORKER_ROLE'],
-    message: '{VALUE} no es un rol válido'
+    message: '{VALUE} is not a valid role'
 }
 
 let Schema = mongoose.Schema;
@@ -36,12 +36,16 @@ let userSchema = new Schema({
         type: String,
         required: true,
         default: 'WORKER_ROLE',
-        enum: rolesValidos
+        enum: validRoles
     },
     state: {
         type: Boolean,
         default: true
-    }
+    },
+    offers: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Offer',
+    }]
 });
 
 // Para eliminar el password cuando se envíen datos.
