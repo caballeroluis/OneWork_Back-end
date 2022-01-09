@@ -1,5 +1,5 @@
 
-let verifyRoleInitial = (req, res, next) => {
+let verifyRoleInitialandPass = (req, res, next) => {
 
     let body = req.body;
 
@@ -18,6 +18,14 @@ let verifyRoleInitial = (req, res, next) => {
 
     }
 
+    if(!(/^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9]).{12}$/.test(body.password))) {
+        
+        return res.status(400).json({
+            ok: false,
+            message: 'The password requirements: 8 characters length, 1 letter uppercase, 1 special character and 1 number'
+        });
+    }
+
 }
 
 let verifyOwnIdOrAdmin = (req, res, next) => {
@@ -25,8 +33,7 @@ let verifyOwnIdOrAdmin = (req, res, next) => {
     let idProvided = req.params.id;
     let user = req.user;
 
-    console.log(idProvided);
-    console.log(user._id);
+
     if (idProvided === user._id || user.role === 'ADMIN_ROLE') {
 
         next();
@@ -67,7 +74,7 @@ let verifyAdmin = (req, res, next) => {
 
 module.exports = {
 
-    verifyRoleInitial,
+    verifyRoleInitialandPass,
     verifyOwnIdOrAdmin,
     verifyAdmin
 };

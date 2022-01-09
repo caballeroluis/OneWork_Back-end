@@ -42,6 +42,12 @@ let userSchema = new Schema({
         type: Boolean,
         default: true
     },
+    data: {
+        type: Object,
+        required: false,
+        name: String,
+        surnames: String
+    },
     offers: [{
         type: Schema.Types.ObjectId, 
         ref: 'Offer',

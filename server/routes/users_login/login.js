@@ -1,7 +1,10 @@
 const express = require('express');
-const User = require('../../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const _ = require('underscore');
+
+const User = require('../../models/user');
+
 const app = express();
 
 
@@ -32,7 +35,11 @@ app.post('/login', (req, res) => {
         bcrypt.compare(body.password, userDB.password, function(errPass, result) {
             
             if (result === true) {
-    
+
+                //TODO: que información se meterá en el jwt
+
+                userDB = _.pick(userDB, ['username', '_id', 'img', 'email', 'role'])
+
                 let token = jwt.sign({
     
                     user: userDB
