@@ -1,8 +1,10 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 
-const User = require('../../models/user');
-const { verifyRoleInitialandPass, verifyOwnIdOrAdmin, verifyAdmin } = require('../../middlewares/verifyRole');
+const User = require('../models/user');
+
+const verifyToken = require('../middlewares/veryfyAuth');
+const { verifyOwnIdOrAdmin } = require('../middlewares/verifyRole');
 
 const fs = require('fs');
 const path = require('path');
@@ -11,7 +13,7 @@ const app = express();
 
 app.use(fileUpload());
 
-app.put('/upload/:type/:id', verifyOwnIdOrAdmin, function(req, res) {
+app.put('/upload/:type/:id', verifyToken, verifyOwnIdOrAdmin, function(req, res) {
 
     console.log(req.files);
 
@@ -67,9 +69,9 @@ app.put('/upload/:type/:id', verifyOwnIdOrAdmin, function(req, res) {
         
         // Se crea el folder.
         
-        if (!fs.existsSync(path.resolve(__dirname, `../../../uploads/${type}/${id}`))) {
+        if (!fs.existsSync(path.resolve(__dirname, `../../uploads/${type}/${id}`))) {
     
-            fs.mkdirSync(path.resolve(__dirname, `../../../uploads/${type}/${id}`));
+            fs.mkdirSync(path.resolve(__dirname, `../../uploads/${type}/${id}`));
         }
 
         // Cambia nombre del archivo.
@@ -78,7 +80,7 @@ app.put('/upload/:type/:id', verifyOwnIdOrAdmin, function(req, res) {
 
         // Mueve el archivo a la ubicación seleccionada
 
-        file.mv(path.resolve(__dirname, `../../../uploads/${type}/${id}/${fileName}`), (err) => {
+        file.mv(path.resolve(__dirname, `../../uploads/${type}/${id}/${fileName}`), (err) => {
     
             if(err) {
                 return res.status(500)
@@ -100,7 +102,7 @@ app.get('/file/:type/:id/:name', (req, res) => {
     let type = req.params.type;
     let id = req.params.id;
 
-    let pathFile = path.resolve(__dirname, `../../../uploads/${type}/${ id }/${ name }`);
+    let pathFile = path.resolve(__dirname, `../../uploads/${type}/${ id }/${ name }`);
     
     if (fs.existsSync(pathFile)) {
 
@@ -108,7 +110,7 @@ app.get('/file/:type/:id/:name', (req, res) => {
 
     } else {
 
-        let nofile = path.resolve(__dirname, `../../assets/no_available.jpg`)
+        let nofile = path.resolve(__dirname, `../assets/no_available.jpg`)
         res.sendFile(nofile)
 
     }
@@ -162,7 +164,7 @@ function userImg(id, res, type, fileName) {
 
 function deleteFile(id, type, fileName) {
 
-    let filePath = path.resolve(__dirname, `../../../uploads/${type}/${id}/${fileName}`)
+    let filePath = path.resolve(__dirname, `../../uploads/${type}/${id}/${fileName}`)
     
     if(fs.existsSync(filePath)) {
 
@@ -173,7 +175,7 @@ function deleteFile(id, type, fileName) {
 
 function deleteFolder(id, type, fileName) {
         
-    let filePath = path.resolve(__dirname, `../../../uploads/${type}/${id}`)
+    let filePath = path.resolve(__dirname, `../../uploads/${type}/${id}`)
         
     if(fs.existsSync(filePath)) {
             fs.rmdirSync(filePath, {recursive: true})

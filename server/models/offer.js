@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
 
 let validStatus = {
     values: ['Opened', 'Uncompleted', 'Videoconference set', 'Accepted'],
@@ -30,13 +29,13 @@ let offerSchema = new Schema({
     },
     description: {
         type: String,
-        default: ''
+        required: [true, 'Enter a brief description of this job']
     },
     status: {
         type: String,
+        default: 'Opened',
         enum: validStatus
     }
-
 
 })
 

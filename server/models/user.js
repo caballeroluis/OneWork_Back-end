@@ -14,11 +14,6 @@ let userSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    username: {
-        type: String,
-        unique: true,
-        required: [true, 'Enter the name is mandatory']
-    },
     email: {
         type: String,
         unique: true,
@@ -34,7 +29,7 @@ let userSchema = new Schema({
     },
     role: {
         type: String,
-        required: true,
+        required: [true, 'Role should be ADMIN_ROLE or RECRUITER_ROLE'],
         default: 'WORKER_ROLE',
         enum: validRoles
     },
@@ -42,16 +37,18 @@ let userSchema = new Schema({
         type: Boolean,
         default: true
     },
-    data: {
-        type: Object,
-        required: false,
-        name: String,
-        surnames: String
-    },
-    offers: [{
+    recruiterData: {
         type: Schema.Types.ObjectId, 
-        ref: 'Offer',
-    }]
+        ref: 'Recruiter',
+        autopopulate: true
+    },
+    workerData: {
+        type: Schema.Types.ObjectId, 
+        ref: 'Worker',
+        autopopulate: true
+    },
+
+
 });
 
 // Para eliminar el password cuando se envíen datos.
@@ -66,5 +63,6 @@ userSchema.methods.toJSON = function() {
 }
 
 userSchema.plugin( uniqueValidator, { message: '{PATH} should be unique' } )
+userSchema.plugin(require('mongoose-autopopulate'));
 
 module.exports = mongoose.model('User', userSchema);

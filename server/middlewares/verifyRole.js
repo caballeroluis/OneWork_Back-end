@@ -72,9 +72,53 @@ let verifyAdmin = (req, res, next) => {
 
 }
 
+let verifyWorker = (req, res, next) => {
+
+    let user = req.user;
+
+    if (user.role !== 'WORKER_ROLE') {
+
+        return res.status(401).json({
+            ok: false,
+            err: {
+                message: 'You are not authorized to perform this action'
+            }
+        });
+
+    } else {
+
+        next();
+
+    }
+
+}
+
+let verifyRecruiter = (req, res, next) => {
+
+    let user = req.user;
+
+    if (user.role !== 'RECRUITER_ROLE') {
+
+        return res.status(401).json({
+            ok: false,
+            err: {
+                message: 'You are not authorized to perform this action'
+            }
+        });
+
+    } else {
+
+        next();
+
+    }
+
+}
+
 module.exports = {
 
     verifyRoleInitialandPass,
     verifyOwnIdOrAdmin,
-    verifyAdmin
+    verifyAdmin,
+    verifyWorker,
+    verifyRecruiter
 };

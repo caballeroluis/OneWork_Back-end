@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const User = require('../../models/user');
-const verifyToken = require('../../middlewares/authentication');
+const verifyToken = require('../../middlewares/veryfyAuth');
 const { verifyRoleInitialandPass, verifyOwnIdOrAdmin, verifyAdmin } = require('../../middlewares/verifyRole');
 
 
@@ -14,21 +14,21 @@ const app = express();
 
 app.post('/user', verifyRoleInitialandPass, function (req, res) {
 
-    // TODO: El usuario tiene que poder subir su propia imagen.
-
+    
     let body = req.body;
     const salt = 11;
 
     bcrypt.hash(body.password, salt, function(err, hash) {
 
         let user = new User({
-                username: body.username,
+
                 email: body.email,
                 password: hash,
                 role: body.role
+
             })
 
-        user.save((errData, usuarioDB) => {
+        user.save((errData, userDB) => {
 
             if( errData ) {
                 return res.status(400).json({
@@ -39,7 +39,7 @@ app.post('/user', verifyRoleInitialandPass, function (req, res) {
         
             res.json({
                 ok: true,
-                usuario: usuarioDB
+                user: userDB
             })
         
         })
@@ -96,7 +96,7 @@ app.put('/user/:id', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
 
     let id = req.params.id;
 
-    let body = _.pick(req.body, ['username', 'email', 'role', 'state']);
+    let body = _.pick(req.body, ['email', 'role', 'state']);
   
     User.findByIdAndUpdate(id, body, {new: true, runValidators: true}, (err, userDB) => {
 
@@ -117,7 +117,7 @@ app.delete('/user/:id', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
     
     let id = req.params.id;
 
-    User.findByIdAndUpdate(id, {estado: false}, {new: true, runValidators: true}, (err, userDB) => {
+    User.findByIdAndUpdate(id, {state: false}, {new: true, runValidators: true}, (err, userDB) => {
 
         if( err ) {
           return res.status(400).json({

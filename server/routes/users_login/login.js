@@ -14,12 +14,12 @@ app.post('/login', (req, res) => {
 
     // Username o email
 
-    User.findOne({ username: body.username }, (errUser, userDB) => {
+    User.findOne({ email: body.email }, (errUser, userDB) => {
 
         if(errUser) {
             return res.status(500).json({
                 ok: false,
-                err
+                errUser
             });
         }
 
@@ -27,7 +27,7 @@ app.post('/login', (req, res) => {
             return res.status(400).json({
                 ok: false,
                 err: {
-                    message: 'Username or password incorrect'
+                    message: 'Email or password incorrect'
                 }
             });
         }
@@ -38,7 +38,7 @@ app.post('/login', (req, res) => {
 
                 //TODO: que información se meterá en el jwt
 
-                userDB = _.pick(userDB, ['username', '_id', 'img', 'email', 'role'])
+                userDB = _.pick(userDB, ['_id', 'img', 'email', 'role'])
 
                 let token = jwt.sign({
     
@@ -64,7 +64,7 @@ app.post('/login', (req, res) => {
                 return res.status(400).json({
                     ok: false,
                     err: {
-                        message: 'Username or password incorrect'
+                        message: 'Email or password incorrect'
                     }
                 });
             }

@@ -23,5 +23,12 @@ let verifyToken = (req, res, next) => {
 
 };
 
+let verifyStatus = (req, res, next) => {
+
+    
+
+
+}
+
 
 module.exports = verifyToken;
