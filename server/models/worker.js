@@ -26,7 +26,10 @@ let workerSchema = new Schema({
     offersApplied: [{
         type: Schema.Types.ObjectId, 
         ref: 'Offer',
+        autopopulate: true
     }]
 })
+
+workerSchema.plugin(require('mongoose-autopopulate'));
 
 module.exports = mongoose.model('Worker', workerSchema);

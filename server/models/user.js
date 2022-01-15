@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+
+const Recruiter = require('./recruiter').schema;
+const Worker = require('./worker').schema;
 
 let validRoles = {
     values: ['ADMIN_ROLE', 'RECRUITER_ROLE', 'WORKER_ROLE'],
@@ -29,7 +31,7 @@ let userSchema = new Schema({
     },
     role: {
         type: String,
-        required: [true, 'Role should be ADMIN_ROLE or RECRUITER_ROLE'],
+        required: [true, 'Role should be WORKER_ROLE or RECRUITER_ROLE'],
         default: 'WORKER_ROLE',
         enum: validRoles
     },
@@ -37,17 +39,8 @@ let userSchema = new Schema({
         type: Boolean,
         default: true
     },
-    recruiterData: {
-        type: Schema.Types.ObjectId, 
-        ref: 'Recruiter',
-        autopopulate: true
-    },
-    workerData: {
-        type: Schema.Types.ObjectId, 
-        ref: 'Worker',
-        autopopulate: true
-    },
-
+    recruiterData: Recruiter,
+    workerData: Worker
 
 });
 
@@ -62,7 +55,6 @@ userSchema.methods.toJSON = function() {
     return userObject;
 }
 
-userSchema.plugin( uniqueValidator, { message: '{PATH} should be unique' } )
 userSchema.plugin(require('mongoose-autopopulate'));
 
 module.exports = mongoose.model('User', userSchema);

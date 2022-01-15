@@ -56,7 +56,7 @@ app.post('/login', (req, res) => {
     
                     ok: true,
                     user: userDB,
-                    token
+                    token: 'Bearer ' + token
                 })
     
             } else {
@@ -70,7 +70,6 @@ app.post('/login', (req, res) => {
             }
         })
     })
-
 })
 
 module.exports = app;

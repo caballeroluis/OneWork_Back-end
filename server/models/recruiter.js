@@ -5,8 +5,7 @@ let Schema = mongoose.Schema;
 let recruiterSchema = new Schema({
 
     corporationName: {
-        type: String,
-        autopopulate: true
+        type: String
     },
     descriptionCorporate: {
 
@@ -29,8 +28,11 @@ let recruiterSchema = new Schema({
     offersCreated: [{
         type: Schema.Types.ObjectId, 
         ref: 'Offer',
-        unique: false
+        autopopulate: true
     }]
 
 })
+
+recruiterSchema.plugin(require('mongoose-autopopulate'));
+
 module.exports = mongoose.model('Recruiter', recruiterSchema);

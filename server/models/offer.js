@@ -5,6 +5,8 @@ let validStatus = {
     message: '{VALUE} is not a valid status'
 }
 
+let Schema = mongoose.Schema;
+
 let offerSchema = new Schema({
 
     creationDate: {
@@ -36,10 +38,6 @@ let offerSchema = new Schema({
         default: 'Opened',
         enum: validStatus
     }
-
 })
-
-let Schema = mongoose.Schema;
-
 
 module.exports = mongoose.model('Offer', offerSchema);

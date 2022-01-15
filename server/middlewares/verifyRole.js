@@ -33,8 +33,31 @@ let verifyOwnIdOrAdmin = (req, res, next) => {
     let idProvided = req.params.id;
     let user = req.user;
 
-
     if (idProvided === user._id || user.role === 'ADMIN_ROLE') {
+
+        next();
+
+    } else {
+
+        return res.status(401).json({
+            ok: false,
+            err: {
+                message: 'You are not authorized to perform this action'
+            }
+        });
+
+    }
+
+}
+
+let verifyOwnIdOrRecruiterOrAdmin = (req, res, next) => {
+
+    let idProvided = req.params.id;
+    let user = req.user;
+
+    if (idProvided === user._id || 
+        user.role === 'ADMIN_ROLE' ||
+        user.role === 'RECRUITER_ROLE') {
 
         next();
 
@@ -118,6 +141,7 @@ module.exports = {
 
     verifyRoleInitialandPass,
     verifyOwnIdOrAdmin,
+    verifyOwnIdOrRecruiterOrAdmin,
     verifyAdmin,
     verifyWorker,
     verifyRecruiter
