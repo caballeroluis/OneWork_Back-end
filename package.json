@@ -29,6 +29,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.5",
     "mongoose-autopopulate": "^0.16.0",
+<<<<<<< HEAD
+=======
+    "mongoose-unique-validator": "^3.0.0",
+    "nodemon": "^2.0.15",
+>>>>>>> 39896cee81849f48532a9ac40cf2f17e1c7a7713
     "underscore": "^1.13.2"
   }
 }
