@@ -23,6 +23,9 @@ let workerSchema = new Schema({
     CV: {
 
     },
+    email: {
+
+    },
     offersApplied: [{
         type: Schema.Types.ObjectId, 
         ref: 'Offer',

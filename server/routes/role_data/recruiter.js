@@ -127,9 +127,9 @@ app.get('/recruiter/:id', (req, res) => {
 
 app.put('/recruiter/:id/:idR', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
 
-    let idRecruiter = req.params.id;
+    let idRecruiter = req.params.idR;
 
-    let body = _.pick(req.body, ['corporationName', 'surname1', 'surname2', 'age', 'sex']);
+    let body = _.pick(req.body, ['corporationName', 'recruiterName', 'surname1', 'surname2', 'age', 'sex']);
 
     Recruiter.findByIdAndUpdate(idRecruiter, body, {new: true, runValidators: true}, (err, recruiterDB) => {
         

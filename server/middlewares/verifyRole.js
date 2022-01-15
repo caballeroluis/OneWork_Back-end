@@ -9,7 +9,7 @@ let verifyRoleInitialandPass = (req, res, next) => {
 
     } else {
 
-        return res.status(401).json({
+        return res.status(400).json({
             ok: false,
             err: {
                 message: `The role ${body.role} is invalid`

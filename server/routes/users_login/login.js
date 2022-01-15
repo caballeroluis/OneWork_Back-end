@@ -56,7 +56,7 @@ app.post('/login', (req, res) => {
     
                     ok: true,
                     user: userDB,
-                    token: 'Bearer ' + token
+                    token
                 })
     
             } else {
