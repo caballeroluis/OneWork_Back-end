@@ -4,15 +4,15 @@ const _ = require('underscore');
 
 const User = require('../../models/user');
 const verifyToken = require('../../middlewares/veryfyAuth');
-const { verifyRoleInitialandPass, verifyOwnIdOrAdmin, verifyAdmin } = require('../../middlewares/verifyRole');
-
+const { verifyRoleInitial, verifyOwnIdOrAdmin, verifyAdmin } = require('../../middlewares/verifyRole');
+const { verifyPass } = require('../../middlewares/VerifyMix');
 
 const app = express();
 
 // Queda pendiente de definir de que forma se van a introducir los usuarios.
 // Por ahora pueden ser creados cualquier tipo de usuario mientras que se cree un worker o un recruiter
 
-app.post('/user', verifyRoleInitialandPass, function (req, res) {
+app.post('/user', [verifyRoleInitial, verifyPass], function (req, res) {
 
     
     let body = req.body;

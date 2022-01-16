@@ -1,10 +1,10 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 
-const User = require('../models/user');
+const User = require('../../models/user');
 
-const verifyToken = require('../middlewares/veryfyAuth');
-const { verifyOwnIdOrAdmin } = require('../middlewares/verifyRole');
+const verifyToken = require('../../middlewares/veryfyAuth');
+const { verifyOwnIdOrAdmin } = require('../../middlewares/verifyRole');
 
 const fs = require('fs');
 const path = require('path');
@@ -28,7 +28,7 @@ app.put('/upload/:type/:id', verifyToken, verifyOwnIdOrAdmin, function(req, res)
                 .json({
                     ok: false,
                     err: {
-                        message: 'There isn\'t files on the request'
+                        message: 'There are no files in the request'
                     }
         })
     }
@@ -40,7 +40,7 @@ app.put('/upload/:type/:id', verifyToken, verifyOwnIdOrAdmin, function(req, res)
                       .json({
                           ok: false,
                           err: {
-                              message: 'The valid type of file is user'
+                              message: 'The valid type of the request is user'
                           }
                       })
         }
@@ -69,9 +69,9 @@ app.put('/upload/:type/:id', verifyToken, verifyOwnIdOrAdmin, function(req, res)
         
         // Se crea el folder.
         
-        if (!fs.existsSync(path.resolve(__dirname, `../../uploads/${type}/${id}`))) {
+        if (!fs.existsSync(path.resolve(__dirname, `../../../uploads/${type}/${id}`))) {
     
-            fs.mkdirSync(path.resolve(__dirname, `../../uploads/${type}/${id}`));
+            fs.mkdirSync(path.resolve(__dirname, `../../../uploads/${type}/${id}`));
         }
 
         // Cambia nombre del archivo.
@@ -80,7 +80,7 @@ app.put('/upload/:type/:id', verifyToken, verifyOwnIdOrAdmin, function(req, res)
 
         // Mueve el archivo a la ubicación seleccionada
 
-        file.mv(path.resolve(__dirname, `../../uploads/${type}/${id}/${fileName}`), (err) => {
+        file.mv(path.resolve(__dirname, `../../../uploads/${type}/${id}/${fileName}`), (err) => {
     
             if(err) {
                 return res.status(500)
@@ -102,7 +102,7 @@ app.get('/file/:type/:id/:name', (req, res) => {
     let type = req.params.type;
     let id = req.params.id;
 
-    let pathFile = path.resolve(__dirname, `../../uploads/${type}/${ id }/${ name }`);
+    let pathFile = path.resolve(__dirname, `../../../uploads/${type}/${ id }/${ name }`);
     
     if (fs.existsSync(pathFile)) {
 
@@ -110,12 +110,71 @@ app.get('/file/:type/:id/:name', (req, res) => {
 
     } else {
 
-        let nofile = path.resolve(__dirname, `../assets/no_available.jpg`)
+        let nofile = path.resolve(__dirname, `../../assets/no_available.jpg`)
         res.sendFile(nofile)
 
     }
 
 
+})
+
+app.delete('/file/:type/:id/:name', (req, res) => {
+
+    let name = req.params.name;
+    
+    let type = req.params.type;
+    let id = req.params.id;
+
+    let pathFile = path.resolve(__dirname, `../../../uploads/${type}/${ id }/${ name }`);
+    
+    if (fs.existsSync(pathFile)) {
+
+        User.findById(id, (err, UserDB) => {
+        
+            if(!UserDB) {  
+                return res.status(400)
+                          .json({
+                              ok: false,
+                              err: {
+                                  message: 'This user doesn\'t exist'
+                            }
+                        })
+                }
+    
+            if(err) {
+                return res.status(500)
+                          .json({
+                                ok: false,
+                                 err
+                            })
+                }
+                
+            deleteFile(id, type, UserDB.img);
+            deleteFolder(id, type);
+            UserDB.img = undefined;
+            
+            UserDB.save((err2, UserDBsaved) => {
+                if(err2) {
+                    return res.status(500)
+                              .json({
+                                    ok: false,
+                                     err2
+                                })
+                    }
+
+                res.json({
+                    ok: true,
+                    UserDBsaved,
+                    message: 'The photo was successfully deleted'
+                })
+            })
+        })
+    } else {
+        return res.json({
+            ok: true,
+            message: 'The photo was successfully deleted'
+        })
+    }
 })
 
 
@@ -155,8 +214,7 @@ function userImg(id, res, type, fileName) {
 
             res.json({
                 ok: true,
-                user: UserDBsaved,
-                img: fileName
+                user: UserDBsaved
                 })
         })
     })
@@ -164,7 +222,7 @@ function userImg(id, res, type, fileName) {
 
 function deleteFile(id, type, fileName) {
 
-    let filePath = path.resolve(__dirname, `../../uploads/${type}/${id}/${fileName}`)
+    let filePath = path.resolve(__dirname, `../../../uploads/${type}/${id}/${fileName}`)
     
     if(fs.existsSync(filePath)) {
 
@@ -173,9 +231,9 @@ function deleteFile(id, type, fileName) {
     }
 }
 
-function deleteFolder(id, type, fileName) {
+function deleteFolder(id, type) {
         
-    let filePath = path.resolve(__dirname, `../../uploads/${type}/${id}`)
+    let filePath = path.resolve(__dirname, `../../../uploads/${type}/${id}`)
         
     if(fs.existsSync(filePath)) {
             fs.rmdirSync(filePath, {recursive: true})

@@ -9,17 +9,15 @@ const { verifyRecruiter } = require('../../middlewares/verifyRole');
 
 const app = express();
 
-app.post('/offer/:idR/:idW', [verifyToken, verifyRecruiter], function (req, res) {
+app.post('/offer/:idRecruiter/:idWorker', [verifyToken, verifyRecruiter], function (req, res) {
 
     let body = req.body;
-    let idRecruiter = req.params.idR;
-    let idWorker = req.params.idW;
+    let idRecruiter = req.params.idRecruiter;
+    let idWorker = req.params.idWorker;
 
     Recruiter.findById(idRecruiter, (errRecruiter, recruiterDB) => {
 
         if(!recruiterDB) {  
-                console.log(recruiterDB.recruiterData === undefined,
-                    recruiterDB.recruiterData.length === 0);  
             return res.status(400).json({
                 ok: false,
                 err: {
@@ -87,7 +85,8 @@ app.post('/offer/:idR/:idW', [verifyToken, verifyRecruiter], function (req, res)
                 workerDB.save((errWSaved, workerSaved) => {
                     if( errWSaved ) {
                         offer.remove();
-                        recruiterDB.offersCreated.remove();
+                        recruiterDB.offersCreated.pop()
+                        recruiterDB.save();
                         return res.status(500).json({
                             ok: false,
                             errWSaved
@@ -106,7 +105,5 @@ app.post('/offer/:idR/:idW', [verifyToken, verifyRecruiter], function (req, res)
 
     })
 })
-
-
 
 module.exports = app;

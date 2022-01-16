@@ -8,9 +8,9 @@ app.use(require('./users_login/login'));
 app.use(require('./role_data/recruiter'));
 app.use(require('./role_data/worker'));
 
-app.use(require('./upload'));
-app.use(require('./offer/offer'));
-app.use(require('./offer/stateOffer'));
+app.use(require('./upload/upload'));
+app.use(require('./offers/offer'));
+app.use(require('./offers/stateOffer'));
 
 
 
