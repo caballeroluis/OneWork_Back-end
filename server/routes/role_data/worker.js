@@ -5,11 +5,11 @@ const Worker = require('../../models/worker');
 const User = require('../../models/user');
 
 const verifyToken = require('../../middlewares/veryfyAuth');
-const { verifyWorker, verifyRecruiter, verifyOwnIdOrRecruiterOrAdmin, verifyOwnIdOrAdmin } = require('../../middlewares/verifyRole');
+const { verifyWorker, verifyRecruiter, verifyOwnIdOrRecruiter, verifyOwnId } = require('../../middlewares/verifyRole');
 
 const app = express();
 
-app.post('/worker/:id', [verifyToken, verifyWorker, verifyOwnIdOrAdmin], function (req, res) {
+app.post('/worker/:id', [verifyToken, verifyWorker, verifyOwnId], function (req, res) {
 
     let body = req.body;
     let id = req.params.id;
@@ -42,7 +42,6 @@ app.post('/worker/:id', [verifyToken, verifyWorker, verifyOwnIdOrAdmin], functio
             offersApplied: body.offersApplied
         })
 
-        console.log(worker);
         worker.save((errWorker, workerSaved) => {
 
             if(errWorker) {
@@ -101,7 +100,7 @@ app.get('/worker', [verifyToken, verifyRecruiter], (req, res) => {
 
 })
 
-app.get('/worker/:id', [verifyToken, verifyOwnIdOrRecruiterOrAdmin], (req, res) => {
+app.get('/worker/:id', [verifyToken, verifyOwnIdOrRecruiter], (req, res) => {
 
     let params = req.params;
 
@@ -122,7 +121,7 @@ app.get('/worker/:id', [verifyToken, verifyOwnIdOrRecruiterOrAdmin], (req, res) 
 })
 
 
-app.put('/worker/:id', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
+app.put('/worker/:id', [verifyToken, verifyOwnId], function (req, res) {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['name', 'surname1', 'surname2', 'age', 'sex']);

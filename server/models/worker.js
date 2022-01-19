@@ -23,7 +23,7 @@ let workerSchema = new Schema({
     CV: {
 
     },
-    email: {
+    contactEmail: {
 
     },
     offersApplied: [{

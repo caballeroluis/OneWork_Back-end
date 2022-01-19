@@ -4,7 +4,7 @@ const fileUpload = require('express-fileupload');
 const User = require('../../models/user');
 
 const verifyToken = require('../../middlewares/veryfyAuth');
-const { verifyOwnIdOrAdmin } = require('../../middlewares/verifyRole');
+const { verifyOwnId } = require('../../middlewares/verifyRole');
 
 const fs = require('fs');
 const path = require('path');
@@ -13,7 +13,7 @@ const app = express();
 
 app.use(fileUpload());
 
-app.put('/upload/:type/:id', verifyToken, verifyOwnIdOrAdmin, function(req, res) {
+app.put('/upload/:type/:id', [verifyToken, verifyOwnId], function(req, res) {
 
     console.log(req.files);
 
@@ -95,7 +95,7 @@ app.put('/upload/:type/:id', verifyToken, verifyOwnIdOrAdmin, function(req, res)
 
 });
 
-app.get('/file/:type/:id/:name', (req, res) => {
+app.get('/file/:type/:id/:name', [verifyToken, verifyOwnId], (req, res) => {
 
     let name = req.params.name;
     
@@ -118,7 +118,7 @@ app.get('/file/:type/:id/:name', (req, res) => {
 
 })
 
-app.delete('/file/:type/:id/:name', (req, res) => {
+app.delete('/file/:type/:id/:name', [verifyToken, verifyOwnId], (req, res) => {
 
     let name = req.params.name;
     

@@ -1,16 +1,34 @@
 const express = require('express');
+const _ = require('underscore');
 
-const Recruiter = require('../../models/recruiter');
-const Worker = require('../../models/worker');
 const Offer = require('../../models/offer');
 
 const verifyToken = require('../../middlewares/veryfyAuth');
-const { verifyWorker, verifyRecruiter } = require('../../middlewares/verifyRole');
+const { verifyAdmin } = require('../../middlewares/verifyRole');
 
 const app = express();
 
+app.put('/admin/offer/:id', [verifyToken, verifyAdmin], function (req, res) {
 
-app.patch('/offer/:type/:idO', [verifyToken, verifyWorker], function (req, res) {
+    let id = req.params.id;
+    let body = _.pick(req.body, ['salary', 'title', 'requirements', 'workplaceAdress', 'description']);
+  
+    Offer.findByIdAndUpdate(id, body, {new: true, runValidators: true}, (err, offerDB) => {
+
+        if(err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            })}
+
+        res.json({
+            ok: true,
+            offer: offerDB
+        })
+    })
+})
+
+app.patch('/admin/offer/:type/:idO', [verifyToken, verifyAdmin], function (req, res) {
 
     let idOffer = req.params.idO;
     let type = req.params.type;
@@ -134,7 +152,9 @@ app.patch('/offer/:type/:idO', [verifyToken, verifyWorker], function (req, res) 
 
 })
 
-app.delete('/offer/:idO', [verifyToken, verifyRecruiter], function (req, res) {
+
+
+app.delete('/admin/offer/:idO', [verifyToken, verifyAdmin], function (req, res) {
 
     let idOffer = req.params.idO;
     let type = 'eliminated';

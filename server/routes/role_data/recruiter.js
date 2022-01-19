@@ -5,11 +5,11 @@ const Recruiter = require('../../models/recruiter');
 const User = require('../../models/user');
 
 const verifyToken = require('../../middlewares/veryfyAuth');
-const { verifyRecruiter, verifyOwnIdOrAdmin } = require('../../middlewares/verifyRole');
+const { verifyRecruiter, verifyOwnId } = require('../../middlewares/verifyRole');
 
 const app = express();
 
-app.post('/recruiter/:id', [verifyToken, verifyRecruiter, verifyOwnIdOrAdmin], function (req, res) {
+app.post('/recruiter/:id', [verifyToken, verifyRecruiter, verifyOwnId], function (req, res) {
 
     let body = req.body;
     let id = req.params.id;
@@ -125,7 +125,7 @@ app.get('/recruiter/:id', (req, res) => {
 })
 
 
-app.put('/recruiter/:id/:idR', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
+app.put('/recruiter/:id/:idR', [verifyToken, verifyOwnId], function (req, res) {
 
     let idRecruiter = req.params.idR;
 

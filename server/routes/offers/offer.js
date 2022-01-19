@@ -1,11 +1,12 @@
 const express = require('express');
+const _ = require('underscore');
 
 const Recruiter = require('../../models/recruiter');
 const Worker = require('../../models/worker');
 const Offer = require('../../models/offer');
 
 const verifyToken = require('../../middlewares/veryfyAuth');
-const { verifyRecruiter } = require('../../middlewares/verifyRole');
+const { verifyRecruiter, verifyOwnId } = require('../../middlewares/verifyRole');
 
 const app = express();
 
@@ -106,4 +107,25 @@ app.post('/offer/:idRecruiter/:idWorker', [verifyToken, verifyRecruiter], functi
     })
 })
 
+app.put('/offer/:id', [verifyToken, verifyOwnId], function (req, res) {
+
+    let id = req.params.id;
+    let body = _.pick(req.body, ['salary', 'title', 'requirements', 'workplaceAdress', 'description']);
+  
+    Offer.findByIdAndUpdate(id, body, {new: true, runValidators: true}, (err, offerDB) => {
+
+        if(err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            })}
+
+        res.json({
+            ok: true,
+            offer: offerDB
+        })
+    })
+})
+
 module.exports = app;
+

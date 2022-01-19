@@ -4,7 +4,7 @@ const _ = require('underscore');
 
 const User = require('../../models/user');
 const verifyToken = require('../../middlewares/veryfyAuth');
-const { verifyRoleInitial, verifyOwnIdOrAdmin, verifyAdmin } = require('../../middlewares/verifyRole');
+const { verifyRoleInitial, verifyOwnId } = require('../../middlewares/verifyRole');
 const { verifyPass } = require('../../middlewares/VerifyMix');
 
 const app = express();
@@ -34,7 +34,9 @@ app.post('/user', [verifyRoleInitial, verifyPass], function (req, res) {
             if( errData ) {
                 return res.status(400).json({
                     ok: false,
-                    errData
+                    error: {
+
+                    }
                 });
             }  
         
@@ -47,26 +49,7 @@ app.post('/user', [verifyRoleInitial, verifyPass], function (req, res) {
     });
 });
 
-app.get('/user', [verifyToken, verifyAdmin], (req, res) => {
-
-    User.find({}, (err, data) => {
-
-        if( err ) {
-            return res.status(400).json({
-                ok: false,
-                err
-            });
-        }
-       
-        res.json({
-            ok: true,
-            user: data,
-        })
-    })
-
-})
-
-app.get('/user/:id', [verifyToken, verifyOwnIdOrAdmin], (req, res) => {
+app.get('/user/:id', [verifyToken, verifyOwnId], (req, res) => {
 
     let params = req.params;
 
@@ -90,28 +73,14 @@ app.get('/user/:id', [verifyToken, verifyOwnIdOrAdmin], (req, res) => {
 })
 
 
-app.put('/user/:id', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
+app.put('/user/:id', [verifyToken, verifyOwnId, verifyPass], function (req, res) {
 
-    // TODO: El usuario no puede modificar su propio estado o rol.
-    // TODO: El usuario tiene que poder modificar su propia imagen.
-    // TODO: El usuario tiene que cambiar la contraseña de forma segura. 
     const salt = 11;
     let id = req.params.id;
 
-    let body = _.pick(req.body, ['email', 'role', 'state', 'password']);
+    let body = _.pick(req.body, ['email', 'password']);
 
     if(body.password !== undefined) {
-
-        // TODO: La validación de la contraseña debe hacerse antes
-
-        if(!(/^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9]).{12}$/.test(body.password))) {
-        
-            return res.status(400).json({
-                ok: false,
-                message: 'The password requirements: 8 characters length, 1 letter uppercase, 1 special character and 1 number'
-            });
-        }
-
         bcrypt.hash(body.password, salt, function(err, hash) {
             if(err) {
                 return res.status(400).json({
@@ -122,7 +91,6 @@ app.put('/user/:id', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
             body.password = hash;
 
             User.findByIdAndUpdate(id, body, {new: true, runValidators: true}, (errDB, userDB) => {
-            
                 if(errDB) {
                   return res.status(400).json({
                       ok: false,
@@ -136,8 +104,7 @@ app.put('/user/:id', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
             })
           
         });
-    } else {
-        
+    } else {  
         User.findByIdAndUpdate(id, body, {new: true, runValidators: true}, (errDB, userDB) => { 
             if(errDB) {
               return res.status(400).json({
@@ -153,7 +120,7 @@ app.put('/user/:id', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
     }
 })
 
-app.delete('/user/:id', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
+app.delete('/user/:id', [verifyToken, verifyOwnId], function (req, res) {
     
     let id = req.params.id;
 
@@ -169,7 +136,7 @@ app.delete('/user/:id', [verifyToken, verifyOwnIdOrAdmin], function (req, res) {
           ok: true,
           user: userDB
         })
-      })
+    })
 
 })
 
