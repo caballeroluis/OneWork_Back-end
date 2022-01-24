@@ -1,20 +1,4 @@
 
-let verifyRoleInitial = (req, res, next) => {
-
-    let body = req.body;
-
-    if (body.role === 'RECRUITER_ROLE' || body.role === 'WORKER_ROLE') {
-        next();
-    } else {
-        return res.status(400).json({
-            ok: false,
-            err: {
-                message: `The role ${body.role} is invalid`
-            }
-        });
-    }
-}
-
 let verifyOwnId = (req, res, next) => {
 
     let idProvided = req.params.id;
@@ -119,8 +103,6 @@ let verifyRecruiter = (req, res, next) => {
 }
 
 module.exports = {
-
-    verifyRoleInitial,
     verifyOwnId,
     verifyOwnIdOrRecruiter,
     verifyAdmin,

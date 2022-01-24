@@ -7,10 +7,12 @@ const app = express();
 app.use(require('./config/config'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(bodyParser.json());
 
-app.use(require('./routes/index'));
+app.use('/api/users', require('./routes/user'));
+app.use('/api/login', require('./routes/login'));
+app.use('/api/upload',require('./routes/upload'));
+app.use('/api/offer',require('./routes/offer'));
 
 
 mongoose.connect('mongodb://localhost:27017/OneWork', { useNewUrlParser: true }, (err, res) => {

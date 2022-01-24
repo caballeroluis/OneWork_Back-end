@@ -1,14 +1,8 @@
 const mongoose = require('mongoose');
 
-const Recruiter = require('./recruiter').schema;
-const Worker = require('./worker').schema;
-
-let validRoles = {
-    values: ['ADMIN_ROLE', 'RECRUITER_ROLE', 'WORKER_ROLE'],
-    message: '{VALUE} is not a valid role'
-}
-
 let Schema = mongoose.Schema;
+
+let options = {collection: 'users', discriminatorKey: '_type'};
 
 let userSchema = new Schema({
 
@@ -29,32 +23,86 @@ let userSchema = new Schema({
         type: String,
         required: false
     },
-    role: {
-        type: String,
-        required: [true, 'Role should be WORKER_ROLE or RECRUITER_ROLE'],
-        default: 'WORKER_ROLE',
-        enum: validRoles
-    },
     state: {
         type: Boolean,
         default: true
     },
-    recruiterData: Recruiter,
-    workerData: Worker
-
-});
+    offers: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Offer',
+        autopopulate: true
+    }]
+}, options)
 
 // Para eliminar el password cuando se envíen datos.
-
+    
 userSchema.methods.toJSON = function() {
-
+    
     let user = this;
     let userObject = user.toObject();
     delete userObject.password;
-
+    
     return userObject;
 }
-
+    
 userSchema.plugin(require('mongoose-autopopulate'));
 
-module.exports = mongoose.model('User', userSchema);
+let User = mongoose.model('User', userSchema);
+
+let Recruiter = User.discriminator('Recruiter', new mongoose.Schema({
+    corporationName: {
+        type: String
+    },
+    descriptionCorporate: {
+        
+    },
+    international: {
+        type: Boolean
+    },
+    recruiterName: {
+        
+    },
+    recruiterSurname1: {
+        
+    },
+    recruiterSurname2: {
+        
+    },
+    contactData: {
+        
+    } 
+})
+)
+
+let Worker = User.discriminator('Worker', new mongoose.Schema({
+    corporationName: {
+        type: String
+    },
+    descriptionCorporate: {
+        
+    },
+    international: {
+        type: Boolean
+    },
+    recruiterName: {
+        
+    },
+    recruiterSurname1: {
+        
+    },
+    recruiterSurname2: {
+        
+    },
+    contactData: {
+        
+    }})
+)
+
+let Admin = User.discriminator('Admin', new mongoose.Schema({}));
+    
+module.exports = {
+    User,
+    Admin,
+    Worker,
+    Recruiter
+};
