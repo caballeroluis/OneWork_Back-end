@@ -2,15 +2,16 @@ const express = require('express');
 const { check } = require('express-validator');
 
 const userController = require('../controllers/userController');
-const { verifyToken } = require('../middlewares/verifyAuth');
-const { verifyRoleInitial } = require('../middlewares/verifyRole');
+const { verifyToken } = require('../middlewares/verifyAuthMiddleware');
+const { verifyRoleInitial } = require('../middlewares/verifyRoleMiddleware');
 
 
 const router = express.Router();
 
 /* POST /api/users  */
+
 router.post(
-  '/:userType',
+  '/',
   [
     check('email', 'Enter a valid email').isEmail(),
     check('password', 'Password must be a minimum of 6 characters').isLength({
@@ -20,16 +21,24 @@ router.post(
   userController.createUser
 );
 
-/* GET /api/users/:id  */
+/* PUT /api/users  */
+
+router.put(
+  '/:email',
+  userController.updateUser
+)
+
+/* GET /api/users/:email  */
+
 router.get(
-  '/:id',
+  '/:email',
   userController.getUserByID
 )
 
 /* DELETE /api/users  */
 router.delete(
-    '/:id',
-    userController.deleteUser
+  '/:email',
+  userController.deleteUser
 );
 
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
+const loginController = require('../controllers/loginController');
 const { check } = require('express-validator');
 
 
@@ -13,7 +13,7 @@ router.post(
         min: 6,
       }),
     ],
-    userController.userLogin
+    loginController.userLogin
 );
 
 module.exports = router;

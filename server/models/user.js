@@ -75,22 +75,22 @@ let Recruiter = User.discriminator('Recruiter', new mongoose.Schema({
 )
 
 let Worker = User.discriminator('Worker', new mongoose.Schema({
-    corporationName: {
+    name: {
         type: String
     },
-    descriptionCorporate: {
+    surname1: {
         
     },
-    international: {
-        type: Boolean
-    },
-    recruiterName: {
+    surname2: {
         
     },
-    recruiterSurname1: {
+    sex: {
         
     },
-    recruiterSurname2: {
+    age: {
+        
+    },
+    DNI: {
         
     },
     contactData: {

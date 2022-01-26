@@ -1,59 +1,15 @@
-const _ = require('underscore');
-
-const { Worker, Recruiter } = require('../models/user');
-const Offer = require('../models/offer');
-
+let offerService = require('../services/offerService');
 
 exports.createOffer = async (req, res) => {
 
-    let body = req.body;
-    let idRecruiter = req.params.idRecruiter;
-    let idWorker = req.params.idWorker;
-
-    let offer = new Offer({
-        salary: body.salary,
-        title: body.title,
-        requirements: body.requirements,
-        workplaceAdress: body.workplaceAdress,
-        description: body.description,
-    })
-
     try {
-        
-        let recruiter = await Recruiter.findById(idRecruiter);
-
-        if(!recruiter) {  
-            return res.status(400).json({
-                ok: false,
-                err: {
-                    message: 'This recruiter doesn\'t exist'
-                }
-            })
-        }
-
-        let worker = await Worker.findById(idWorker);
-
-        if(!worker) {    
-            return res.status(400).json({
-                ok: false,
-                err: {
-                    message: 'This worker doesn\'t exist'
-                }
-            })
-        }
-
-        recruiter.offers.push(offer._id);
-        worker.offers.push(offer._id);
-
-        await Promise.all([offer.save(), worker.save(), recruiter.save()]);
+        let offer = await offerService.createOffer(req);
 
         return res.json({
             ok: true,
             offer
         })
-
     } catch(error) {
-
         console.log(error);
         return res.status(500).json({
             ok: false,
@@ -65,17 +21,13 @@ exports.createOffer = async (req, res) => {
 
 exports.updateOffer = async (req, res) => {
 
-    let id = req.params.id;
-    let body = _.pick(req.body, ['salary', 'title', 'requirements', 'workplaceAdress', 'description']);
-  
-    try {
-        let offer = await Offer.findByIdAndUpdate(id, body, {new: true, runValidators: true});
+    try {   
+        let offer = await offerService.updateOffer(req);
 
         res.json({
             ok: true,
             offer
         })
-
     } catch(error) {
         res.status(400).json({
             ok: false,
@@ -213,31 +165,14 @@ exports.changeStateOffer = async (req, res) => {
 
 exports.deleteOffer = async (req, res) => {
     
-    let idOffer = req.params.idO;
-    let type = 'eliminated';
-    
     try {
 
-        let offer = await Offer.findById(idOffer);
-    
-        if(!offer) {    
-            return res.status(400).json({
-                ok: false,
-                error: {
-                    message: 'This offer doesn\'t exist'
-                }
-            })
-        }
-
-        offer.status = type;
-
-        await offer.save();
+        let offer = await offerService.deleteOffer(req);
 
         res.json({
             ok: true,
             offer
         })
-
     } catch (error) {
         res.status(500).json({
             ok: false,
