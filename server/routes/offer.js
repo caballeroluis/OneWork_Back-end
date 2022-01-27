@@ -7,13 +7,13 @@ const offerController = require('../controllers/offerController');
 const router = express.Router()
 
 router.post(
-    '/:idRecruiter/:idWorker', 
+    '/worker/:idWorker/recruiter/:idRecruiter', 
     verifyToken, 
     offerController.createOffer
 )
 
 router.patch(
-    '/:type/:idO', 
+    '/:id', 
     verifyToken,
     offerController.changeStateOffer
 )
@@ -26,7 +26,7 @@ router.put(
 )
 
 router.delete(
-    '/:idO', 
+    '/:id', 
     verifyToken,
     offerController.deleteOffer
 )

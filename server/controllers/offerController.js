@@ -1,47 +1,48 @@
 let offerService = require('../services/offerService');
+let Offer = require('../models/offer');
+const _ = require('underscore');
 
-exports.createOffer = async (req, res) => {
+exports.createOffer = async (req, res, next) => {
+
+    const {idWorker, idRecruiter} = req.params;
+    let body = req.body
 
     try {
-        let offer = await offerService.createOffer(req);
+        let offer = await offerService.createOffer(idWorker, idRecruiter, body);
 
         return res.json({
             ok: true,
             offer
         })
     } catch(error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            error
-        })
+        next(error)
     }
     
 }
 
-exports.updateOffer = async (req, res) => {
+exports.updateOffer = async (req, res, next) => {
+
+    const id = req.params.id;
+    let body = _.pick(req.body, ['salary', 'title', 'requirements', 'workplaceAdress', 'description']);
 
     try {   
-        let offer = await offerService.updateOffer(req);
+        let offer = await offerService.updateOffer(id, body);
 
         res.json({
             ok: true,
             offer
         })
     } catch(error) {
-        res.status(400).json({
-            ok: false,
-            error
-        })
+        next(error)
     }
 }
 
 // TODO: Refactorizar cambio de estado.
 
-exports.changeStateOffer = async (req, res) => {
+exports.changeStateOffer = async (req, res, next) => {
 
-    let idOffer = req.params.idO;
-    let type = req.params.type;
+    let idOffer = req.params.id;
+    let type = req.body.status;
     
     Offer.findById(idOffer, (errorOffer, offerDB) => {
 
@@ -163,20 +164,18 @@ exports.changeStateOffer = async (req, res) => {
 
 // TODO: Eliminar también la oferta en los usuarios y completamente, o cambiar de su estado.
 
-exports.deleteOffer = async (req, res) => {
-    
+exports.deleteOffer = async (req, res, next) => {
+    const id = req.params.id;
+    let type = 'eliminated';
     try {
 
-        let offer = await offerService.deleteOffer(req);
+        let offer = await offerService.deleteOffer(id, type);
 
         res.json({
             ok: true,
             offer
         })
     } catch (error) {
-        res.status(500).json({
-            ok: false,
-            error
-        })
+        next(error)
     }
 }

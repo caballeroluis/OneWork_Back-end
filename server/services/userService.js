@@ -7,20 +7,17 @@ let createUser = async function(req) {
     
     try {
         let user = await User.findOne({ email });
-        
-        if (user) {
-            return res.status(400).json({
-                ok: false,
-                message: 'User already exists'
-            });
+
+        if (user) throw {status: 400, message: 'User already exists'};
+
+        if (type === 'worker') {
+            user = new Worker(req.body)
+        } else if(type === 'recruiter') {
+            user = new Recruiter(req.body)
+        } else {
+            throw {status: 400, message: 'The type of the user is incorrect'}
         }
-    
-        type === 'worker' ?
-        user = new Worker(req.body) :
-        type === 'recruiter' ?
-        user = new Recruiter(req.body) :
-        res.status(400).json({ ok: false, message: 'The type of the user is incorrect'});
-    
+        
         // TODO: generar salt en variables de entorno.
     
         const salt = await bcryptjs.genSalt(11);
@@ -30,72 +27,71 @@ let createUser = async function(req) {
 
         return user;
     } catch(error) {
-        return error;
+        if(!error.status) {
+            throw {status: 500, message: 'Internal server error'};
+        } else {
+            throw error;
+        } 
     }
 }
 
 let updateUser = async function(req) {
     const body = req.body;
     const type = body.type;
-    const email = req.params.email;
+    const id = req.params.id;
     let user;
     
     try {
-
-        type === 'worker' ?
-        user = await Worker.findOneAndUpdate({email}, body, {new: true, runValidators: true}) :
-        type === 'recruiter' ?
-        user = await Recruiter.findOneAndUpdate({email}, body, {new: true, runValidators: true}) :
-        res.status(400).json({ ok: false, message: 'The type of the user is incorrect'});
-
-        if(!user) {    
-            return res.status(400).json({
-                ok: false,
-                error: {
-                    message: 'This user doesn\'t exist'
-                }
-            })
+        if (type === 'worker') {
+            user = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true})
+        } else if(type === 'recruiter') {
+            user = await Recruiter.findByIdAndUpdate(id, body, {new: true, runValidators: true})
+        } else {
+            throw {status: 400, message: 'The type of the user is incorrect'}
         }
+
+        if (!user) throw {status: 400, message: 'User doesn\'t exist'};
 
         return user;
     } catch(error) {
-        return error;
+        if(!error.status) {
+            throw {status: 500, message: 'Internal server error'};
+        } else {
+            throw error;
+        } 
     }
 }
 
 let getUserID = async function(req) {
-    const email = req.params.email;
+    const id = req.params.id;
 
     try {
 
-        let user = await User.findOne({email});
-            if(!user) {
-                return res.status(400).json({
-                    ok: false,
-                    message: 'The user doesn\'t exist'
-                });
-            }
+        let user = await User.findById(id);
+
+        if (!user) throw {status: 400, message: 'User doesn\'t exist'};
 
         return user;
     } catch (error) {
-        return error;
+        if(!error.status) {
+            throw {status: 500, message: 'Internal server error'};
+        } else {
+            throw error;
+        } 
     }
 }
 
 let deleteUser = async function(req) {
-    const email = req.params.email;
+    let id = req.params.id;
     try {
-        let user = await User.findOneAndUpdate(email, {state: false}, {new: true, runValidators: true})
-        
-        if (!user) {
-            return res.status(400).json({
-                ok: false,
-                message: 'User doesn\'t exist'
-            });
-        }
-
+        let user = await User.findOneAndUpdate(id, {state: false}, {new: true, runValidators: true})
+        if (!user) throw {status: 400, message: 'User doesn\'t exist'};
     } catch(error) {
-        return error;
+        if(!error.status) {
+            throw {status: 500, message: 'Internal server error'};
+        } else {
+            throw error;
+        } 
     }
 }
 

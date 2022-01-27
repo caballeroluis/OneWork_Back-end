@@ -6,23 +6,21 @@ exports.createUser = async (req, res, next) => {
     const errors = validationResult(req);
     
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+
+        return res.status(400).json({ errors: errors.array(true)[0] });
     }
 
-    try {
-        
+    try { 
         let user = await userService.createUser(req);
-        console.log(user);
+
         res.json({
             ok: true,
             user
         })
     
     } catch (error) {
-        return res.status(400).json({
-            ok: false,
-            error
-        });  
+        console.log(error);
+        next(error)
     }  
 }
 
@@ -36,10 +34,7 @@ exports.updateUser = async (req, res) => {
         });
 
     } catch(error) {
-        return res.status(500).json({
-            ok: false,
-            error
-        })
+        next(error)
     }
 }
 
@@ -55,10 +50,7 @@ exports.getUserByID = async (req, res) => {
         });
 
     } catch(error) {
-        return res.status(500).json({
-            ok: false,
-            error
-        })
+        next(error)
     }
 }
 
@@ -72,9 +64,6 @@ exports.deleteUser = async (req, res) => {
         });
 
     } catch(error) {
-        return res.status(500).json({
-            ok: false,
-            error
-        })
+        next(error)
     }
 }

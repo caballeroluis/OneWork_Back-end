@@ -9,7 +9,7 @@ let modifyImg = async function(req) {
 
     try {
         let user = await User.findById(id);
-
+        if(!user) throw {status: 400, message: 'This user doesn\'t exist'};
         deleteFile(id, type, user.img);
 
         user.img = fileName;
@@ -17,34 +17,56 @@ let modifyImg = async function(req) {
         await user.save();
         
         return user;
-        
     } catch(error) {
         deleteFolder(id, type);
-        console.log(error);
-        return error;
+        if(!error.status) {
+            throw {status: 500, message: 'Internal server error'};
+        } else {
+            throw error;
+        } 
     }
 }
 
-let deleteImg = async function(req) {
-
-    const { id, type } = req.params;
+let getImg = async function(id) {
 
     try {
-        
         let user = await User.findById(id);
+        if(!user) throw {status: 400, message: 'This user doesn\'t exist'};
 
-        deleteFile(id, type, user.img);
-        deleteFolder(id, type);
+        return user.img;
+    } catch(error) {
+        if(!error.status) {
+            throw {status: 500, message: 'Internal server error'};
+        } else {
+            throw error;
+        } 
+    }
+}
+
+let deleteImg = async function(id) {
+
+    try {
+        let user = await User.findById(id);
+        if(!user) throw {status: 400, message: 'This user doesn\'t exist'};
+
+        deleteFile(id, 'users', user.img);
+        deleteFolder(id, 'users');
         user.img = undefined;
 
         await user.save();
+
         return user;
     } catch(error) {
-        return error
+        if(!error.status) {
+            throw {status: 500, message: 'Internal server error'};
+        } else {
+            throw error;
+        } 
     }
 }
 
 module.exports = {
     modifyImg,
+    getImg,
     deleteImg
 }

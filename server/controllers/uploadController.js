@@ -1,12 +1,12 @@
 const { validationResult } = require('express-validator');
-const userService = require('../services/userService');
+const uploadService = require('../services/uploadService');
 const fs = require('fs');
 const path = require('path');
 
 exports.modifyImg = async (req, res, next) => {
 
     try {
-        let user = await userService.modifyImg(req);
+        let user = await uploadService.modifyImg(req);
 
         return res.json({
             ok: true,
@@ -19,55 +19,41 @@ exports.modifyImg = async (req, res, next) => {
 }
 
 
-exports.getImg = async(req, res) => {
+exports.getImg = async (req, res, next) => {
 
-    let name = req.params.name;
-    let type = req.params.type;
     let id = req.params.id;
 
-    let pathFile = path.resolve(__dirname, `../../uploads/${type}/${ id }/${ name }`);
-    
-    if (fs.existsSync(pathFile)) {
-        res.sendFile(pathFile);
-    } else {
-        let nofile = path.resolve(__dirname, `../assets/no_available.jpg`)
-        res.sendFile(nofile);
+    try {
+
+        let img = await uploadService.getImg(id);
+        let pathFile = path.resolve(__dirname, `../../uploads/users/${ id }/${ img }`);
+
+        if (fs.existsSync(pathFile) && img) {
+            res.sendFile(pathFile);
+        } else {
+            let nofile = path.resolve(__dirname, `../assets/no_available.jpg`)
+            res.sendFile(nofile);
+        }
+    } catch(error) {
+        next(error)
     }
 }
 
-exports.deleteImg = async (req, res) => {
+exports.deleteImg = async (req, res, next) => {
 
-    let name = req.params.name;
-    let type = req.params.type;
     let id = req.params.id;
 
-    let pathFile = path.resolve(__dirname, `../../uploads/${type}/${ id }/${ name }`);
-    
-    if (fs.existsSync(pathFile)) {
+    try {
 
-        try {
-            let user = await userService.deleteImg(req)
+        let user = await uploadService.deleteImg(id);
 
-            res.json({
-                ok: true,
-                user,
-                message: 'The photo was successfully deleted'
-            })
-
-        } catch(error) {
-            if(error) {
-                return res.status(500)
-                          .json({
-                                ok: false,
-                                error: error.message
-                            })
-            }
-        }
-    } else {
-        return res.json({
+        res.json({
             ok: true,
+            user,
             message: 'The photo was successfully deleted'
         })
+    } catch(error) {
+        next(error)
     }
 }
 

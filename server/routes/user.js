@@ -24,20 +24,20 @@ router.post(
 /* PUT /api/users  */
 
 router.put(
-  '/:email',
+  '/:id',
   userController.updateUser
 )
 
 /* GET /api/users/:email  */
 
 router.get(
-  '/:email',
+  '/:id',
   userController.getUserByID
 )
 
 /* DELETE /api/users  */
 router.delete(
-  '/:email',
+  '/:id',
   userController.deleteUser
 );
 

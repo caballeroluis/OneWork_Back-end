@@ -7,7 +7,7 @@ const uploadHandler = require('../middlewares/uploadFileMiddleware')
 const router = express.Router();
 
 router.patch(
-    '/:type/:id',
+    '/images/:id',
     verifyToken,
     uploadHandler,
     uploadController.modifyImg
@@ -15,12 +15,12 @@ router.patch(
 )
 
 router.get(
-    '/:type/:id/:name',
+    '/images/:id',
     uploadController.getImg
 )
 
 router.delete(
-    '/:type/:id/:name', 
+    '/images/:id/', 
     uploadController.deleteImg
 )
 

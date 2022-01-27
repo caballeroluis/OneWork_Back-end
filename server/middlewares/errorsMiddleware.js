@@ -1,10 +1,10 @@
 
 module.exports = function(error, req, res, next) {
-    console.log(error);
-    return res.status(400)
+    console.error(error);
+    return res.status(error.status || 500)
               .json({
                 ok: false,
-                error: error.message
+                message: error.message
             })
 
 }

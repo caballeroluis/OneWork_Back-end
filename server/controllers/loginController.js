@@ -3,13 +3,12 @@ const { validationResult } = require('express-validator');
 const loginService = require('../services/loginService');
 
 
-exports.userLogin = async (req, res) => {
+exports.userLogin = async (req, res, next) => {
     const errors = validationResult(req);
   
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
 
     try {      
         
@@ -38,9 +37,6 @@ exports.userLogin = async (req, res) => {
             });
         });
     } catch (error) {
-        return res.status(500).json({
-            ok: false,
-            error: error
-        });
+        next(error)
     }
 }
