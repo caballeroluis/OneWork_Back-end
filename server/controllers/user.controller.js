@@ -1,5 +1,4 @@
-
-const userService = require('../services/userService')
+const userService = require('../services/user.service')
 const { validationResult } = require('express-validator');
 
 exports.createUser = async (req, res, next) => {
@@ -24,7 +23,7 @@ exports.createUser = async (req, res, next) => {
     }  
 }
 
-exports.updateUser = async (req, res) => {
+exports.updateUser = async (req, res, next) => {
     try {
         let user = await userService.updateUser(req);
 
@@ -38,7 +37,7 @@ exports.updateUser = async (req, res) => {
     }
 }
 
-exports.getUserByID = async (req, res) => {
+exports.getUserByID = async (req, res, next) => {
 
     try {
         
@@ -54,7 +53,7 @@ exports.getUserByID = async (req, res) => {
     }
 }
 
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = async (req, res, next) => {
     try {
         await userService.deleteUser(req);
 

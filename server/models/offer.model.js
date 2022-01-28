@@ -38,6 +38,16 @@ let offerSchema = new Schema({
         type: String,
         default: 'created',
         enum: validStatus
+    },
+    workerAssigned: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Worker',
+        autopopulate: true
+    },
+    recruiterAssigned: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Recruiter',
+        autopopulate: true
     }
 })
 

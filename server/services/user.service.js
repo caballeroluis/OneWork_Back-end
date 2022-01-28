@@ -1,4 +1,4 @@
-const { User, Worker, Recruiter } = require('../models/user');
+const { User, Worker, Recruiter } = require('../models/user.model');
 const bcryptjs = require('bcryptjs');
 
 
@@ -7,7 +7,6 @@ let createUser = async function(req) {
     
     try {
         let user = await User.findOne({ email });
-
         if (user) throw {status: 400, message: 'User already exists'};
 
         if (type === 'worker') {
@@ -27,11 +26,7 @@ let createUser = async function(req) {
 
         return user;
     } catch(error) {
-        if(!error.status) {
-            throw {status: 500, message: 'Internal server error'};
-        } else {
-            throw error;
-        } 
+        throw error;
     }
 }
 
@@ -43,7 +38,7 @@ let updateUser = async function(req) {
     
     try {
         if (type === 'worker') {
-            user = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true})
+            user = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true});
         } else if(type === 'recruiter') {
             user = await Recruiter.findByIdAndUpdate(id, body, {new: true, runValidators: true})
         } else {
@@ -54,11 +49,7 @@ let updateUser = async function(req) {
 
         return user;
     } catch(error) {
-        if(!error.status) {
-            throw {status: 500, message: 'Internal server error'};
-        } else {
-            throw error;
-        } 
+        throw error;
     }
 }
 
@@ -73,11 +64,7 @@ let getUserID = async function(req) {
 
         return user;
     } catch (error) {
-        if(!error.status) {
-            throw {status: 500, message: 'Internal server error'};
-        } else {
-            throw error;
-        } 
+        throw error;
     }
 }
 

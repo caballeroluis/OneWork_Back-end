@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-
-let Schema = mongoose.Schema;
+const uniqueValidator = require('mongoose-unique-validator');
 
 let options = {collection: 'users', discriminatorKey: '_type'};
 
-let userSchema = new Schema({
+let userSchema = new mongoose.Schema({
 
     creationDate: {
         type: Date,
@@ -28,7 +27,7 @@ let userSchema = new Schema({
         default: true
     },
     offers: [{
-        type: Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId, 
         ref: 'Offer',
         autopopulate: true
     }]
@@ -46,63 +45,12 @@ userSchema.methods.toJSON = function() {
 }
     
 userSchema.plugin(require('mongoose-autopopulate'));
+userSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser único' })
 
 let User = mongoose.model('User', userSchema);
-
-let Recruiter = User.discriminator('Recruiter', new mongoose.Schema({
-    corporationName: {
-        type: String
-    },
-    descriptionCorporate: {
-        
-    },
-    international: {
-        type: Boolean
-    },
-    recruiterName: {
-        
-    },
-    recruiterSurname1: {
-        
-    },
-    recruiterSurname2: {
-        
-    },
-    contactData: {
-        
-    } 
-})
-)
-
-let Worker = User.discriminator('Worker', new mongoose.Schema({
-    name: {
-        type: String
-    },
-    surname1: {
-        
-    },
-    surname2: {
-        
-    },
-    sex: {
-        
-    },
-    age: {
-        
-    },
-    DNI: {
-        
-    },
-    contactData: {
-        
-    }})
-)
-
 let Admin = User.discriminator('Admin', new mongoose.Schema({}));
     
 module.exports = {
     User,
-    Admin,
-    Worker,
-    Recruiter
+    Admin
 };

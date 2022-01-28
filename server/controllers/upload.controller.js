@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-const uploadService = require('../services/uploadService');
+const uploadService = require('../services/upload.service');
 const fs = require('fs');
 const path = require('path');
 

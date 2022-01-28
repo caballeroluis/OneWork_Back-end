@@ -1,5 +1,5 @@
-const { deleteFolder, deleteFile } = require('../utils/filesUtil');
-const { User } = require('../models/user');
+const { deleteFolder, deleteFile } = require('../utils/files.util');
+const { User } = require('../models/user.model');
 
 
 let modifyImg = async function(req) {
@@ -19,11 +19,7 @@ let modifyImg = async function(req) {
         return user;
     } catch(error) {
         deleteFolder(id, type);
-        if(!error.status) {
-            throw {status: 500, message: 'Internal server error'};
-        } else {
-            throw error;
-        } 
+        throw error
     }
 }
 
@@ -35,11 +31,7 @@ let getImg = async function(id) {
 
         return user.img;
     } catch(error) {
-        if(!error.status) {
-            throw {status: 500, message: 'Internal server error'};
-        } else {
-            throw error;
-        } 
+        throw error;
     }
 }
 
@@ -57,11 +49,7 @@ let deleteImg = async function(id) {
 
         return user;
     } catch(error) {
-        if(!error.status) {
-            throw {status: 500, message: 'Internal server error'};
-        } else {
-            throw error;
-        } 
+        throw error;
     }
 }
 

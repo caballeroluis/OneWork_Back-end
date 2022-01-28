@@ -1,9 +1,9 @@
 const express = require('express');
 const { check } = require('express-validator');
 
-const userController = require('../controllers/userController');
-const { verifyToken } = require('../middlewares/verifyAuthMiddleware');
-const { verifyRoleInitial } = require('../middlewares/verifyRoleMiddleware');
+const userController = require('../controllers/user.controller');
+const { verifyToken } = require('../middlewares/verifyAuth.middleware');
+const { verifyRoleInitial } = require('../middlewares/verifyRole.middleware');
 
 
 const router = express.Router();

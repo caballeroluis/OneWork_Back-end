@@ -1,8 +1,8 @@
 const express = require('express');
 const { check } = require('express-validator');
 
-const verifyToken = require('../middlewares/verifyAuthMiddleware');
-const offerController = require('../controllers/offerController');
+const verifyToken = require('../middlewares/verifyAuth.middleware');
+const offerController = require('../controllers/offer.controller');
 
 const router = express.Router()
 
@@ -10,6 +10,12 @@ router.post(
     '/worker/:idWorker/recruiter/:idRecruiter', 
     verifyToken, 
     offerController.createOffer
+)
+
+router.get(
+    '/', 
+    verifyToken,
+    offerController.getOffer
 )
 
 router.patch(

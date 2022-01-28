@@ -1,9 +1,9 @@
 const express = require('express');
 const { check } = require('express-validator');
 
-const verifyToken = require('../middlewares/verifyAuthMiddleware');
-const uploadController = require('../controllers/uploadController');
-const uploadHandler = require('../middlewares/uploadFileMiddleware')
+const verifyToken = require('../middlewares/verifyAuth.middleware');
+const uploadController = require('../controllers/upload.controller');
+const uploadHandler = require('../middlewares/uploadFile.middleware')
 const router = express.Router();
 
 router.patch(

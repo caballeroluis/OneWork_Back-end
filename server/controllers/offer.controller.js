@@ -1,5 +1,5 @@
-let offerService = require('../services/offerService');
-let Offer = require('../models/offer');
+let offerService = require('../services/offer.service');
+let Offer = require('../models/offer.model');
 const _ = require('underscore');
 
 exports.createOffer = async (req, res, next) => {
@@ -18,6 +18,21 @@ exports.createOffer = async (req, res, next) => {
         next(error)
     }
     
+}
+
+exports.getOffer = async (req, res, next) => {
+
+    const id = req.params.id;
+
+    try {
+        let offer = await offerService.getOffer(id);
+        if(!offer) throw 'Hola'
+        return res.json(
+            offer
+        )
+    } catch(error) {
+        next(error)
+    }
 }
 
 exports.updateOffer = async (req, res, next) => {
@@ -170,7 +185,7 @@ exports.deleteOffer = async (req, res, next) => {
     try {
 
         let offer = await offerService.deleteOffer(id, type);
-
+        if(!offer) throw 'Hola'
         res.json({
             ok: true,
             offer

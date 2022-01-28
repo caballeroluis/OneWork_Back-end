@@ -17,6 +17,7 @@ let fileFilter = function (req, file, cb) {
 
     let validExtensions = ['png', 'jpg', 'gif', 'jpeg'];
     let fileMimeExtension = file.mimetype.split('/')[1];
+
     let extensionSplitted = file.originalname.split('.');
     let extension = extensionSplitted[extensionSplitted.length - 1]
 
@@ -41,14 +42,11 @@ let fileFilter = function (req, file, cb) {
 
 let uploadHandler = async function(req, res, next) {
     multer({storage: storage, fileFilter: fileFilter}).single('image')(req, res, function(error){
-        if (error) {
-            return res.status(500)
-                      .json({
-                        ok: false,
-                        message: error.message
+        
+        if (error) next(error);
 
-                      })
-        } else if (!req.file) {
+
+        if (!req.file) {
 
             return res.status(400)
                       .json({
