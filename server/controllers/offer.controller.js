@@ -10,26 +10,19 @@ exports.createOffer = async (req, res, next) => {
     try {
         let offer = await offerService.createOffer(idWorker, idRecruiter, body);
 
-        return res.json({
-            ok: true,
-            offer
-        })
+        return res.json(offer)
     } catch(error) {
         next(error)
     }
     
 }
 
-exports.getOffer = async (req, res, next) => {
-
-    const id = req.params.id;
+exports.getOffers = async (req, res, next) => {
 
     try {
-        let offer = await offerService.getOffer(id);
-        if(!offer) throw 'Hola'
-        return res.json(
-            offer
-        )
+        let offer = await offerService.getOffers();
+        if(!offer) throw {status: 400, message: 'This offer doesn\'t exist'};
+        return res.json(offer)
     } catch(error) {
         next(error)
     }
@@ -42,11 +35,7 @@ exports.updateOffer = async (req, res, next) => {
 
     try {   
         let offer = await offerService.updateOffer(id, body);
-
-        res.json({
-            ok: true,
-            offer
-        })
+        res.json({offer, message: 'The offer was successful saved'})
     } catch(error) {
         next(error)
     }
@@ -56,125 +45,18 @@ exports.updateOffer = async (req, res, next) => {
 
 exports.changeStateOffer = async (req, res, next) => {
 
-    let idOffer = req.params.id;
-    let type = req.body.status;
+    let id = req.params.id;
+    let status = req.body.status;
     
-    Offer.findById(idOffer, (errorOffer, offerDB) => {
+    try {
+        let offer = await offerService.changeStateOffer(id, status);
 
-        if(!offerDB) {    
-            return res.status(400).json({
-                ok: false,
-                err: {
-                    message: 'This offer doesn\'t exist'
-                }
-            })
-        }
+        res.json({offer, message: 'State changed'})
 
-        if(errorOffer) {
-            return res.status(500).json({
-                ok: false,
-                errWorker
-            })
-        }
+    } catch(error) {
+        next(error)
+    }
 
-        if(offerDB.status === 'eliminated') {
-            return res.status(403).json({
-                ok: false,
-                err: {
-                    message: 'The offer was eliminated and cannot be modified'
-                }
-            })
-        }
-
-        offerDB.status = type;
-
-        switch(type) {
-
-            case 'created':
-                // Comprobar cosas
-                offerDB.save((errOffer, offerSaved) => {
-                    if(errOffer) {
-                        return res.status(500).json({
-                            ok: false,
-                            errOffer
-                        })
-                    }
-
-                    res.json({
-                        ok: true,
-                        offer: offerSaved
-                    })
-                })
-
-                console.log('hola5');
-            break;
-            case 'completed':
-                // Comprobar cosas
-                offerDB.save((errOffer, offerSaved) => {
-                    if(errOffer) {
-                        return res.status(500).json({
-                            ok: false,
-                            errOffer
-                        })
-                    }
-
-                    res.json({
-                        ok: true,
-                        offer: offerSaved
-                    })
-                })
-
-                console.log('hola');
-
-            break;
-            case 'videoconferenceSet':
-                // Comprobar cosas
-                offerDB.save((errOffer, offerSaved) => {
-                    if(errOffer) {
-                        return res.status(500).json({
-                            ok: false,
-                            errOffer
-                        })
-                    }
-
-                    res.json({
-                        ok: true,
-                        offer: offerSaved
-                    })
-                })
-
-                console.log('hola4');
-    
-            break;
-            case 'accepted':
-                // Comprobar cosas
-                offerDB.save((errOffer, offerSaved) => {
-                    if(errOffer) {
-                        return res.status(500).json({
-                            ok: false,
-                            errOffer
-                        })
-                    }
-
-                    res.json({
-                        ok: true,
-                        offer: offerSaved
-                    })
-                })
-                console.log('hola3');
-
-            break;
-            default:
-                res.status(400).json({
-                    ok: false,
-                    err: {
-                        message: 'The status provided is not correct'
-                    }
-                })
-            break;
-        }    
-
-    })
 }
 
 // TODO: Eliminar también la oferta en los usuarios y completamente, o cambiar de su estado.
@@ -183,13 +65,9 @@ exports.deleteOffer = async (req, res, next) => {
     const id = req.params.id;
     let type = 'eliminated';
     try {
-
         let offer = await offerService.deleteOffer(id, type);
-        if(!offer) throw 'Hola'
-        res.json({
-            ok: true,
-            offer
-        })
+        if(!offer) throw {status: 400, message: 'This offer doesn\'t exist'};
+        res.json(offer)
     } catch (error) {
         next(error)
     }

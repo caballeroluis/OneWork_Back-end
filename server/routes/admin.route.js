@@ -6,36 +6,46 @@ const offerController = require('../controllers/offer.controller');
 
 const router = express.Router()
 
-router.post(
-    '/worker/:idWorker/recruiter/:idRecruiter', 
-    verifyToken, 
-    offerController.createOffer
-)
-
 router.get(
-    '/', 
-    verifyToken,
-    offerController.getOffers
+    '/offers', 
+    verifyToken, 
+
 )
 
 router.patch(
-    '/:id', 
+    '/offers/:id', 
     verifyToken,
-    offerController.changeStateOffer
+
 )
 
-
 router.put(
-    '/:id', 
+    '/offers/:id', 
     verifyToken,
-    offerController.updateOffer
+
 )
 
 router.delete(
-    '/:id', 
+    '/offers/:id', 
     verifyToken,
-    offerController.deleteOffer
+
 )
 
-module.exports = router;
+router.get(
+    '/users', 
+    verifyToken,
 
+)
+
+router.put(
+    '/users/:id', 
+    verifyToken,
+)
+
+router.delete(
+    '/users/:id', 
+    verifyToken,
+
+)
+
+
+module.exports = router;

@@ -4,14 +4,12 @@ const fs = require('fs');
 const path = require('path');
 
 exports.modifyImg = async (req, res, next) => {
-
+    const fileName = req.file.filename;
+    const { id, type } = req.params;
     try {
-        let user = await uploadService.modifyImg(req);
+        let user = await uploadService.modifyImg(fileName, id, type);
 
-        return res.json({
-            ok: true,
-            user
-        })
+        return res.json(user)
 
     } catch(error) {
         next(error)
@@ -44,12 +42,8 @@ exports.deleteImg = async (req, res, next) => {
     let id = req.params.id;
 
     try {
-
-        let user = await uploadService.deleteImg(id);
-
+        await uploadService.deleteImg(id);
         res.json({
-            ok: true,
-            user,
             message: 'The photo was successfully deleted'
         })
     } catch(error) {

@@ -1,7 +1,7 @@
 const { User } = require('./user.model');
 const mongoose = require('mongoose');
 
-let Recruiter = User.discriminator('Recruiter', new mongoose.Schema({
+let Recruiter = User.discriminator('recruiter', new mongoose.Schema({
     corporationName: {
         type: String
     },
@@ -25,5 +25,7 @@ let Recruiter = User.discriminator('Recruiter', new mongoose.Schema({
     } 
     })
 )
+
+
 
 module.exports = Recruiter;

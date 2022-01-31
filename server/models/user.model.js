@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
-let options = {collection: 'users', discriminatorKey: '_type'};
+let options = {collection: 'users', discriminatorKey: 'role'};
 
 let userSchema = new mongoose.Schema({
 
@@ -22,13 +22,13 @@ let userSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    state: {
+    active: {
         type: Boolean,
         default: true
     },
     offers: [{
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Offer',
+        ref: 'offer',
         autopopulate: true
     }]
 }, options)
@@ -47,8 +47,8 @@ userSchema.methods.toJSON = function() {
 userSchema.plugin(require('mongoose-autopopulate'));
 userSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser único' })
 
-let User = mongoose.model('User', userSchema);
-let Admin = User.discriminator('Admin', new mongoose.Schema({}));
+let User = mongoose.model('user', userSchema);
+let Admin = User.discriminator('admin', new mongoose.Schema({}));
     
 module.exports = {
     User,

@@ -46,7 +46,7 @@ class MultipleValidationDataError extends Error {
       Error.captureStackTrace(this, this.constructor);
         
       this.name = this.constructor.name
-      this.message = []
+      this.message = message
       this.status = status
     }
   

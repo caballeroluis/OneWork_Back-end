@@ -18,12 +18,6 @@ router.post(
 
 router.post(
   '/logout',
-  [
-    check('email', 'Enter a valid email').isEmail(),
-    check('password', 'Password must be a minimum of 6 characters').isLength({
-      min: 6,
-    }),
-  ],
   loginController.userLogin
 );
 

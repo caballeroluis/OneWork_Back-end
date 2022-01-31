@@ -1,7 +1,7 @@
 const { User } = require('./user.model');
 const mongoose = require('mongoose');
 
-let Worker = User.discriminator('Worker', new mongoose.Schema({
+let Worker = User.discriminator('worker', new mongoose.Schema({
     name: {
         type: String
     },

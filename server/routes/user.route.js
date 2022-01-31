@@ -21,14 +21,25 @@ router.post(
   userController.createUser
 );
 
-/* PUT /api/users  */
-
+/* PUT /api/users/:id  */
 router.put(
   '/:id',
   userController.updateUser
 )
 
-/* GET /api/users/:email  */
+/* PATCH /api/users/:id  */
+router.patch(
+  '/:id',
+  userController.changePass
+  )
+  
+/* GET /api/users/:id  */
+router.get(
+  '/',
+  userController.getUsers
+)
+
+/* GET /api/users/:id  */
 
 router.get(
   '/:id',

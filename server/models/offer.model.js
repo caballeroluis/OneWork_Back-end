@@ -39,16 +39,21 @@ let offerSchema = new Schema({
         default: 'created',
         enum: validStatus
     },
+    abandoned: {
+        type: Boolean,
+        default: false
+    },
     workerAssigned: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Worker',
-        autopopulate: true
+        ref: 'worker'
     },
     recruiterAssigned: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Recruiter',
-        autopopulate: true
+        ref: 'recruiter',
+        required: true
     }
-})
+});
 
-module.exports = mongoose.model('Offer', offerSchema);
+
+module.exports = mongoose.model('offer', offerSchema);
+
