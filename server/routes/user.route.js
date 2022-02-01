@@ -2,8 +2,8 @@ const express = require('express');
 const { check } = require('express-validator');
 
 const userController = require('../controllers/user.controller');
-const { verifyToken } = require('../middlewares/verifyAuth.middleware');
-const { verifyRoleInitial } = require('../middlewares/verifyRole.middleware');
+const verifyToken = require('../middlewares/verifyAuth.middleware');
+const { verifyOwnId, verifyOwnIdOrRecruiter } = require('../middlewares/verifyRole.middleware');
 
 
 const router = express.Router();
@@ -21,19 +21,15 @@ router.post(
   userController.createUser
 );
 
-/* PUT /api/users/:id  */
-router.put(
-  '/:id',
-  userController.updateUser
-)
-
 /* PATCH /api/users/:id  */
 router.patch(
   '/:id',
-  userController.changePass
+  verifyToken,
+  verifyOwnId,
+  userController.updateUser
   )
   
-/* GET /api/users/:id  */
+/* GET /api/users?role=xxxx  */
 router.get(
   '/',
   userController.getUsers
@@ -43,12 +39,16 @@ router.get(
 
 router.get(
   '/:id',
+  verifyToken,
+  verifyOwnIdOrRecruiter,
   userController.getUserByID
 )
 
 /* DELETE /api/users  */
 router.delete(
   '/:id',
+  verifyToken,
+  verifyOwnId,
   userController.deleteUser
 );
 

@@ -29,32 +29,12 @@ exports.updateUser = async (req, res, next) => {
         return res.status(400).json({ errors: errors.array(true)[0] });
     }
     const body = req.body;
-    const role = body.role;
+    const role = req.user.role;
     const id = req.params.id;
+
     try {
         let user = await userService.updateUser(body, id, role);
         return res.json(user);
-
-    } catch(error) {
-        next(error)
-    }
-}
-
-exports.changePass = async (req, res, next) => {
-
-    const errors = validationResult(req);
-    
-    if (!errors.isEmpty()) {
-
-        return res.status(400).json({ errors: errors.array(true)[0] });
-    }
-
-    const id = req.params.id;
-    const newPass = req.body.password;
-
-    try {
-        await userService.changePass(id, newPass);
-        return res.json({message: 'The password has been changed'});
 
     } catch(error) {
         next(error)
@@ -70,7 +50,9 @@ exports.getUsers = async (req, res, next) => {
     }
 
     let role;
+
     if(req.query.role) role = {role: req.query.role};
+    else role = {};
 
     try {
         let user = await userService.getUsers(role);
@@ -102,11 +84,9 @@ exports.deleteUser = async (req, res, next) => {
     let id = req.params.id;
 
     try {
-        await userService.deleteUser(id);
+        let user = await userService.deleteUser(id);
 
-        return res.json({
-            message: 'The user has been deleted'
-        });
+        return res.json(user);
 
     } catch(error) {
         next(error)

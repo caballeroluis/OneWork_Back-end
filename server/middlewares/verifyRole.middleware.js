@@ -34,7 +34,7 @@ let verifyOwnIdOrRecruiter = (req, res, next) => {
     let user = req.user;
 
     if (idProvided === user._id ||
-        user.role === 'RECRUITER_ROLE') {
+        user.role === 'recruiter') {
 
         next();
 
@@ -50,7 +50,7 @@ let verifyAdmin = (req, res, next) => {
 
     let user = req.user;
 
-    if (user.role !== 'ADMIN_ROLE') {
+    if (user.role !== 'admin') {
         return res.status(403).json({
             message: 'You are not authorized to perform this action'
         });
@@ -63,7 +63,7 @@ let verifyWorker = (req, res, next) => {
 
     let user = req.user;
 
-    if (user.role !== 'WORKER_ROLE') {
+    if (user.role !== 'worker') {
 
         return res.status(403).json({
             message: 'You are not authorized to perform this action'
@@ -81,7 +81,7 @@ let verifyRecruiter = (req, res, next) => {
 
     let user = req.user;
 
-    if (user.role !== 'RECRUITER_ROLE') {
+    if (user.role !== 'recruiter') {
         return res.status(403).json({
             message: 'You are not authorized to perform this action'
         });
@@ -94,6 +94,7 @@ let verifyRecruiter = (req, res, next) => {
 module.exports = {
     verifyOwnId,
     verifyOwnIdOrRecruiter,
+    verifyState,
     verifyAdmin,
     verifyWorker,
     verifyRecruiter

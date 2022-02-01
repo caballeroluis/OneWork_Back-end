@@ -7,10 +7,9 @@ const crypto = require('crypto');
 
 
 let createUser = async function(email, password, body) {
-    
     try {
         let user = await User.findOne({ email });
-        if (user) throw {status: 400, message: 'User already exists'};
+        if (user) throw {status: 400, message: 'Email already exists on database'};
 
         if (body.role === 'worker') {
             user = new Worker(body)
@@ -34,41 +33,34 @@ let createUser = async function(email, password, body) {
 }
 
 let updateUser = async function(body, id, role) {
-
-    let user;
-    
     try {
-        if (role === 'worker') {
-            user = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true})
-                               .where({active: true});
+        
+        let user;
+
+        if(body.email) {
+            user = await User.findOne({email: body.email});
+            if (user) throw {status: 400, message: 'This email exists, please change the email provided'};
+        }
+
+        if(body.password) {
+            //TODO: cambiar salt.
+            const salt = await bcryptjs.genSalt(11);
+            body.password = await bcryptjs.hash(body.password, salt);
+        }
+
+        if(role === 'worker') {
+            user  = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true})
+                                .where({active: true});
         } else if(role === 'recruiter') {
-            user = await Recruiter.findByIdAndUpdate(id, body, {new: true, runValidators: true})
-                                  .where({active: true});
+            user  = await Recruiter.findByIdAndUpdate(id, body, {new: true, runValidators: true})
+                                   .where({active: true});        
         } else {
             throw {status: 400, message: 'The role of the user is incorrect'}
         }
-
         if (!user) throw {status: 400, message: 'User doesn\'t exist'};
 
         return user;
-    } catch(error) {
-        throw error;
-    }
-}
 
-let changePass = async function(id, newPass) {
-
-    try {
-        let user = await User.findById(id)
-                             .where({active: true});
-        if (!user) throw {status: 400, message: 'User doesn\'t exist'};
-
-    const salt = await bcryptjs.genSalt(11);
-    user.password = await bcryptjs.hash(newPass, salt);
-
-    await user.save();
-
-    return user;
     } catch(error) {
         throw error;
     }
@@ -79,6 +71,7 @@ let getUsers = async function(role = {}) {
         let user = await User.find(role)
                              .where({role:{$ne: 'admin'}})
                              .where({active: true})
+                             .select('_id name creationDate img corporationName descriptionCorporate recruiterName -offers')
         if (!user) throw {status: 400, message: `There\'s no ${role} users on database`};
 
         return user;
@@ -88,7 +81,6 @@ let getUsers = async function(role = {}) {
 }
 
 let getUserID = async function(id) {
-
     try {
 
         let user = await User.findById(id)
@@ -140,7 +132,6 @@ let deleteUser = async function(id) {
 module.exports = {
     createUser,
     updateUser,
-    changePass,
     getUsers,
     getUserID,
     deleteUser

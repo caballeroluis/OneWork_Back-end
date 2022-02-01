@@ -2,6 +2,7 @@ const express = require('express');
 const { check } = require('express-validator');
 
 const verifyToken = require('../middlewares/verifyAuth.middleware');
+const verifyOwnId = require('../middlewares/verifyRole.middleware')
 const offerController = require('../controllers/offer.controller');
 
 const router = express.Router()
