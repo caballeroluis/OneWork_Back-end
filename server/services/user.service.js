@@ -121,7 +121,7 @@ let deleteUser = async function(id) {
             }
         }
 
-        user.state = false;
+        user.active = false;
         user.email = user.email + '-' 
                      + crypto.randomBytes(12).toString('hex') + '-' 
                      + new Date().getMilliseconds();
