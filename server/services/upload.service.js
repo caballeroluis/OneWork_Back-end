@@ -23,7 +23,6 @@ let modifyImg = async function(fileName, id, type) {
 }
 
 let getImg = async function(id) {
-
     try {
         let user = await User.findById(id)
                              .where({active: true});
@@ -36,7 +35,6 @@ let getImg = async function(id) {
 }
 
 let deleteImg = async function(id) {
-
     try {
         let user = await User.findById(id)
                              .where({active: true});

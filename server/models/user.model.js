@@ -28,8 +28,7 @@ let userSchema = new mongoose.Schema({
     },
     offers: [{
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'offer',
-        autopopulate: true
+        ref: 'offer'
     }]
 }, options)
 
@@ -44,8 +43,7 @@ userSchema.methods.toJSON = function() {
     return userObject;
 }
     
-userSchema.plugin(require('mongoose-autopopulate'));
-userSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser único' })
+userSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser único' });
 
 let User = mongoose.model('user', userSchema);
 let Admin = User.discriminator('admin', new mongoose.Schema({}));

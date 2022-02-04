@@ -8,11 +8,9 @@ exports.modifyImg = async (req, res, next) => {
     const { id, type } = req.params;
     try {
         let user = await uploadService.modifyImg(fileName, id, type);
-
-        return res.json(user)
-
+        return res.json(user);
     } catch(error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -25,7 +23,6 @@ exports.getImg = async (req, res, next) => {
 
         let img = await uploadService.getImg(id);
         let pathFile = path.resolve(__dirname, `../../uploads/users/${ id }/${ img }`);
-
         if (fs.existsSync(pathFile) && img) {
             res.sendFile(pathFile);
         } else {
@@ -33,7 +30,7 @@ exports.getImg = async (req, res, next) => {
             res.sendFile(nofile);
         }
     } catch(error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -43,11 +40,9 @@ exports.deleteImg = async (req, res, next) => {
 
     try {
         await uploadService.deleteImg(id);
-        res.json({
-            message: 'The photo was successfully deleted'
-        })
+        res.json({});
     } catch(error) {
-        next(error)
+        next(error);
     }
 }
 

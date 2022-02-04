@@ -49,9 +49,22 @@ let getOffers = async function() {
     try {
         let offer = await Offer.find({})
                                .where({abandoned: false})
-                               .populate({path:'workerAssigned', select: '_id name creationDate img -offers'})
-                               .populate({path:'recruiterAssigned', select: '_id corporationName descriptionCorporate recruiterName -offers'})
+                               .populate({path:'workerAssigned', select: '_id name creationDate img', select: '-offers'})
+                               .populate({path:'recruiterAssigned', select: '_id corporationName descriptionCorporate recruiterName', select: '-offers'})
+        if(!offer) throw {status: 400, message: 'There\'s no offers on database'}
+        return offer;
+    } catch(error) {
+        throw error;
+    }
+}
 
+let getOfferByID = async function(id) {
+
+    try {
+        let offer = await Offer.findById(id)
+                               .where({abandoned: false})
+                               .populate({path:'workerAssigned', select: '_id name creationDate img', select: '-offers'})
+                               .populate({path:'recruiterAssigned', select: '_id corporationName descriptionCorporate recruiterName', select: '-offers'})
         if(!offer) throw {status: 400, message: 'There\'s no offers on database'}
         return offer;
     } catch(error) {
@@ -71,6 +84,11 @@ let changeStateOffer = async function(id, status) {
 }
 let updateOffer = async function(id, body) {
     try {
+        if(body.workerAssigned) {
+            let worker = await Worker.findById(body.workerAssigned);
+            if(!worker) throw {status: 400, message: 'The worker introduced doesn\'t exist'};
+        }
+
         let offer = await Offer.findByIdAndUpdate(id, body, {new: true, runValidators: true})
                                .where({abandoned: false});
         if(!offer) throw {status: 400, message: 'This offer doesn\'t exist'};
@@ -80,16 +98,11 @@ let updateOffer = async function(id, body) {
     }
 }
 
-let deleteOffer = async function(id, type) {
+let deleteOffer = async function(id) {
     try {
-        let offer = await Offer.findById(id)
+        let offer = await Offer.findByIdAndUpdate(id, {abandoned: true}, {new: true, runValidators: true})
                                .where({abandoned: false});
         if(!offer) throw {status: 400, message: 'This offer doesn\'t exist'};
-    
-        offer.status = type;
-    
-        await offer.save();
-
         return offer;
     } catch(error) {
         throw error;
@@ -100,6 +113,7 @@ let deleteOffer = async function(id, type) {
 module.exports = {
     createOffer,
     getOffers,
+    getOfferByID,
     changeStateOffer,
     updateOffer,
     deleteOffer

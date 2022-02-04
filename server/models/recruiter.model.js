@@ -27,5 +27,4 @@ let Recruiter = User.discriminator('recruiter', new mongoose.Schema({
 )
 
 
-
 module.exports = Recruiter;

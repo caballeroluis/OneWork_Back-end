@@ -14,11 +14,11 @@ let verifyOwnId = (req, res, next) => {
 }
 
 
-let verifyState = (req, res, next) => {
+let verifyOfferAsigned = (req, res, next) => {
+    let offers = req.user.offers;
+    let offerToChange = req.params.id;
 
-    let user = req.user;
-
-    if (idProvided === user._id) {
+    if(offers.includes(offerToChange)) {
         next();
     } else {
         return res.status(403).json({
@@ -26,10 +26,11 @@ let verifyState = (req, res, next) => {
         });
     }
 
+    
+
 }
 
 let verifyOwnIdOrRecruiter = (req, res, next) => {
-
     let idProvided = req.params.id;
     let user = req.user;
 
@@ -94,8 +95,8 @@ let verifyRecruiter = (req, res, next) => {
 module.exports = {
     verifyOwnId,
     verifyOwnIdOrRecruiter,
-    verifyState,
     verifyAdmin,
+    verifyOfferAsigned,
     verifyWorker,
     verifyRecruiter
 };

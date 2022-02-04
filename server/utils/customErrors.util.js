@@ -68,3 +68,11 @@ class InsufficientPermisionError extends Error {
     return this.status
   }
 }
+
+module.exports = {
+  MultipleValidationDataError,
+  InsufficientPermisionError,
+  ErrorBDEntityNotFound,
+  ErrorBDEntityFound,
+  ValidationDataError
+}

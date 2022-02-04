@@ -1,6 +1,7 @@
 const { User } = require('../models/user.model');
 const Worker = require('../models/worker.model');
 const Recruiter = require('../models/recruiter.model');
+const { deleteFolder, deleteFile } = require('../utils/files.util');
 
 const bcryptjs = require('bcryptjs');
 const crypto = require('crypto');
@@ -43,7 +44,7 @@ let updateUser = async function(body, id, role) {
         }
 
         if(body.password) {
-            //TODO: cambiar salt.
+            //TODO: cambiar salt y además se debería cambiar la contraseña del Token
             const salt = await bcryptjs.genSalt(11);
             body.password = await bcryptjs.hash(body.password, salt);
         }
@@ -68,10 +69,11 @@ let updateUser = async function(body, id, role) {
 
 let getUsers = async function(role = {}) {
     try {
-        let user = await User.find(role)
+        let user = await User.find({})
+                             .where({role})
                              .where({role:{$ne: 'admin'}})
                              .where({active: true})
-                             .select('_id name creationDate img corporationName descriptionCorporate recruiterName -offers')
+                             .select('_id name creationDate img corporationName descriptionCorporate recruiterName');
         if (!user) throw {status: 400, message: `There\'s no ${role} users on database`};
 
         return user;
@@ -82,9 +84,9 @@ let getUsers = async function(role = {}) {
 
 let getUserID = async function(id) {
     try {
-
         let user = await User.findById(id)
-                             .where({active: true});
+                             .where({active: true})
+                             .populate('offers');
 
         if (!user) throw {status: 400, message: 'User doesn\'t exist'};
 
@@ -95,15 +97,16 @@ let getUserID = async function(id) {
 }
 
 let deleteUser = async function(id) {
-
     try {
         let user = await User.findById(id)
+                             .populate('offers')
                              .where({active: true});
         if (!user) throw {status: 400, message: 'User doesn\'t exist'};
         
         if(user.role === 'worker') {
             for(let offer of user.offers) {
                 offer.workerAssigned = undefined;
+                offer.status = 'created';
                 await offer.save();
             }
         } else if(user.role === 'recruiter') {
@@ -112,7 +115,9 @@ let deleteUser = async function(id) {
                 await offer.save();
             }
         }
-
+        user.img = undefined;
+        deleteFile(id, 'users', user.img);
+        deleteFolder(id, 'users');
         user.active = false;
         user.email = user.email + '-' 
                      + crypto.randomBytes(12).toString('hex') + '-' 

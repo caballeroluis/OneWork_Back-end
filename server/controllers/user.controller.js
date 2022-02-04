@@ -14,9 +14,9 @@ exports.createUser = async (req, res, next) => {
 
     try { 
         let user = await userService.createUser(email, password, body);
-        res.json(user)
+        res.json(user);
     } catch (error) {
-        next(error)
+        next(error);
     }  
 }
 
@@ -37,7 +37,7 @@ exports.updateUser = async (req, res, next) => {
         return res.json(user);
 
     } catch(error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -49,18 +49,14 @@ exports.getUsers = async (req, res, next) => {
         return res.status(400).json({ errors: errors.array(true)[0] });
     }
 
-    let role;
-
-    if(req.query.role) role = {role: req.query.role};
-    else role = {};
-
+    let role = req.query.role;
+    
     try {
         let user = await userService.getUsers(role);
-        console.log(user);
         return res.json(user);
 
     } catch(error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -69,13 +65,10 @@ exports.getUserByID = async (req, res, next) => {
     const id = req.params.id;
 
     try {
-        
         let user = await userService.getUserID(id);
-
         return res.json(user);
-
     } catch(error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -84,11 +77,9 @@ exports.deleteUser = async (req, res, next) => {
     let id = req.params.id;
 
     try {
-        let user = await userService.deleteUser(id);
-
-        return res.json(user);
-
+        await userService.deleteUser(id);
+        return res.json({});
     } catch(error) {
-        next(error)
+        next(error);
     }
 }

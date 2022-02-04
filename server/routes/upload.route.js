@@ -14,7 +14,6 @@ router.patch(
     verifyOwnId,
     uploadHandler,
     uploadController.modifyImg
-
 )
 
 router.get(

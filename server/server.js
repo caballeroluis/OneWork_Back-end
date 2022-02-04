@@ -15,7 +15,7 @@ mongoose.connect('mongodb://localhost:27017/OneWork', { useNewUrlParser: true },
 })
 
 app.use('/api/users', require('./routes/user.route'));
-app.use('/api/session/', require('./routes/session.route'));
+app.use('/api/session', require('./routes/session.route'));
 app.use('/api/uploads', require('./routes/upload.route'));
 app.use('/api/offers', require('./routes/offer.route'));
 app.use('/api/admin', require('./routes/admin.route'));

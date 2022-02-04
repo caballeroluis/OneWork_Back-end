@@ -12,8 +12,8 @@ let userLogin = async function(email, password) {
         const correctPassword = await bcryptjs.compare(password, user.password);
         
         if(!correctPassword) throw {status: 400, message: 'Password or user is incorrect'};
-  
-        user = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName']);
+
+        user = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'offers']);
 
         return user;
     } catch(error) {
