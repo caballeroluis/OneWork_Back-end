@@ -10,16 +10,9 @@ let verifyToken = (req, res, next) => {
         return res.status(400).json({message: 'The token is not provided or is invalid'});
     }
     
-
-
     jwt.verify(token, process.env.SECRET, (error, decoded) => {
-
-        if (error) {
-            return res.status(401).json({error});
-        }
-
-        req.user = decoded.user;
-
+        if (error) return res.status(401).json({error});
+        req.user = decoded;
         next();
 
     });

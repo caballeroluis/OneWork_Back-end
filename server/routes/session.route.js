@@ -1,8 +1,10 @@
 const express = require('express');
-const router = express.Router();
+
 const authController = require('../controllers/auth.controller');
 const { check } = require('express-validator');
+const verifiyToken = require('../middlewares/verifyAuth.middleware');
 
+const router = express.Router();
 
 /* POST /api/users/login  */
 router.post(
@@ -17,8 +19,14 @@ router.post(
 );
 
 router.post(
-  '/logout',
-  authController.userLogout
+    '/refreshToken',
+    authController.letsRefreshToken
+);
+
+router.post(
+    '/logout',
+    verifiyToken,
+    authController.userLogout
 );
 
 module.exports = router;

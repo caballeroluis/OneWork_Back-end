@@ -1,6 +1,27 @@
 const adminService = require('../services/admin.service');
 const { validationResult } = require('express-validator');
 
+/* Seasson */
+
+exports.deleteRefreshToken = async function(req, res, next) {
+    
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+
+        return res.status(400).json({ errors: errors.array(true)[0] });
+    }
+
+    let id = req.params.id;
+
+    try {
+        await adminService.deleteRefreshToken(id);
+        return res.json({}); 
+    } catch(error) {
+        next(error);
+    }
+}
+
 /* Offers */
 
 exports.getOffersAdmin = async function(req, res, next) {
@@ -16,7 +37,7 @@ exports.getOffersAdmin = async function(req, res, next) {
         let offer = await adminService.getOffersAdmin();
         return res.json(offer);
     } catch(error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -34,7 +55,7 @@ exports.getOfferByIDAdmin = async (req, res, next) => {
         let offer = await adminService.getOfferByIDAdmin(id);
         return res.json(offer);
     } catch(error) {
-        next(error)
+        next(error);
     }
 }
 

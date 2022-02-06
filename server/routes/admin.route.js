@@ -7,6 +7,17 @@ const { verifyAdmin } = require('../middlewares/verifyRole.middleware');
 
 const router = express.Router()
 
+/* Session */
+
+router.delete(
+    '/session/:id', 
+    verifyToken,
+    verifyAdmin,
+    adminController.deleteRefreshToken
+)
+
+/* Offers */
+
 router.get(
     '/offers', 
     verifyToken,
@@ -39,6 +50,8 @@ router.delete(
     adminController.deleteOfferAdmin
 )
 
+/* Users */
+
 router.get(
     '/users', 
     verifyToken,
@@ -64,6 +77,8 @@ router.delete(
     verifyToken,
     verifyAdmin
 )
+
+/* Uploads */
 
 router.delete(
     '/uploads/image/:id', 

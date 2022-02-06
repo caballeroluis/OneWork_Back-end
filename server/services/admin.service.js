@@ -3,7 +3,22 @@ const _ = require('underscore');
 const Worker = require('../models/worker.model');
 const Recruiter = require('../models/recruiter.model');
 const Offer = require('../models/offer.model');
+const refreshTokenModel = require('../models/refreshToken.model');
+
 const { deleteFolder, deleteFile } = require('../utils/files.util');
+
+let deleteRefreshToken = async function(id) {
+    try {
+        let refreshToken = await refreshTokenModel.findOne({user: id});
+        if (!refreshToken) throw {status: 403, message: 'This refreshToken doesn\'t exist'};
+        refreshToken.token = undefined;
+        await refreshToken.save();
+        return;
+    } catch(error) {
+        throw error;
+    }
+
+}
 
 let getOffersAdmin = async function() {
     try {
@@ -159,6 +174,7 @@ let deleteImgAdmin = async function(id) {
 }
 
 module.exports = {
+    deleteRefreshToken,
     getOffersAdmin,
     getOfferByIDAdmin,
     changeStateOfferAdmin,
