@@ -51,7 +51,7 @@ exports.getUsers = async (req, res, next) => {
     
     let role;
     
-    if(role){
+    if(req.query.role){
         role = {$and: [{role: req.query.role}, {role:{$ne: 'admin'}}]};
     } else {
         role = {};
