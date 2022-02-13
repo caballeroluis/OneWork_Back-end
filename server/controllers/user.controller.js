@@ -48,8 +48,14 @@ exports.getUsers = async (req, res, next) => {
 
         return res.status(400).json({ errors: errors.array(true)[0] });
     }
-
-    let role = req.query.role;
+    
+    let role;
+    
+    if(role){
+        role = {$and: [{role: req.query.role}, {role:{$ne: 'admin'}}]};
+    } else {
+        role = {};
+    }
 
     try {
         let user = await userService.getUsers(role);

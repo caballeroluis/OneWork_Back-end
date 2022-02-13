@@ -58,6 +58,7 @@ let getOffers = async function() {
     try {
         let offer = await Offer.find({})
                                .where({abandoned: false})
+                               .select('-abandoned')
                                .populate({path:'workerAssigned', select: '_id name creationDate img', select: '-offers -active'})
                                .populate({path:'recruiterAssigned', select: '_id corporationName descriptionCorporate recruiterName', select: '-offers -active'})
         if(!offer) throw {status: 400, message: 'There\'s no offers on database'}
@@ -72,6 +73,7 @@ let getOfferByID = async function(id) {
     try {
         let offer = await Offer.findById(id)
                                .where({abandoned: false})
+                               .select('-abandoned')
                                .populate({path:'workerAssigned', select: '_id name creationDate img', select: '-offers -active'})
                                .populate({path:'recruiterAssigned', select: '_id corporationName descriptionCorporate recruiterName', select: '-offers -active'})
         if(!offer) throw {status: 400, message: 'There\'s no offers on database'}

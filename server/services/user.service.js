@@ -72,7 +72,7 @@ let updateUser = async function(body, id, role) {
 
 let getUsers = async function(role = {}) {
     try {
-        let user = await User.find({$and: [{role}, {role:{$ne: 'admin'}}]})
+        let user = await User.find(role)
                              .where({active: true})
                              .select('_id name creationDate img corporationName descriptionCorporate recruiterName');
         if (!user) throw {status: 400, message: `There\'s no ${role} users on database`};
