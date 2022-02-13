@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 let validStatus = {
     // TODO: se ha hecho prueba técnica, se ha hablado con el equipo técnico, salario concretado
-    values: ['created', 'completed', 'VideoconferenceSet', 'accepted', 'eliminated'],
+    values: ['incompleted', 'opened', 'videoconferenceSet', 'accepted'],
     message: '{VALUE} is not a valid status'
 }
 
@@ -23,22 +23,38 @@ let offerSchema = new Schema({
         required: [true, 'Enter job title is mandatory']
     },
     requirements: {
-        type: String,
-        required: [true, 'Enter work requirments']
+        type: String
     },
-    workplaceAdress: {
+    workplaceAddress: {
         type: String,
         required: [true, 'Enter workplace is mandatory']
     },
     description: {
-        type: String,
-        required: [true, 'Enter a brief description of this job']
+        type: String
+    },
+    videoCallLink: {
+        type: String
     },
     status: {
         type: String,
         default: 'created',
         enum: validStatus
+    },
+    abandoned: {
+        type: Boolean,
+        default: false
+    },
+    workerAssigned: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'worker'
+    },
+    recruiterAssigned: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'recruiter',
+        required: true
     }
-})
+});
 
-module.exports = mongoose.model('Offer', offerSchema);
+
+module.exports = mongoose.model('offer', offerSchema);
+

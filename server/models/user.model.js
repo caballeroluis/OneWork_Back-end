@@ -1,16 +1,9 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
-const Recruiter = require('./recruiter').schema;
-const Worker = require('./worker').schema;
+let options = {collection: 'users', discriminatorKey: 'role'};
 
-let validRoles = {
-    values: ['ADMIN_ROLE', 'RECRUITER_ROLE', 'WORKER_ROLE'],
-    message: '{VALUE} is not a valid role'
-}
-
-let Schema = mongoose.Schema;
-
-let userSchema = new Schema({
+let userSchema = new mongoose.Schema({
 
     creationDate: {
         type: Date,
@@ -29,32 +22,33 @@ let userSchema = new Schema({
         type: String,
         required: false
     },
-    role: {
-        type: String,
-        required: [true, 'Role should be WORKER_ROLE or RECRUITER_ROLE'],
-        default: 'WORKER_ROLE',
-        enum: validRoles
-    },
-    state: {
+    active: {
         type: Boolean,
         default: true
     },
-    recruiterData: Recruiter,
-    workerData: Worker
-
-});
+    offers: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'offer'
+    }]
+}, options)
 
 // Para eliminar el password cuando se envíen datos.
-
+    
 userSchema.methods.toJSON = function() {
-
+    
     let user = this;
     let userObject = user.toObject();
     delete userObject.password;
-
+    
     return userObject;
 }
+    
+userSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser único' });
 
-userSchema.plugin(require('mongoose-autopopulate'));
-
-module.exports = mongoose.model('User', userSchema);
+let User = mongoose.model('user', userSchema);
+let Admin = User.discriminator('admin', new mongoose.Schema({}));
+    
+module.exports = {
+    User,
+    Admin
+};
