@@ -19,7 +19,7 @@ let fileFilter = function (req, file, cb) {
     let fileMimeExtension = file.mimetype.split('/')[1];
 
     let extensionSplitted = file.originalname.split('.');
-    let extension = extensionSplitted[extensionSplitted.length - 1]
+    let extension = extensionSplitted[extensionSplitted.length - 1];
 
     file.extension = extension;   
     if (!(validExtensions.includes(fileMimeExtension)) && !(validExtensions.includes(extension))) {

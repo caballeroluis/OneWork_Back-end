@@ -13,23 +13,6 @@ let verifyOwnId = (req, res, next) => {
 
 }
 
-
-let verifyOfferAsigned = (req, res, next) => {
-    let offers = req.user.offers;
-    let offerToChange = req.params.id;
-
-    if(offers.includes(offerToChange)) {
-        next();
-    } else {
-        return res.status(403).json({
-            message: 'You are not authorized to perform this action'
-        });
-    }
-
-    
-
-}
-
 let verifyOwnIdOrRecruiter = (req, res, next) => {
     let idProvided = req.params.id;
     let user = req.user;
@@ -96,7 +79,6 @@ module.exports = {
     verifyOwnId,
     verifyOwnIdOrRecruiter,
     verifyAdmin,
-    verifyOfferAsigned,
     verifyWorker,
     verifyRecruiter
 };

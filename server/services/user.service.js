@@ -24,9 +24,10 @@ let createUser = async function(email, password, body) {
     
         const salt = await bcryptjs.genSalt(11);
         user.password = await bcryptjs.hash(password, salt);
-    
+        
         await user.save();
-
+        user.active = undefined;
+        
         return user;
     } catch(error) {
         throw error;
@@ -51,10 +52,12 @@ let updateUser = async function(body, id, role) {
 
         if(role === 'worker') {
             user  = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true})
-                                .where({active: true});
+                                .where({active: true})
+                                .select('-active');
         } else if(role === 'recruiter') {
             user  = await Recruiter.findByIdAndUpdate(id, body, {new: true, runValidators: true})
-                                   .where({active: true});        
+                                   .where({active: true})
+                                   .select('-active');        
         } else {
             throw {status: 400, message: 'The role of the user is incorrect'}
         }
@@ -69,9 +72,7 @@ let updateUser = async function(body, id, role) {
 
 let getUsers = async function(role = {}) {
     try {
-        let user = await User.find({})
-                             .where({role})
-                             .where({role:{$ne: 'admin'}})
+        let user = await User.find({$and: [{role}, {role:{$ne: 'admin'}}]})
                              .where({active: true})
                              .select('_id name creationDate img corporationName descriptionCorporate recruiterName');
         if (!user) throw {status: 400, message: `There\'s no ${role} users on database`};
@@ -86,7 +87,8 @@ let getUserID = async function(id) {
     try {
         let user = await User.findById(id)
                              .where({active: true})
-                             .populate('offers');
+                             .populate({path:'offers', select: '-abandoned'})
+                             .select('-active');
 
         if (!user) throw {status: 400, message: 'User doesn\'t exist'};
 
@@ -106,7 +108,7 @@ let deleteUser = async function(id) {
         if(user.role === 'worker') {
             for(let offer of user.offers) {
                 offer.workerAssigned = undefined;
-                offer.status = 'created';
+                offer.status = 'incompleted';
                 await offer.save();
             }
         } else if(user.role === 'recruiter') {

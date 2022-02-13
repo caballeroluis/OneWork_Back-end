@@ -50,7 +50,7 @@ exports.getUsers = async (req, res, next) => {
     }
 
     let role = req.query.role;
-    
+
     try {
         let user = await userService.getUsers(role);
         return res.json(user);

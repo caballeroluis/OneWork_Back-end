@@ -45,7 +45,7 @@ exports.updateOffer = async (req, res, next) => {
     let body = _.pick(req.body, ['salary', 'title', 'requirements', 'workplaceAdress', 'description', 'workerAssigned']);
 
     try {   
-        let offer = await offerService.updateOffer(id, body);
+        let offer = await offerService.updateOffer(id, req.user._id, body);
         res.json(offer);
     } catch(error) {
         next(error);
@@ -60,7 +60,7 @@ exports.changeStateOffer = async (req, res, next) => {
     let status = req.body.status;
     
     try {
-        let offer = await offerService.changeStateOffer(id, status);
+        let offer = await offerService.changeStateOffer(id, req.user._id, status);
         res.json(offer);
     } catch(error) {
         next(error);
@@ -73,7 +73,7 @@ exports.changeStateOffer = async (req, res, next) => {
 exports.deleteOffer = async (req, res, next) => {
     const id = req.params.id;
     try {
-        let offer = await offerService.deleteOffer(id);
+        let offer = await offerService.deleteOffer(id, req.user._id);
         if(!offer) throw {status: 400, message: 'This offer doesn\'t exist'};
         res.json({});
     } catch (error) {
