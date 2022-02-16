@@ -35,9 +35,7 @@ exports.getImg = async (req, res, next) => {
 }
 
 exports.deleteImg = async (req, res, next) => {
-
     let id = req.params.id;
-
     try {
         await uploadService.deleteImg(id);
         res.json({});

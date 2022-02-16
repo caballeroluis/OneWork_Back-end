@@ -1,3 +1,5 @@
+const { InsufficientPermisionError } = require('../utils/customErrors.util');
+
 let verifyOwnId = (req, res, next) => {
 
     let idProvided = req.params.id;
@@ -6,12 +8,10 @@ let verifyOwnId = (req, res, next) => {
     if (idProvided === user._id) {
         next();
     } else {
-        return res.status(403).json({
-            message: 'You are not authorized to perform this action'
-        });
+        return next(new InsufficientPermisionError('You are not authorized to perform this action'));
     }
-
 }
+
 
 let verifyOwnIdOrRecruiter = (req, res, next) => {
     let idProvided = req.params.id;
@@ -23,11 +23,8 @@ let verifyOwnIdOrRecruiter = (req, res, next) => {
         next();
 
     } else {
-        return res.status(403).json({
-                message: 'You are not authorized to perform this action'
-        });
+        return next(new InsufficientPermisionError('You are not authorized to perform this action'));
     }
-
 }
 
 let verifyAdmin = (req, res, next) => {
@@ -35,9 +32,7 @@ let verifyAdmin = (req, res, next) => {
     let user = req.user;
 
     if (user.role !== 'admin') {
-        return res.status(403).json({
-            message: 'You are not authorized to perform this action'
-        });
+        return next(new InsufficientPermisionError('You are not authorized to perform this action'));
     } else {
         next();
     }
@@ -48,17 +43,10 @@ let verifyWorker = (req, res, next) => {
     let user = req.user;
 
     if (user.role !== 'worker') {
-
-        return res.status(403).json({
-            message: 'You are not authorized to perform this action'
-        });
-
+        return next(new InsufficientPermisionError('You are not authorized to perform this action'));
     } else {
-
         next();
-
     }
-
 }
 
 let verifyRecruiter = (req, res, next) => {
@@ -66,13 +54,10 @@ let verifyRecruiter = (req, res, next) => {
     let user = req.user;
 
     if (user.role !== 'recruiter') {
-        return res.status(403).json({
-            message: 'You are not authorized to perform this action'
-        });
+        return next(new InsufficientPermisionError('You are not authorized to perform this action'));
     } else {
         next();
     }
-
 }
 
 module.exports = {

@@ -30,7 +30,6 @@ router.patch(
     offerController.changeStateOffer
 )
 
-
 router.put(
     '/:id', 
     verifyToken,

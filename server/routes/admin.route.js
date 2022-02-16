@@ -21,26 +21,30 @@ router.delete(
 router.get(
     '/offers', 
     verifyToken,
-    verifyAdmin 
+    verifyAdmin,
+    adminController.getOffersAdmin
 
 )
 router.get(
-    '/offers:id', 
+    '/offers/:id', 
     verifyToken,
+    verifyAdmin,
+    adminController.getOfferByIDAdmin
 )
 
 router.patch(
     '/offers/:id', 
     verifyToken,
-    verifyAdmin
+    verifyAdmin,
+    adminController.changeStateOfferAdmin
 
 )
 
 router.put(
     '/offers/:id', 
     verifyToken,
-    verifyAdmin
-
+    verifyAdmin,
+    adminController.updateOfferAdmin
 )
 
 router.delete(
@@ -55,27 +59,29 @@ router.delete(
 router.get(
     '/users', 
     verifyToken,
-    verifyAdmin
-
+    verifyAdmin,
+    adminController.getUsersAdmin
 )
 
 router.get(
     '/users/:id', 
     verifyToken,
-    verifyAdmin
-
+    verifyAdmin,
+    adminController.getUserByIDAdmin
 )
 
 router.put(
     '/users/:id', 
     verifyToken,
-    verifyAdmin
+    verifyAdmin,
+    adminController.updateUserAdmin
 )
 
 router.delete(
     '/users/:id', 
     verifyToken,
-    verifyAdmin
+    verifyAdmin,
+    adminController.deleteUserAdmin
 )
 
 /* Uploads */
@@ -83,7 +89,8 @@ router.delete(
 router.delete(
     '/uploads/image/:id', 
     verifyToken,
-    verifyAdmin
+    verifyAdmin,
+    adminController.deleteImgAdmin
 )
 
 module.exports = router;

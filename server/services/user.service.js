@@ -2,6 +2,7 @@ const { User } = require('../models/user.model');
 const Worker = require('../models/worker.model');
 const Recruiter = require('../models/recruiter.model');
 const { deleteFolder, deleteFile } = require('../utils/files.util');
+const { ErrorBDEntityFound, ErrorBDEntityNotFound, ValidationDataError } = require('../utils/customErrors.util');
 
 const bcryptjs = require('bcryptjs');
 const crypto = require('crypto');
@@ -10,14 +11,14 @@ const crypto = require('crypto');
 let createUser = async function(email, password, body) {
     try {
         let user = await User.findOne({ email });
-        if (user) throw {status: 400, message: 'Email already exists on database'};
+        if (user) throw new ErrorBDEntityFound('Email already exists on database');
 
         if (body.role === 'worker') {
             user = new Worker(body)
         } else if(body.role === 'recruiter') {
             user = new Recruiter(body)
         } else {
-            throw {status: 400, message: 'The role of the user is incorrect'}
+            throw new ValidationDataError('The role of the user is incorrect');
         }
         
         // TODO: generar salt en variables de entorno.
@@ -41,7 +42,7 @@ let updateUser = async function(body, id, role) {
 
         if(body.email) {
             user = await User.findOne({email: body.email});
-            if (user) throw {status: 400, message: 'This email exists, please change the email provided'};
+            if (user) throw new ErrorBDEntityFound('This email exists, please change the email provided');
         }
 
         if(body.password) {
@@ -59,9 +60,9 @@ let updateUser = async function(body, id, role) {
                                    .where({active: true})
                                    .select('-active');        
         } else {
-            throw {status: 400, message: 'The role of the user is incorrect'}
+            throw new ValidationDataError('The role of the user is incorrect');
         }
-        if (!user) throw {status: 400, message: 'User doesn\'t exist'};
+        if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
 
         return user;
 
@@ -75,7 +76,7 @@ let getUsers = async function(role = {}) {
         let user = await User.find(role)
                              .where({active: true})
                              .select('_id name creationDate img corporationName descriptionCorporate recruiterName');
-        if (!user) throw {status: 400, message: `There\'s no ${role} users on database`};
+        if (!user) throw new ErrorBDEntityNotFound(`There\'s no ${role} users on database`);
 
         return user;
     } catch (error) {
@@ -90,7 +91,7 @@ let getUserID = async function(id) {
                              .populate({path:'offers', select: '-abandoned'})
                              .select('-active');
 
-        if (!user) throw {status: 400, message: 'User doesn\'t exist'};
+        if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
 
         return user;
     } catch (error) {
@@ -103,12 +104,12 @@ let deleteUser = async function(id) {
         let user = await User.findById(id)
                              .populate('offers')
                              .where({active: true});
-        if (!user) throw {status: 400, message: 'User doesn\'t exist'};
+        if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
         
         if(user.role === 'worker') {
             for(let offer of user.offers) {
                 offer.workerAssigned = undefined;
-                offer.status = 'incompleted';
+                offer.status = 'uncompleted';
                 await offer.save();
             }
         } else if(user.role === 'recruiter') {

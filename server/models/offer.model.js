@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 let validStatus = {
     // TODO: se ha hecho prueba técnica, se ha hablado con el equipo técnico, salario concretado
-    values: ['incompleted', 'opened', 'videoconferenceSet', 'accepted'],
+    values: ['uncompleted', 'opened', 'videoconferenceSet', 'accepted'],
     message: '{VALUE} is not a valid status'
 }
 
@@ -34,6 +34,9 @@ let offerSchema = new Schema({
     },
     videoCallLink: {
         type: String
+    },
+    videoCallDate: {
+        type: Date
     },
     status: {
         type: String,

@@ -1,6 +1,7 @@
 const bcryptjs = require('bcryptjs');
 const _ = require('underscore');
 const jwt = require('jsonwebtoken');
+const { ErrorPwdOrUserNotFound, ErrorBDEntityNotFound, UnathorizedError } = require('../utils/customErrors.util');
 
 const { User } = require('../models/user.model');
 const refreshTokenModel = require('../models/refreshToken.model');
@@ -10,10 +11,10 @@ let userLogin = async function(email, password) {
         let user = await User.findOne({ email })
                              .where({active: true})
                              .select('-active -offers');
-        if (!user) throw {status: 400, message: 'Password or user is incorrect'};
+        if (!user) throw new ErrorPwdOrUserNotFound('Password or user is incorrect');
 
         const correctPassword = await bcryptjs.compare(password, user.password);
-        if(!correctPassword) throw {status: 400, message: 'Password or user is incorrect'};
+        if(!correctPassword) throw new ErrorPwdOrUserNotFound('Password or user is incorrect');
         
         let refreshTokenDBExists = await refreshTokenModel.findOne(user._id);
 
@@ -47,14 +48,14 @@ let letsRefreshToken = async function(refreshToken) {
             let user = await User.findOne(refreshTokenExists.user)
                                  .where({active: true})
                                  .select('-active -offers');
-            if (!user) throw {status: 400, message: 'User doesn\'t exist'};
+            if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
 
             let payload = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName', 'corporationName']);
 
             let newToken = jwt.sign(payload, process.env.SECRET, {expiresIn: 1500});
             return newToken;
         } else {
-            throw {status: 403, message: 'RefreshToken has been expired, please login again'}
+            throw new UnathorizedError('RefreshToken has been expired, please login again');
         }
     } catch(error) {
         throw error;
@@ -64,7 +65,8 @@ let letsRefreshToken = async function(refreshToken) {
 let userLogout = async function(id) {
     try {      
         let refreshToken = await refreshTokenModel.findOne({user: id});
-        if (!refreshToken) throw {status: 403, message: 'This refreshToken doesn\'t exist'};
+        // Cambiar error.
+        if (!refreshToken) throw new ErrorBDEntityNotFound('This refreshToken doesn\'t exist');
         refreshToken.token = undefined;
         await refreshToken.save();
         return;

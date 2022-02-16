@@ -1,4 +1,4 @@
-let booleanIncompleted = function(offer) {
+let booleanUncompleted = function(offer) {
     if(!offer.salary ||
        !offer.title ||
        !offer.requirements ||
@@ -51,7 +51,7 @@ let booleanCheckOfferAssigned = function(userID, offer) {
 }
 
 module.exports = {
-    booleanIncompleted,
+    booleanUncompleted,
     booleanOpened,
     booleanVideoConferenceSet,
     booleanAccepted,

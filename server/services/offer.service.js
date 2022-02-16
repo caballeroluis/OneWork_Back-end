@@ -2,6 +2,7 @@ const Worker = require('../models/worker.model');
 const Recruiter = require('../models/recruiter.model');
 const Offer = require('../models/offer.model');
 const offerStateUtil = require('../utils/offerState.util');
+const { ErrorBDEntityNotFound, OfferStatusError, UnathorizedError } = require('../utils/customErrors.util');
 
 // TODO: Añadir el ID de worker y recruiter.
 
@@ -11,13 +12,13 @@ let createOffer = async function(idWorker, idRecruiter, body) {
         
         let recruiter = await Recruiter.findById(idRecruiter)
                                        .where({active: true})
-                                       .select('-active');
-        if(!recruiter) throw {status: 400, message: 'This recruiter doesn\'t exist'};
+                                       .select('-active -email');
+        if(!recruiter) throw new ErrorBDEntityNotFound('This recruiter doesn\'t exist');
 
         let worker = await Worker.findById(idWorker)
                                  .where({active: true})
-                                 .select('-active');
-        if(!worker) throw {status: 400, message: 'This worker doesn\'t exist'};
+                                 .select('-active -email');
+        if(!worker) throw new ErrorBDEntityNotFound('This worker doesn\'t exist');
         
         let offer = new Offer({
             creationDate: body.creationDate,
@@ -33,7 +34,7 @@ let createOffer = async function(idWorker, idRecruiter, body) {
         if(offerStateUtil.booleanOpened(offer)) {
             offer.status = 'opened';
         } else {
-            offer.status = 'incompleted';
+            offer.status = 'uncompleted';
         }
 
         recruiter.offers.push(offer._id);
@@ -59,9 +60,9 @@ let getOffers = async function() {
         let offer = await Offer.find({})
                                .where({abandoned: false})
                                .select('-abandoned')
-                               .populate({path:'workerAssigned', select: '_id name creationDate img', select: '-offers -active'})
-                               .populate({path:'recruiterAssigned', select: '_id corporationName descriptionCorporate recruiterName', select: '-offers -active'})
-        if(!offer) throw {status: 400, message: 'There\'s no offers on database'}
+                               .populate({path:'workerAssigned', select: '_id name creationDate img', select: '-offers -active -email'})
+                               .populate({path:'recruiterAssigned', select: '_id corporationName descriptionCorporate recruiterName', select: '-offers -active -email'})
+        if(!offer) throw new ErrorBDEntityNotFound('There\'s no offers on database');
         return offer;
     } catch(error) {
         throw error;
@@ -74,9 +75,9 @@ let getOfferByID = async function(id) {
         let offer = await Offer.findById(id)
                                .where({abandoned: false})
                                .select('-abandoned')
-                               .populate({path:'workerAssigned', select: '_id name creationDate img', select: '-offers -active'})
-                               .populate({path:'recruiterAssigned', select: '_id corporationName descriptionCorporate recruiterName', select: '-offers -active'})
-        if(!offer) throw {status: 400, message: 'There\'s no offers on database'}
+                               .populate({path:'workerAssigned', select: '_id name creationDate img', select: '-offers -active -email'})
+                               .populate({path:'recruiterAssigned', select: '_id corporationName descriptionCorporate recruiterName', select: '-offers -active -email'})
+        if(!offer) throw new ErrorBDEntityNotFound('There\'s no offer on database with the ID');
         return offer;
     } catch(error) {
         throw error;
@@ -88,22 +89,23 @@ let changeStateOffer = async function(id, userID, status) {
         let offer = await Offer.findById(id)
                                .where({abandoned: false})
                                .select('-abandoned');
-        if(!offer) throw {status: 400, message: 'This offer doesn\'t exist'};
+        if(!offer) throw new ErrorBDEntityNotFound('This offer doesn\'t exist');
 
-        if(!offerStateUtil.booleanCheckOfferAssigned(userID, offer)) throw {status: 403, message: 'You are not authorized to perform this action'};
+        if(!offerStateUtil.booleanCheckOfferAssigned(userID, offer)) throw new OfferStatusError('You are not authorized to perform this action');
 
         switch(status) {
             case 'opened':
-                if(!offerStateUtil.booleanOpened(offer)) throw {status: 403, message: 'Requirements to change status are not accomplished'}
+                if(!offerStateUtil.booleanOpened(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
             case 'videoconferenceSet':
-                if(!offerStateUtil.booleanVideoConferenceSet(offer)) throw {status: 403, message: 'Requirements to change status are not accomplished'}
+                if(!offerStateUtil.booleanVideoConferenceSet(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
             case 'accepted':
-                if(!offerStateUtil.booleanAccepted(offer)) throw {status: 403, message: 'Requirements to change status are not accomplished'}
+                // TODO: modificar offer accepted offerStateUtil
+                if(!offerStateUtil.booleanAccepted(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
             default:
-                return {status: 400, message: 'The status introduced is incorrect'}
+                throw new OfferStatusError('The status introduced is incorrect');
         }
         
         offer.status = status;
@@ -119,24 +121,26 @@ let updateOffer = async function(id, userID, body) {
         let offer = await Offer.findById(id)
                                .where({abandoned: false})
                                .select('-abandoned');
-        if(!offer) throw {status: 400, message: 'This offer doesn\'t exist'};
-        if(!offerStateUtil.booleanCheckOfferAssigned(userID, offer)) throw {status: 403, message: 'You are not authorized to perform this action'};
+        if(!offer) throw new ErrorBDEntityNotFound('This offer doesn\'t exist');
+        if(!offerStateUtil.booleanCheckOfferAssigned(userID, offer)) throw new UnathorizedError('You are not authorized to perform this action');
         
         if(body.workerAssigned) {
             let worker = await Worker.findById(body.workerAssigned);
-            if(!worker) throw {status: 400, message: 'The worker introduced doesn\'t exist'};
+            if(!worker) throw new ErrorBDEntityNotFound('The worker introduced doesn\'t exist');
         }
 
         offer.salary = body.salary || offer.salary;
         offer.title = body.title || offer.title;
         offer.requirements = body.requirements || offer.requirements;
-        offer.workplaceAdress = body.workplaceAdress || offer.workplaceAdress;
+        offer.workplaceAddress = body.workplaceAddress || offer.workplaceAddress;
         offer.description = body.description || offer.description;
         offer.workerAssigned = body.workerAssigned || offer.workerAssigned._id;
+        offer.videoCallDate = body.videoCallDate || offer.videoCallDate;
+        offer.videoCallLink = body.videoCallLink || offer.videoCallLink;
 
-        if(offerStateUtil.booleanIncompleted(offer)) offer.status = 'incompleted';
+        if(offerStateUtil.booleanUncompleted(offer)) offer.status = 'uncompleted';
         
-        if(offerStateUtil.booleanOpened(offer) && offer.status === 'incompleted') {
+        if(offerStateUtil.booleanOpened(offer) && offer.status === 'uncompleted') {
             offer.status = 'opened';
         }
 
@@ -152,8 +156,8 @@ let deleteOffer = async function(id, userID) {
     try {
         let offer = await Offer.findByIdAndUpdate(id, {abandoned: true}, {new: true, runValidators: true})
                                .where({abandoned: false});
-        if(!offer) throw {status: 400, message: 'This offer doesn\'t exist'};
-        if(!offerStateUtil.booleanCheckOfferAssigned(userID, offer)) throw {status: 403, message: 'You are not authorized to perform this action'};
+        if(!offer) throw new ErrorBDEntityNotFound('This offer doesn\'t exist');
+        if(!offerStateUtil.booleanCheckOfferAssigned(userID, offer)) throw new UnathorizedError('You are not authorized to perform this action');
         
         return offer;
     } catch(error) {
