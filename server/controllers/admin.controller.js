@@ -145,6 +145,12 @@ exports.getUsersAdmin = async (req, res, next) => {
     }
 
     let role = req.query.role;
+
+    if(role){
+        role = {role: req.query.role};
+    } else {
+        role = {};
+    }
     
     try {
         let user = await adminService.getUsersAdmin(role);

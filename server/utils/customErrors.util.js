@@ -59,7 +59,6 @@ class ValidationDataError extends Error {
       super(...params)
       Error.captureStackTrace(this, this.constructor);
   
-      this.message = message;
       this.name = this.constructor.name;
       this.status = 400;
     }
@@ -75,7 +74,6 @@ class MultipleValidationDataError extends Error {
       Error.captureStackTrace(this, this.constructor);
         
       this.name = this.constructor.name;
-      this.message = message;
       this.status = 400;
     }
   

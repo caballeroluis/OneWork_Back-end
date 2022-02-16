@@ -1,6 +1,6 @@
 const Worker = require('../models/worker.model');
 const Recruiter = require('../models/recruiter.model');
-const { Admin } = require('../models/user.model');
+const { Admin, User } = require('../models/user.model');
 const Offer = require('../models/offer.model');
 const refreshTokenModel = require('../models/refreshToken.model');
 const { deleteFolder, deleteFile } = require('../utils/files.util');
@@ -114,8 +114,7 @@ let updateUserAdmin = async function(body, id, role) {
 
 let getUsersAdmin = async function(role) {
     try {
-        let user = await User.find({})
-                             .where({role})
+        let user = await User.find(role);
         if (!user.length) throw new ErrorBDEntityNotFound(`There\'s no ${role} users on database`);
         return user;
     } catch(error) {

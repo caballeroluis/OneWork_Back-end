@@ -3,11 +3,13 @@ const { ValidationDataError } = require('../utils/customErrors.util');
 
 let verifyToken = (req, res, next) => {
 
-    let token = req.get('Authorization');  
+    let token = req.get('Authorization'); 
+     
     try{
         token = token.split(' ')[1];
+        
     } catch(error) {
-        next(new ValidationDataError('The token is not provided or is invalid'));
+        return next(new ValidationDataError('The token is not provided or is invalid'));
     }
     
     jwt.verify(token, process.env.SECRET, (error, decoded) => {
