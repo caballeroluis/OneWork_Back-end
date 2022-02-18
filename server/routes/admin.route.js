@@ -55,6 +55,12 @@ router.delete(
 )
 
 /* Users */
+router.post(
+    '/users', 
+    verifyToken,
+    verifyAdmin,
+    adminController.createUserAdmin
+)
 
 router.get(
     '/users', 

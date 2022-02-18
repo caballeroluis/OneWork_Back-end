@@ -5,6 +5,7 @@ const Offer = require('../models/offer.model');
 const refreshTokenModel = require('../models/refreshToken.model');
 const { deleteFolder, deleteFile } = require('../utils/files.util');
 const { ErrorBDEntityNotFound, ValidationDataError } = require('../utils/customErrors.util');
+const bcryptjs = require('bcryptjs');
 
 let deleteRefreshToken = async function(id) {
     try {
@@ -86,6 +87,35 @@ let deleteOfferAdmin = async function(id) {
         await Promise.all([offer.workerAssigned.save(), offer.recruiterAssigned.save(), offer.remove()]);
         
         return offer;
+    } catch(error) {
+        throw error;
+    }
+}
+
+let createUserAdmin = async function(email, password, body) {
+    try {
+        let user = await User.findOne({ email });
+        if (user) throw new ErrorBDEntityFound('Email already exists on database');
+
+        if (body.role === 'worker') {
+            user = new Worker(body);
+        } else if(body.role === 'recruiter') {
+            user = new Recruiter(body);
+        } else if(body.role === 'admin') {
+            user = new Admin(body);
+        } else {
+            throw new ValidationDataError('The role of the user is incorrect');
+        }
+        
+        // TODO: generar salt en variables de entorno.
+    
+        const salt = await bcryptjs.genSalt(11);
+        user.password = await bcryptjs.hash(password, salt);
+        
+        await user.save();
+        user.active = undefined;
+        
+        return user;
     } catch(error) {
         throw error;
     }
@@ -184,6 +214,7 @@ module.exports = {
     updateOfferAdmin,
     deleteOfferAdmin,
     updateUserAdmin,
+    createUserAdmin,
     getUsersAdmin,
     getUserByIDAdmin,
     deleteUserAdmin,

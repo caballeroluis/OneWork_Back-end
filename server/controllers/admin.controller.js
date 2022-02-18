@@ -117,6 +117,25 @@ exports.deleteOfferAdmin = async function(req, res, next) {
 
 /* User */
 
+exports.createUserAdmin = async (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+
+        return res.status(400).json({ errors: errors.array(true)[0] });
+    }
+
+    const body = req.body;
+    const {email, password} = body;
+
+    try { 
+        let user = await adminService.createUserAdmin(email, password, body);
+        res.json(user);
+    } catch (error) {
+        next(error);
+    }  
+}
+
 exports.updateUserAdmin = async (req, res, next) => {
     const errors = validationResult(req);
     
