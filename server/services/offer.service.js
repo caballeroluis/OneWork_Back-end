@@ -21,7 +21,6 @@ let createOffer = async function(idWorker, idRecruiter, body) {
         if(!worker) throw new ErrorBDEntityNotFound('This worker doesn\'t exist');
         
         let offer = new Offer({
-            creationDate: body.creationDate,
             salary: body.salary,
             title: body.title,
             requirements: body.requirements,
@@ -97,8 +96,14 @@ let changeStateOffer = async function(id, userID, status) {
             case 'opened':
                 if(!offerStateUtil.booleanOpened(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
+            case 'inProgress':
+
+            break;
             case 'videoconferenceSet':
                 if(!offerStateUtil.booleanVideoConferenceSet(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
+            break;
+            case 'techinqueRevised':
+
             break;
             case 'accepted':
                 // TODO: modificar offer accepted offerStateUtil

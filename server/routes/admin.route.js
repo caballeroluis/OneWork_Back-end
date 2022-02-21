@@ -18,6 +18,13 @@ router.delete(
 
 /* Offers */
 
+router.post(
+    '/worker/:idWorker/recruiter/:idRecruiter', 
+    verifyToken,
+    verifyAdmin, 
+    adminController.createOfferAdmin
+)
+
 router.get(
     '/offers', 
     verifyToken,

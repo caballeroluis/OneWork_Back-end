@@ -21,6 +21,54 @@ let deleteRefreshToken = async function(id) {
 
 }
 
+let createOfferAdmin = async function() {
+
+    try {
+        
+        let recruiter = await Recruiter.findById(idRecruiter)
+                                       .where({active: true})
+                                       .select('-active');
+        if(!recruiter) throw new ErrorBDEntityNotFound('This recruiter doesn\'t exist');
+
+        let worker = await Worker.findById(idWorker)
+                                 .where({active: true})
+                                 .select('-active');
+        if(!worker) throw new ErrorBDEntityNotFound('This worker doesn\'t exist');
+        
+        let offer = new Offer({
+            salary: body.salary,
+            title: body.title,
+            requirements: body.requirements,
+            workplaceAddress: body.workplaceAddress,
+            description: body.description,
+            workerAssigned: worker._id,
+            recruiterAssigned: recruiter._id
+        });
+
+        if(offerStateUtil.booleanOpened(offer)) {
+            offer.status = 'opened';
+        } else {
+            offer.status = 'uncompleted';
+        }
+
+        recruiter.offers.push(offer._id);
+        worker.offers.push(offer._id);
+
+        await Promise.all([offer.save(), worker.save(), recruiter.save()]);
+
+        worker.offers = undefined;
+        recruiter.offers = undefined;
+        offer.abandoned = undefined;
+        offer.workerAssigned = worker;
+        offer.recruiterAssigned = recruiter;
+
+        return offer;
+    } catch(error) {
+        throw error;
+    }
+
+}
+
 let getOffersAdmin = async function() {
     try {
         let offer = await Offer.find({})
@@ -208,6 +256,7 @@ let deleteImgAdmin = async function(id) {
 
 module.exports = {
     deleteRefreshToken,
+    createOfferAdmin,
     getOffersAdmin,
     getOfferByIDAdmin,
     changeStateOfferAdmin,
