@@ -2,6 +2,7 @@ const express = require('express');
 const { check } = require('express-validator');
 
 const adminController = require('../controllers/admin.controller');
+const adminService = require('../services/admin.service');
 const verifyToken = require('../middlewares/verifyAuth.middleware');
 const { verifyAdmin } = require('../middlewares/verifyRole.middleware');
 
@@ -22,7 +23,7 @@ router.post(
     '/worker/:idWorker/recruiter/:idRecruiter', 
     verifyToken,
     verifyAdmin, 
-    adminController.createOfferAdmin
+    adminService.createOfferAdmin
 )
 
 router.get(
