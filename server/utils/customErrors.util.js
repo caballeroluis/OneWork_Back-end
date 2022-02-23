@@ -97,7 +97,7 @@ class InsufficientPermisionError extends Error {
 }
 
 class UnathorizedError extends Error {  
-  constructor (status, ...params) {
+  constructor (...params) {
     super(...params)
     Error.captureStackTrace(this, this.constructor);
 

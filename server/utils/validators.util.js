@@ -19,6 +19,7 @@ function DNIValidator(value) {
 
 }
 
+
 module.exports = {
     DNIValidator
 }

@@ -5,6 +5,7 @@ const Offer = require('../models/offer.model');
 const refreshTokenModel = require('../models/refreshToken.model');
 const { deleteFolder, deleteFile } = require('../utils/files.util');
 const { ErrorBDEntityNotFound, ValidationDataError } = require('../utils/customErrors.util');
+
 const bcryptjs = require('bcryptjs');
 
 let deleteRefreshToken = async function(id) {
@@ -45,10 +46,10 @@ let createOfferAdmin = async function() {
             recruiterAssigned: recruiter._id
         });
 
-        if(offerStateUtil.booleanOpened(offer)) {
-            offer.status = 'opened';
+        if(offerStateUtil.booleanready(offer)) {
+            offer.status = 'ready';
         } else {
-            offer.status = 'uncompleted';
+            offer.status = 'backlog';
         }
 
         recruiter.offers.push(offer._id);

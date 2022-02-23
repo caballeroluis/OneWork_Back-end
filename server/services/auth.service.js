@@ -43,19 +43,20 @@ let userLogin = async function(email, password) {
 let letsRefreshToken = async function(refreshToken) {
     try {      
         let refreshTokenExists = await refreshTokenModel.findOne({token: refreshToken});
-        
+        console.log(refreshToken);
+        console.log(refreshTokenExists);
         if(refreshTokenExists && jwt.verify(refreshToken, process.env.SECRET)) {
             let user = await User.findOne(refreshTokenExists.user)
                                  .where({active: true})
                                  .select('-active -offers');
             if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
-
+            console.log(user);
             let payload = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName', 'corporationName']);
 
             let newToken = jwt.sign(payload, process.env.SECRET, {expiresIn: 1500});
             return newToken;
         } else {
-            throw new UnathorizedError('RefreshToken has been expired, please login again');
+            throw new UnathorizedError('RefreshToken has been expired or doesn\'t exist');
         }
     } catch(error) {
         throw error;
@@ -65,9 +66,8 @@ let letsRefreshToken = async function(refreshToken) {
 let userLogout = async function(id) {
     try {      
         let refreshToken = await refreshTokenModel.findOne({user: id});
-        // Cambiar error.
         if (!refreshToken) throw new ErrorBDEntityNotFound('This refreshToken doesn\'t exist');
-        refreshToken.token = undefined;
+        refreshToken.token = ' ';
         await refreshToken.save();
         return;
     } catch(error) {

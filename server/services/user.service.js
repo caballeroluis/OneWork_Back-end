@@ -1,6 +1,7 @@
 const { User } = require('../models/user.model');
 const Worker = require('../models/worker.model');
 const Recruiter = require('../models/recruiter.model');
+const refreshToken = require('../models/refreshToken.model');
 const { deleteFolder, deleteFile } = require('../utils/files.util');
 const { ErrorBDEntityFound, ErrorBDEntityNotFound, ValidationDataError } = require('../utils/customErrors.util');
 
@@ -105,11 +106,12 @@ let deleteUser = async function(id) {
                              .populate('offers')
                              .where({active: true});
         if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
-        
+        let refreshTokenExists = await refreshToken.findOne(user._id);
+
         if(user.role === 'worker') {
             for(let offer of user.offers) {
                 offer.workerAssigned = undefined;
-                offer.status = 'uncompleted';
+                offer.status = 'backlog';
                 await offer.save();
             }
         } else if(user.role === 'recruiter') {
@@ -118,6 +120,7 @@ let deleteUser = async function(id) {
                 await offer.save();
             }
         }
+
         user.img = undefined;
         deleteFile(id, 'users', user.img);
         deleteFolder(id, 'users');
@@ -126,7 +129,8 @@ let deleteUser = async function(id) {
                      + crypto.randomBytes(12).toString('hex') + '-' 
                      + new Date().getMilliseconds();
 
-        await user.save();
+        Promise.all([await user.save(), await refreshTokenExists.delete()]);
+
         return user;
 
     } catch(error) {

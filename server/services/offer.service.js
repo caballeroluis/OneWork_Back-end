@@ -2,7 +2,8 @@ const Worker = require('../models/worker.model');
 const Recruiter = require('../models/recruiter.model');
 const Offer = require('../models/offer.model');
 const offerStateUtil = require('../utils/offerState.util');
-const { ErrorBDEntityNotFound, OfferStatusError, UnathorizedError } = require('../utils/customErrors.util');
+const { ErrorBDEntityNotFound, OfferStatusError, 
+        UnathorizedError, InsufficientPermisionError } = require('../utils/customErrors.util');
 
 // TODO: Añadir el ID de worker y recruiter.
 
@@ -30,10 +31,10 @@ let createOffer = async function(idWorker, idRecruiter, body) {
             recruiterAssigned: recruiter._id
         });
 
-        if(offerStateUtil.booleanOpened(offer)) {
-            offer.status = 'opened';
+        if(offerStateUtil.booleanReady(offer)) {
+            offer.status = 'ready';
         } else {
-            offer.status = 'uncompleted';
+            offer.status = 'backlog';
         }
 
         recruiter.offers.push(offer._id);
@@ -90,19 +91,19 @@ let changeStateOffer = async function(id, userID, status) {
                                .select('-abandoned');
         if(!offer) throw new ErrorBDEntityNotFound('This offer doesn\'t exist');
 
-        if(!offerStateUtil.booleanCheckOfferAssigned(userID, offer)) throw new OfferStatusError('You are not authorized to perform this action');
+        if(!offerStateUtil.booleanCheckOfferAssigned(userID, offer)) throw new InsufficientPermisionError('You are not authorized to perform this action');
 
         switch(status) {
-            case 'opened':
-                if(!offerStateUtil.booleanOpened(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
+            case 'ready':
+                if(!offerStateUtil.booleanReady(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
             case 'inProgress':
 
             break;
-            case 'videoconferenceSet':
-                if(!offerStateUtil.booleanVideoConferenceSet(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
+            case 'videoSet':
+                if(!offerStateUtil.booleanVideoSet(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
-            case 'techinqueRevised':
+            case 'technicianChecked':
 
             break;
             case 'accepted':
@@ -143,10 +144,10 @@ let updateOffer = async function(id, userID, body) {
         offer.videoCallDate = body.videoCallDate || offer.videoCallDate;
         offer.videoCallLink = body.videoCallLink || offer.videoCallLink;
 
-        if(offerStateUtil.booleanUncompleted(offer)) offer.status = 'uncompleted';
+        if(offerStateUtil.booleanBacklog(offer)) offer.status = 'backlog';
         
-        if(offerStateUtil.booleanOpened(offer) && offer.status === 'uncompleted') {
-            offer.status = 'opened';
+        if(offerStateUtil.booleanReady(offer) && offer.status === 'backlog') {
+            offer.status = 'ready';
         }
 
         offer.save();

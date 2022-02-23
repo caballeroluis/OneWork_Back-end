@@ -7,7 +7,7 @@ exports.userLogin = async (req, res, next) => {
     const errors = validationResult(req);
   
     if (!errors.isEmpty()) {
-        console.log(errors);
+
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -29,7 +29,7 @@ exports.letsRefreshToken = async function(req, res, next) {
     const errors = validationResult(req);
   
     if (!errors.isEmpty()) {
-        console.log(errors);
+
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -37,6 +37,7 @@ exports.letsRefreshToken = async function(req, res, next) {
 
     try {      
         let newToken = await loginService.letsRefreshToken(refreshToken);
+        console.log(newToken);
         return res.json({token: newToken});  
     } catch(error) {
         next(error);
