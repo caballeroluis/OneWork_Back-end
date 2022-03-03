@@ -42,7 +42,24 @@ userSchema.methods.toJSON = function() {
     
     return userObject;
 }
-    
+
+userSchema.statics.findByIdAndUpdateActivesNoShowActives = function (id, body) {
+    return this.findByIdAndUpdate(id, body, {new: true, runValidators: true})
+               .where({active: true})
+               .select('-active')
+}
+
+userSchema.statics.findByIdActivesNoShowActives = function (id) {
+    return this.findById(id)
+               .where({active: true})
+               .select('-active')
+}
+
+userSchema.statics.findByIdActivesShowActives = function (id) {
+    return this.findById(id)
+               .where({active: true})
+}
+
 userSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser único' });
 
 let User = mongoose.model('user', userSchema);

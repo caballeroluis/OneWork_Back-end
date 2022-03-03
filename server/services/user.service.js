@@ -53,13 +53,9 @@ let updateUser = async function(body, id, role) {
         }
 
         if(role === 'worker') {
-            user  = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true})
-                                .where({active: true})
-                                .select('-active');
+            user  = await Worker.findByIdAndUpdateActivesNoShowActives(id, body);
         } else if(role === 'recruiter') {
-            user  = await Recruiter.findByIdAndUpdate(id, body, {new: true, runValidators: true})
-                                   .where({active: true})
-                                   .select('-active');        
+            user  = await Recruiter.findByIdAndUpdateActivesNoShowActives(id, body);       
         } else {
             throw new ValidationDataError('The role of the user is incorrect');
         }
@@ -87,11 +83,9 @@ let getUsers = async function(role = {}) {
 
 let getUserID = async function(id) {
     try {
-        let user = await User.findById(id)
-                             .where({active: true})
+        let user = await User.findByIdActivesNoShowActives(id)
                              .populate({path:'offers', select: '-abandoned'})
-                             .select('-active');
-
+                             
         if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
 
         return user;
@@ -102,9 +96,9 @@ let getUserID = async function(id) {
 
 let deleteUser = async function(id) {
     try {
-        let user = await User.findById(id)
+        let user = await User.findByIdActivesShowActives(id)
                              .populate('offers')
-                             .where({active: true});
+
         if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
         let refreshTokenExists = await refreshToken.findOne(user._id);
 

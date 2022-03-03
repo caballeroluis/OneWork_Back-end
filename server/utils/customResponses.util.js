@@ -1,4 +1,3 @@
-
 exports.responseOkArray = (res, items) => {
     return res.status(200).json({
         results: items

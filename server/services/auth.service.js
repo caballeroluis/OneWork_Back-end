@@ -29,7 +29,7 @@ let userLogin = async function(email, password) {
             await refreshTokenDBExists.save();
         } else {
             let refreshTokenToSave = new refreshTokenModel({
-                user: user._id,
+                user: payload._id,
                 token: refreshToken
             })
             await refreshTokenToSave.save();
@@ -46,7 +46,7 @@ let letsRefreshToken = async function(refreshToken) {
         console.log(refreshToken);
         console.log(refreshTokenExists);
         if(refreshTokenExists && jwt.verify(refreshToken, process.env.SECRET)) {
-            let user = await User.findOne(refreshTokenExists.user)
+            let user = await User.findById(refreshTokenExists.user)
                                  .where({active: true})
                                  .select('-active -offers');
             if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');

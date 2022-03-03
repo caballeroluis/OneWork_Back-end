@@ -2,8 +2,7 @@ const Worker = require('../models/worker.model');
 const Recruiter = require('../models/recruiter.model');
 const Offer = require('../models/offer.model');
 const offerStateUtil = require('../utils/offerState.util');
-const { ErrorBDEntityNotFound, OfferStatusError, 
-        UnathorizedError, InsufficientPermisionError } = require('../utils/customErrors.util');
+const { ErrorBDEntityNotFound, UnathorizedError } = require('../utils/customErrors.util');
 
 // TODO: Añadir el ID de worker y recruiter.
 
@@ -85,14 +84,16 @@ let getOfferByID = async function(id) {
 }
 
 let changeStateOffer = async function(id, userID, status) {
+
     try {
+
         let offer = await Offer.findById(id)
                                .where({abandoned: false})
                                .select('-abandoned');
+
         if(!offer) throw new ErrorBDEntityNotFound('This offer doesn\'t exist');
-
         if(!offerStateUtil.booleanCheckOfferAssigned(userID, offer)) throw new InsufficientPermisionError('You are not authorized to perform this action');
-
+        
         switch(status) {
             case 'ready':
                 if(!offerStateUtil.booleanReady(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
@@ -112,16 +113,17 @@ let changeStateOffer = async function(id, userID, status) {
             break;
             default:
                 throw new OfferStatusError('The status introduced is incorrect');
-        }
+            }
         
         offer.status = status;
-        offer.save();
-
+        await offer.save();
+        
         return offer;
     } catch(error) {
         throw error
     }
 }
+    
 let updateOffer = async function(id, userID, body) {
     try {
         let offer = await Offer.findById(id)

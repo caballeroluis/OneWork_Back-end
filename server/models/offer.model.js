@@ -26,8 +26,7 @@ let offerSchema = new Schema({
         type: String
     },
     workplaceAddress: {
-        type: String,
-        required: [true, 'Enter workplace is mandatory']
+        type: String
     },
     description: {
         type: String
@@ -57,7 +56,6 @@ let offerSchema = new Schema({
         required: true
     }
 });
-
 
 module.exports = mongoose.model('offer', offerSchema);
 
