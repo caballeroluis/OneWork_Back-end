@@ -1,5 +1,7 @@
 const adminService = require('../services/admin.service');
 const { validationResult } = require('express-validator');
+const { responseOkElementCreated, responseOk, 
+        responseOkArray, responseOkElementDeleted } = require('../utils/customResponses.util');
 
 /* Seasson */
 
@@ -16,7 +18,7 @@ exports.deleteRefreshToken = async function(req, res, next) {
 
     try {
         await adminService.deleteRefreshToken(id);
-        return res.json({}); 
+        responseOkElementDeleted(res);
     } catch(error) {
         next(error);
     }
@@ -35,7 +37,7 @@ exports.getOffersAdmin = async function(req, res, next) {
 
     try {
         let offer = await adminService.getOffersAdmin();
-        return res.json(offer);
+        responseOkArray(res, offer);
     } catch(error) {
         next(error);
     }
@@ -53,7 +55,7 @@ exports.getOfferByIDAdmin = async (req, res, next) => {
 
     try {
         let offer = await adminService.getOfferByIDAdmin(id);
-        return res.json(offer);
+        responseOk(res, offer);
     } catch(error) {
         next(error);
     }
@@ -72,7 +74,7 @@ exports.changeStateOfferAdmin = async function(req, res, next) {
 
     try {
         let offer = await adminService.changeStateOfferAdmin(id, status);
-        return res.json(offer);
+        responseOk(res, offer);
     } catch(error) {
         next(error);
     }
@@ -91,7 +93,7 @@ exports.updateOfferAdmin = async function(req, res, next) {
 
     try {
         let offer = await adminService.updateOfferAdmin(id, body);
-        return res.json(offer);
+        responseOk(res, offer);
     } catch(error) {
         next(error);
     }
@@ -109,13 +111,32 @@ exports.deleteOfferAdmin = async function(req, res, next) {
     
     try {
         await adminService.deleteOfferAdmin(id);
-        return res.json({});
+        responseOkElementDeleted(res);
     } catch(error) {
         next(error);
     }
 }
 
 /* User */
+
+exports.createUserAdmin = async (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+
+        return res.status(400).json({ errors: errors.array(true)[0] });
+    }
+
+    const body = req.body;
+    const {email, password} = body;
+
+    try { 
+        let user = await adminService.createUserAdmin(email, password, body);
+        responseOkElementCreated(res, user);
+    } catch (error) {
+        next(error);
+    }  
+}
 
 exports.updateUserAdmin = async (req, res, next) => {
     const errors = validationResult(req);
@@ -130,7 +151,7 @@ exports.updateUserAdmin = async (req, res, next) => {
 
     try {
         let user = await adminService.updateUserAdmin(body, id, role);
-        return res.json(user);
+        responseOk(res, user);
     } catch(error) {
         next(error);
     }
@@ -145,10 +166,16 @@ exports.getUsersAdmin = async (req, res, next) => {
     }
 
     let role = req.query.role;
+
+    if(role){
+        role = {role: req.query.role};
+    } else {
+        role = {};
+    }
     
     try {
         let user = await adminService.getUsersAdmin(role);
-        return res.json(user);
+        responseOkArray(res, user);
     } catch(error) {
         next(error);
     }
@@ -166,8 +193,7 @@ exports.getUserByIDAdmin = async (req, res, next) => {
 
     try {
         let user = await adminService.getUserByIDAdmin(id);
-        return res.json(user);
-
+        responseOk(res, user);
     } catch(error) {
         next(error);
     }
@@ -185,7 +211,7 @@ exports.deleteUserAdmin = async (req, res, next) => {
 
     try {
         await adminService.deleteUserAdmin(id);
-        return res.json({});
+        responseOkElementDeleted(res);
     } catch(error) {
         next(error);
     }
@@ -205,7 +231,7 @@ exports.deleteImgAdmin = async function(req, res, next) {
 
     try {
         await adminService.deleteImgAdmin(id);
-        return res.json({});
+        responseOkElementDeleted(res);
     } catch(error) {
         next(error);
     }

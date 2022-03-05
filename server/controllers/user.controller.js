@@ -1,5 +1,7 @@
 const userService = require('../services/user.service')
 const { validationResult } = require('express-validator');
+const { responseOkElementCreated, responseOk, 
+        responseOkArray, responseOkElementDeleted } = require('../utils/customResponses.util');
 
 exports.createUser = async (req, res, next) => {
     const errors = validationResult(req);
@@ -14,7 +16,7 @@ exports.createUser = async (req, res, next) => {
 
     try { 
         let user = await userService.createUser(email, password, body);
-        res.json(user);
+        responseOkElementCreated(res, user);
     } catch (error) {
         next(error);
     }  
@@ -34,8 +36,7 @@ exports.updateUser = async (req, res, next) => {
 
     try {
         let user = await userService.updateUser(body, id, role);
-        return res.json(user);
-
+        responseOk(res, user);
     } catch(error) {
         next(error);
     }
@@ -48,13 +49,18 @@ exports.getUsers = async (req, res, next) => {
 
         return res.status(400).json({ errors: errors.array(true)[0] });
     }
-
-    let role = req.query.role;
+    
+    let role;
+    
+    if(req.query.role){
+        role = {$and: [{role: req.query.role}, {role:{$ne: 'admin'}}]};
+    } else {
+        role = {role:{$ne: 'admin'}};
+    }
 
     try {
         let user = await userService.getUsers(role);
-        return res.json(user);
-
+        responseOkArray(res, user);
     } catch(error) {
         next(error);
     }
@@ -66,7 +72,7 @@ exports.getUserByID = async (req, res, next) => {
 
     try {
         let user = await userService.getUserID(id);
-        return res.json(user);
+        responseOk(res, user);
     } catch(error) {
         next(error);
     }
@@ -78,7 +84,7 @@ exports.deleteUser = async (req, res, next) => {
 
     try {
         await userService.deleteUser(id);
-        return res.json({});
+        responseOkElementDeleted(res);
     } catch(error) {
         next(error);
     }

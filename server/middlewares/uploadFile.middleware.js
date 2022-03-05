@@ -2,6 +2,8 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 
+const { ValidationDataError } = require('../utils/customErrors.util');
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, file.path);
@@ -23,7 +25,7 @@ let fileFilter = function (req, file, cb) {
 
     file.extension = extension;   
     if (!(validExtensions.includes(fileMimeExtension)) && !(validExtensions.includes(extension))) {
-        return cb(new Error('Only png, jpg, gif and jpeg extensions are allowed', false)) 
+        return cb(new ValidationDataError('Only png, jpg, gif and jpeg extensions are allowed', false)) 
     } else {
 
         if (!fs.existsSync(path.resolve(__dirname, `../../uploads/users`))) {
@@ -41,28 +43,11 @@ let fileFilter = function (req, file, cb) {
 };
 
 let uploadHandler = async function(req, res, next) {
-    multer({storage: storage, fileFilter: fileFilter}).single('image')(req, res, function(error){
-        
-        if (error) next(error);
-
-
-        if (!req.file) {
-
-            return res.status(400)
-                      .json({
-                        ok: false,
-                        message: 'There is not a file in the request'
-    
-                    })
-        } else if (error instanceof multer.MulterError) {
-            return res.status(400)
-                      .json({
-                            ok: false,
-                            message: 'No more than XMB files is allowed'
-            })
-        } else {
-            next()
-        } 
+    // TODO: determinar la cantidad máxima de bytes de los archivos.
+    multer({storage: storage, fileFilter: fileFilter, limits: { fileSize: 1048576 }}).single('image')(req, res, function(error){
+        if (error) return next(error);
+        if (!req.file) return next(new ValidationDataError('There is not a file in the request'));
+        next();
     })
 }
 

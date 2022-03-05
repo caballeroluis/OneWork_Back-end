@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 let validStatus = {
     // TODO: se ha hecho prueba técnica, se ha hablado con el equipo técnico, salario concretado
-    values: ['incompleted', 'opened', 'videoconferenceSet', 'accepted'],
+    values: ['backlog', 'ready', 'inProgress', 'videoSet', 'technicianChecked', 'accepted'],
     message: '{VALUE} is not a valid status'
 }
 
@@ -26,14 +26,16 @@ let offerSchema = new Schema({
         type: String
     },
     workplaceAddress: {
-        type: String,
-        required: [true, 'Enter workplace is mandatory']
+        type: String
     },
     description: {
         type: String
     },
     videoCallLink: {
         type: String
+    },
+    videoCallDate: {
+        type: Date
     },
     status: {
         type: String,
@@ -54,7 +56,6 @@ let offerSchema = new Schema({
         required: true
     }
 });
-
 
 module.exports = mongoose.model('offer', offerSchema);
 

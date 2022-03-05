@@ -1,4 +1,4 @@
-let booleanIncompleted = function(offer) {
+let booleanBacklog = function(offer) {
     if(!offer.salary ||
        !offer.title ||
        !offer.requirements ||
@@ -10,7 +10,7 @@ let booleanIncompleted = function(offer) {
     return false;
 };
 
-let booleanOpened = function(offer) {
+let booleanReady = function(offer) {
     if(offer.salary &&
         offer.title &&
         offer.requirements &&
@@ -22,7 +22,7 @@ let booleanOpened = function(offer) {
     return false;
 };
 
-let booleanVideoConferenceSet = function(offer) {
+let booleanVideoSet = function(offer) {
     if(offer.videoCallLink &&
        offer.salary &&
        offer.title &&
@@ -51,9 +51,9 @@ let booleanCheckOfferAssigned = function(userID, offer) {
 }
 
 module.exports = {
-    booleanIncompleted,
-    booleanOpened,
-    booleanVideoConferenceSet,
+    booleanBacklog,
+    booleanReady,
+    booleanVideoSet,
     booleanAccepted,
     booleanCheckOfferAssigned
 }

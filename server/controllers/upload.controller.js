@@ -1,5 +1,8 @@
 const { validationResult } = require('express-validator');
 const uploadService = require('../services/upload.service');
+const { responseOkElementCreated, responseOk, 
+        responseOkArray, responseOkElementDeleted } = require('../utils/customResponses.util');
+
 const fs = require('fs');
 const path = require('path');
 
@@ -8,7 +11,7 @@ exports.modifyImg = async (req, res, next) => {
     const { id, type } = req.params;
     try {
         let user = await uploadService.modifyImg(fileName, id, type);
-        return res.json(user);
+        responseOk(res, user);
     } catch(error) {
         next(error);
     }
@@ -35,12 +38,10 @@ exports.getImg = async (req, res, next) => {
 }
 
 exports.deleteImg = async (req, res, next) => {
-
     let id = req.params.id;
-
     try {
         await uploadService.deleteImg(id);
-        res.json({});
+        responseOkElementDeleted(res);
     } catch(error) {
         next(error);
     }

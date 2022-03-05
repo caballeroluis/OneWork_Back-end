@@ -1,53 +1,80 @@
 class ErrorBDEntityNotFound extends Error {  
-    constructor (status, ...params) {
+    constructor (...params) {
       super(...params)
       Error.captureStackTrace(this, this.constructor);
   
-      this.name = this.constructor.name
-      this.status = status
+      this.name = this.constructor.name;
+      this.status = 404;
     }
   
     statusCode() {
-      return this.status
+      return this.status;
     }
 }
 
+class ErrorPwdOrUserNotFound extends Error {  
+  constructor (...params) {
+    super(...params)
+    Error.captureStackTrace(this, this.constructor);
+
+    this.name = this.constructor.name;
+    this.status = 404;
+  }
+
+  statusCode() {
+    return this.status;
+  }
+}
+
+class OfferStatusError extends Error {  
+  constructor (...params) {
+    super(...params)
+    Error.captureStackTrace(this, this.constructor);
+
+    this.name = this.constructor.name;
+    this.status = 400;
+  }
+
+  statusCode() {
+    return this.status;
+  }
+}
+
 class ErrorBDEntityFound extends Error {  
-    constructor (status, ...params) {
+    constructor (...params) {
       super(...params)
       Error.captureStackTrace(this, this.constructor);
   
       this.name = this.constructor.name
-      this.status = status
+      this.status = 400;
     }
   
     statusCode() {
-      return this.status
+      return this.status;
     }
 }
 
 class ValidationDataError extends Error {  
-    constructor (status, ...params) {
+    constructor (...params) {
       super(...params)
       Error.captureStackTrace(this, this.constructor);
   
-      this.name = this.constructor.name
-      this.status = status
+      this.name = this.constructor.name;
+      this.status = 400;
     }
   
     statusCode() {
-      return this.status
+      return this.status;
     }
 }
 
 class MultipleValidationDataError extends Error {  
-    constructor (status, message, ...params) {
+    constructor (...params) {
       super(...params)
       Error.captureStackTrace(this, this.constructor);
         
-      this.name = this.constructor.name
-      this.message = message
-      this.status = status
+      this.name = this.constructor.name;
+      this.status = 400;
     }
   
     statusCode() {
@@ -56,22 +83,39 @@ class MultipleValidationDataError extends Error {
 }
 
 class InsufficientPermisionError extends Error {  
-  constructor (status, ...params) {
+  constructor (...params) {
     super(...params)
     Error.captureStackTrace(this, this.constructor);
 
-    this.name = this.constructor.name
-    this.status = status
+    this.name = this.constructor.name;
+    this.status = 403;
   }
 
   statusCode() {
-    return this.status
+    return this.status;
+  }
+}
+
+class UnathorizedError extends Error {  
+  constructor (...params) {
+    super(...params)
+    Error.captureStackTrace(this, this.constructor);
+
+    this.name = this.constructor.name;
+    this.status = 401;
+  }
+
+  statusCode() {
+    return this.status;
   }
 }
 
 module.exports = {
   MultipleValidationDataError,
   InsufficientPermisionError,
+  OfferStatusError,
+  UnathorizedError,
+  ErrorPwdOrUserNotFound,
   ErrorBDEntityNotFound,
   ErrorBDEntityFound,
   ValidationDataError

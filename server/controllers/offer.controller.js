@@ -1,5 +1,8 @@
 let offerService = require('../services/offer.service');
 const _ = require('underscore');
+const { responseOkElementCreated, responseOk, 
+        responseOkArray, responseOkElementDeleted } = require('../utils/customResponses.util');
+
 
 exports.createOffer = async (req, res, next) => {
 
@@ -8,7 +11,7 @@ exports.createOffer = async (req, res, next) => {
 
     try {
         let offer = await offerService.createOffer(idWorker, idRecruiter, body);
-        return res.json(offer);
+        responseOkElementCreated(res, offer);
     } catch(error) {
         next(error);
     }
@@ -19,8 +22,7 @@ exports.getOffers = async (req, res, next) => {
 
     try {
         let offer = await offerService.getOffers();
-        if(!offer) throw {status: 400, message: 'This offer doesn\'t exist'};
-        return res.json(offer);
+        responseOkArray(res, offer);
     } catch(error) {
         next(error);
     }
@@ -32,8 +34,7 @@ exports.getOfferByID = async (req, res, next) => {
 
     try {
         let offer = await offerService.getOfferByID(id);
-        if(!offer) throw {status: 400, message: 'This offer doesn\'t exist'};
-        return res.json(offer);
+        responseOk(res, offer);
     } catch(error) {
         next(error);
     }
@@ -42,11 +43,11 @@ exports.getOfferByID = async (req, res, next) => {
 exports.updateOffer = async (req, res, next) => {
 
     const id = req.params.id;
-    let body = _.pick(req.body, ['salary', 'title', 'requirements', 'workplaceAdress', 'description', 'workerAssigned']);
+    let body = _.pick(req.body, ['salary', 'title', 'requirements', 'workplaceAddress', 'description', 'workerAssigned']);
 
     try {   
         let offer = await offerService.updateOffer(id, req.user._id, body);
-        res.json(offer);
+        responseOk(res, offer);
     } catch(error) {
         next(error);
     }
@@ -61,7 +62,7 @@ exports.changeStateOffer = async (req, res, next) => {
     
     try {
         let offer = await offerService.changeStateOffer(id, req.user._id, status);
-        res.json(offer);
+        responseOk(res, offer);
     } catch(error) {
         next(error);
     }
@@ -73,9 +74,8 @@ exports.changeStateOffer = async (req, res, next) => {
 exports.deleteOffer = async (req, res, next) => {
     const id = req.params.id;
     try {
-        let offer = await offerService.deleteOffer(id, req.user._id);
-        if(!offer) throw {status: 400, message: 'This offer doesn\'t exist'};
-        res.json({});
+        await offerService.deleteOffer(id, req.user._id);
+        responseOkElementDeleted(res);
     } catch (error) {
         next(error);
     }

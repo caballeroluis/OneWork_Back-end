@@ -2,6 +2,7 @@ const express = require('express');
 const { check } = require('express-validator');
 
 const adminController = require('../controllers/admin.controller');
+const adminService = require('../services/admin.service');
 const verifyToken = require('../middlewares/verifyAuth.middleware');
 const { verifyAdmin } = require('../middlewares/verifyRole.middleware');
 
@@ -18,29 +19,40 @@ router.delete(
 
 /* Offers */
 
+router.post(
+    '/worker/:idWorker/recruiter/:idRecruiter', 
+    verifyToken,
+    verifyAdmin, 
+    adminService.createOfferAdmin
+)
+
 router.get(
     '/offers', 
     verifyToken,
-    verifyAdmin 
+    verifyAdmin,
+    adminController.getOffersAdmin
 
 )
 router.get(
-    '/offers:id', 
+    '/offers/:id', 
     verifyToken,
+    verifyAdmin,
+    adminController.getOfferByIDAdmin
 )
 
 router.patch(
     '/offers/:id', 
     verifyToken,
-    verifyAdmin
+    verifyAdmin,
+    adminController.changeStateOfferAdmin
 
 )
 
 router.put(
     '/offers/:id', 
     verifyToken,
-    verifyAdmin
-
+    verifyAdmin,
+    adminController.updateOfferAdmin
 )
 
 router.delete(
@@ -51,31 +63,39 @@ router.delete(
 )
 
 /* Users */
+router.post(
+    '/users', 
+    verifyToken,
+    verifyAdmin,
+    adminController.createUserAdmin
+)
 
 router.get(
     '/users', 
     verifyToken,
-    verifyAdmin
-
+    verifyAdmin,
+    adminController.getUsersAdmin
 )
 
 router.get(
     '/users/:id', 
     verifyToken,
-    verifyAdmin
-
+    verifyAdmin,
+    adminController.getUserByIDAdmin
 )
 
 router.put(
     '/users/:id', 
     verifyToken,
-    verifyAdmin
+    verifyAdmin,
+    adminController.updateUserAdmin
 )
 
 router.delete(
     '/users/:id', 
     verifyToken,
-    verifyAdmin
+    verifyAdmin,
+    adminController.deleteUserAdmin
 )
 
 /* Uploads */
@@ -83,7 +103,8 @@ router.delete(
 router.delete(
     '/uploads/image/:id', 
     verifyToken,
-    verifyAdmin
+    verifyAdmin,
+    adminController.deleteImgAdmin
 )
 
 module.exports = router;
