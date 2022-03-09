@@ -1,7 +1,4 @@
-const mongoose = require('mongoose');
-
-module.exports = function(error, req, res, next) {
-    console.error(error);
+module.exports = function(error, req, res) {
     switch(error.name) {
       case 'ErrorPwdOrUserNotFound':
         res.status(error.status).json({message: error.message});
@@ -39,7 +36,5 @@ module.exports = function(error, req, res, next) {
       default:
         res.status(500).json({message: 'Internal Server Error'});
       break;
-
     }
-
 }

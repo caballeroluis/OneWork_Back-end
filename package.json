@@ -22,6 +22,7 @@
   },
   "homepage": "https://gitlab.com/onework/backend#readme",
   "dependencies": {
+    "@supercharge/request-ip": "^1.2.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
     "express": "^4.17.2",
@@ -34,6 +35,7 @@
     "nodemon": "^2.0.15",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.3.0",
-    "underscore": "^1.13.2"
+    "underscore": "^1.13.2",
+    "winston": "^3.6.0"
   }
 }
