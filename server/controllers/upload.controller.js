@@ -11,7 +11,7 @@ exports.modifyImg = async (req, res, next) => {
     const { id, type } = req.params;
     try {
         let user = await uploadService.modifyImg(fileName, id, type);
-        responseOk(res, user);
+        responseOk(req, res, user);
     } catch(error) {
         next(error);
     }
@@ -41,7 +41,7 @@ exports.deleteImg = async (req, res, next) => {
     let id = req.params.id;
     try {
         await uploadService.deleteImg(id);
-        responseOkElementDeleted(res);
+        responseOkElementDeleted(req, res);
     } catch(error) {
         next(error);
     }

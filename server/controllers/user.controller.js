@@ -16,7 +16,7 @@ exports.createUser = async (req, res, next) => {
 
     try { 
         let user = await userService.createUser(email, password, body);
-        responseOkElementCreated(res, user);
+        responseOkElementCreated(req, res, user);
     } catch (error) {
         next(error);
     }  
@@ -36,7 +36,7 @@ exports.updateUser = async (req, res, next) => {
 
     try {
         let user = await userService.updateUser(body, id, role);
-        responseOk(res, user);
+        responseOk(req, res, user);
     } catch(error) {
         next(error);
     }
@@ -60,7 +60,7 @@ exports.getUsers = async (req, res, next) => {
 
     try {
         let user = await userService.getUsers(role);
-        responseOkArray(res, user);
+        responseOkArray(req, res, user);
     } catch(error) {
         next(error);
     }
@@ -72,7 +72,7 @@ exports.getUserByID = async (req, res, next) => {
 
     try {
         let user = await userService.getUserID(id);
-        responseOk(res, user);
+        responseOk(req, res, user);
     } catch(error) {
         next(error);
     }
@@ -84,7 +84,7 @@ exports.deleteUser = async (req, res, next) => {
 
     try {
         await userService.deleteUser(id);
-        responseOkElementDeleted(res);
+        responseOkElementDeleted(req, res);
     } catch(error) {
         next(error);
     }

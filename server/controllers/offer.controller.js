@@ -11,7 +11,7 @@ exports.createOffer = async (req, res, next) => {
 
     try {
         let offer = await offerService.createOffer(idWorker, idRecruiter, body);
-        responseOkElementCreated(res, offer);
+        responseOkElementCreated(req, res, offer);
     } catch(error) {
         next(error);
     }
@@ -22,7 +22,7 @@ exports.getOffers = async (req, res, next) => {
 
     try {
         let offer = await offerService.getOffers();
-        responseOkArray(res, offer);
+        responseOkArray(req, res, offer);
     } catch(error) {
         next(error);
     }
@@ -34,7 +34,7 @@ exports.getOfferByID = async (req, res, next) => {
 
     try {
         let offer = await offerService.getOfferByID(id);
-        responseOk(res, offer);
+        responseOk(req, res, offer);
     } catch(error) {
         next(error);
     }
@@ -47,7 +47,7 @@ exports.updateOffer = async (req, res, next) => {
 
     try {   
         let offer = await offerService.updateOffer(id, req.user._id, body);
-        responseOk(res, offer);
+        responseOk(req, res, offer);
     } catch(error) {
         next(error);
     }
@@ -62,7 +62,7 @@ exports.changeStateOffer = async (req, res, next) => {
     
     try {
         let offer = await offerService.changeStateOffer(id, req.user._id, status);
-        responseOk(res, offer);
+        responseOk(req, res, offer);
     } catch(error) {
         next(error);
     }
@@ -75,7 +75,7 @@ exports.deleteOffer = async (req, res, next) => {
     const id = req.params.id;
     try {
         await offerService.deleteOffer(id, req.user._id);
-        responseOkElementDeleted(res);
+        responseOkElementDeleted(req, res);
     } catch (error) {
         next(error);
     }

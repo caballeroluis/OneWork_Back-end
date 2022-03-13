@@ -1,4 +1,7 @@
-module.exports = function(error, req, res) {
+const logGenerator = require('../utils/logGenerator.util');
+
+module.exports = function(error, req, res, next) {
+    logGenerator(req, error);
     switch(error.name) {
       case 'ErrorPwdOrUserNotFound':
         res.status(error.status).json({message: error.message});
@@ -32,6 +35,12 @@ module.exports = function(error, req, res) {
       break;
       case 'TokenExpiredError':
         res.status(401).json({message: error.message});
+      break;
+      case 'JsonWebTokenError':
+        res.status(400).json({message: error.message});
+      break;
+      case 'NotBeforeError':
+        res.status(400).json({message: error.message});
       break;
       default:
         res.status(500).json({message: 'Internal Server Error'});

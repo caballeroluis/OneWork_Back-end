@@ -18,7 +18,7 @@ exports.deleteRefreshToken = async function(req, res, next) {
 
     try {
         await adminService.deleteRefreshToken(id);
-        responseOkElementDeleted(res);
+        responseOkElementDeleted(req, res);
     } catch(error) {
         next(error);
     }
@@ -37,7 +37,7 @@ exports.getOffersAdmin = async function(req, res, next) {
 
     try {
         let offer = await adminService.getOffersAdmin();
-        responseOkArray(res, offer);
+        responseOkArray(req, res, offer);
     } catch(error) {
         next(error);
     }
@@ -55,7 +55,7 @@ exports.getOfferByIDAdmin = async (req, res, next) => {
 
     try {
         let offer = await adminService.getOfferByIDAdmin(id);
-        responseOk(res, offer);
+        responseOk(req, res, offer);
     } catch(error) {
         next(error);
     }
@@ -74,7 +74,7 @@ exports.changeStateOfferAdmin = async function(req, res, next) {
 
     try {
         let offer = await adminService.changeStateOfferAdmin(id, status);
-        responseOk(res, offer);
+        responseOk(req, res, offer);
     } catch(error) {
         next(error);
     }
@@ -93,7 +93,7 @@ exports.updateOfferAdmin = async function(req, res, next) {
 
     try {
         let offer = await adminService.updateOfferAdmin(id, body);
-        responseOk(res, offer);
+        responseOk(req, res, offer);
     } catch(error) {
         next(error);
     }
@@ -111,7 +111,7 @@ exports.deleteOfferAdmin = async function(req, res, next) {
     
     try {
         await adminService.deleteOfferAdmin(id);
-        responseOkElementDeleted(res);
+        responseOkElementDeleted(req, res);
     } catch(error) {
         next(error);
     }
@@ -132,7 +132,7 @@ exports.createUserAdmin = async (req, res, next) => {
 
     try { 
         let user = await adminService.createUserAdmin(email, password, body);
-        responseOkElementCreated(res, user);
+        responseOkElementCreated(req, res, user);
     } catch (error) {
         next(error);
     }  
@@ -151,7 +151,7 @@ exports.updateUserAdmin = async (req, res, next) => {
 
     try {
         let user = await adminService.updateUserAdmin(body, id, role);
-        responseOk(res, user);
+        responseOk(req, res, user);
     } catch(error) {
         next(error);
     }
@@ -175,7 +175,7 @@ exports.getUsersAdmin = async (req, res, next) => {
     
     try {
         let user = await adminService.getUsersAdmin(role);
-        responseOkArray(res, user);
+        responseOkArray(req, res, user);
     } catch(error) {
         next(error);
     }
@@ -193,7 +193,7 @@ exports.getUserByIDAdmin = async (req, res, next) => {
 
     try {
         let user = await adminService.getUserByIDAdmin(id);
-        responseOk(res, user);
+        responseOk(req, res, user);
     } catch(error) {
         next(error);
     }
@@ -211,7 +211,7 @@ exports.deleteUserAdmin = async (req, res, next) => {
 
     try {
         await adminService.deleteUserAdmin(id);
-        responseOkElementDeleted(res);
+        responseOkElementDeleted(req, res);
     } catch(error) {
         next(error);
     }
@@ -231,7 +231,7 @@ exports.deleteImgAdmin = async function(req, res, next) {
 
     try {
         await adminService.deleteImgAdmin(id);
-        responseOkElementDeleted(res);
+        responseOkElementDeleted(req, res);
     } catch(error) {
         next(error);
     }
