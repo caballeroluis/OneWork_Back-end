@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { globalLimiter } = require('./middlewares/rateLimiter.middleware'); 
 
 const app = express();
 
@@ -14,6 +15,8 @@ mongoose.connect('mongodb://localhost:27017/OneWork', { useNewUrlParser: true },
   console.log('Datebase is up!');
 })
 
+
+app.use(globalLimiter);
 
 app.use('/api/users', require('./routes/user.route'));
 app.use('/api/session', require('./routes/session.route'));

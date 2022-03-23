@@ -24,6 +24,9 @@ module.exports = function(error, req, res, next) {
       case 'InsufficientPermisionError':
         res.status(error.status).json({message: error.message});
       break;
+      case 'ErrorLimitRateExceeded':
+        res.status(error.status).json({message: error.message});
+      break;
       case 'MulterError':
         res.status(400).json({message: error.message});
       break;

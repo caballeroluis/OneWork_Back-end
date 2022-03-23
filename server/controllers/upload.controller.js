@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const uploadService = require('../services/upload.service');
-const { responseOkElementCreated, responseOk, 
-        responseOkArray, responseOkElementDeleted } = require('../utils/customResponses.util');
+const { responseOk, responseOkElementDeleted } = require('../utils/customResponses.util');
+const logGenerator = require('../utils/logGenerator.util');
 
 const fs = require('fs');
 const path = require('path');
@@ -26,6 +26,7 @@ exports.getImg = async (req, res, next) => {
 
         let img = await uploadService.getImg(id);
         let pathFile = path.resolve(__dirname, `../../uploads/users/${ id }/${ img }`);
+        logGenerator(req);
         if (fs.existsSync(pathFile) && img) {
             res.sendFile(pathFile);
         } else {

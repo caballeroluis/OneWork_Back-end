@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const loginService = require('../services/auth.service');
-
+const logGenerator = require('../utils/logGenerator.util');
 
 exports.userLogin = async (req, res, next) => {
 
@@ -15,6 +15,7 @@ exports.userLogin = async (req, res, next) => {
 
     try {      
         let { token, refreshToken, user } = await loginService.userLogin(email, password);
+        logGenerator(req);
         return res.json({
             user,
             token,
@@ -37,6 +38,7 @@ exports.letsRefreshToken = async function(req, res, next) {
 
     try {      
         let newToken = await loginService.letsRefreshToken(refreshToken);
+        logGenerator(req);
         return res.json({token: newToken});  
     } catch(error) {
         next(error);
@@ -54,6 +56,7 @@ exports.userLogout = async (req, res, next) => {
     
     try {      
         await loginService.userLogout(id);
+        logGenerator(req);
         return res.json({});  
     } catch(error) {
         next(error);
