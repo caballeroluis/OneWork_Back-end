@@ -2,7 +2,7 @@ const Worker = require('../models/worker.model');
 const Recruiter = require('../models/recruiter.model');
 const Offer = require('../models/offer.model');
 const offerStateUtil = require('../utils/offerState.util');
-const { ErrorBDEntityNotFound, UnathorizedError } = require('../utils/customErrors.util');
+const { ErrorBDEntityNotFound, UnathorizedError, OfferStatusError } = require('../utils/customErrors.util');
 
 // TODO: Añadir el ID de worker y recruiter.
 
