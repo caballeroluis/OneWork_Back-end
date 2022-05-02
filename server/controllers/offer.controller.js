@@ -1,5 +1,4 @@
 let offerService = require('../services/offer.service');
-const _ = require('underscore');
 const { responseOkElementCreated, responseOk, 
         responseOkArray, responseOkElementDeleted } = require('../utils/customResponses.util');
 
@@ -43,7 +42,7 @@ exports.getOfferByID = async (req, res, next) => {
 exports.updateOffer = async (req, res, next) => {
 
     const id = req.params.id;
-    let body = _.pick(req.body, ['salary', 'title', 'requirements', 'workplaceAddress', 'description', 'workerAssigned']);
+    let body = req.body;
 
     try {   
         let offer = await offerService.updateOffer(id, req.user._id, body);

@@ -37,6 +37,10 @@ let offerSchema = new Schema({
     videoCallDate: {
         type: Date
     },
+    technicianChecked: {
+        type: Boolean,
+        default: false
+    },
     status: {
         type: String,
         default: 'created',

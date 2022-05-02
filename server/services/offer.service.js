@@ -105,7 +105,7 @@ let changeStateOffer = async function(id, userID, status) {
                 if(!offerStateUtil.booleanVideoSet(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
             case 'technicianChecked':
-
+                if(!offerStateUtil.booleanTechnicianChecked(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
             case 'accepted':
                 // TODO: modificar offer accepted offerStateUtil
@@ -145,6 +145,7 @@ let updateOffer = async function(id, userID, body) {
         offer.workerAssigned = body.workerAssigned || offer.workerAssigned._id;
         offer.videoCallDate = body.videoCallDate || offer.videoCallDate;
         offer.videoCallLink = body.videoCallLink || offer.videoCallLink;
+        offer.technicianChecked = body.technicianChecked || offer.technicianChecked;
 
         if(offerStateUtil.booleanBacklog(offer)) offer.status = 'backlog';
         
