@@ -43,7 +43,7 @@ let offerSchema = new Schema({
     },
     status: {
         type: String,
-        default: 'created',
+        default: 'backlog',
         enum: validStatus
     },
     abandoned: {
