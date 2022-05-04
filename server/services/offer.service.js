@@ -27,7 +27,10 @@ let createOffer = async function(idWorker, idRecruiter, body) {
             workplaceAddress: body.workplaceAddress,
             description: body.description,
             workerAssigned: worker._id,
-            recruiterAssigned: recruiter._id
+            recruiterAssigned: recruiter._id,
+            videoCallDate: body.videoCallDate,
+            videoCallLink: body.videoCallLink,
+            technicianChecked: body.technicianChecked
         });
 
         if(offerStateUtil.booleanReady(offer)) {
