@@ -50,8 +50,7 @@ let booleanTechnicianChecked = function(offer) {
 };
 
 let booleanAccepted = function(offer) {
-    if(offer.status === 'inProgress' ||
-       offer.status === 'technicianChecked') {
+    if(offer.status !== 'backlog') {
         return true;
     }
     return false;

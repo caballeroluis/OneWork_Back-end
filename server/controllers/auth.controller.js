@@ -1,15 +1,12 @@
 const { validationResult } = require('express-validator');
 const loginService = require('../services/auth.service');
 const logGenerator = require('../utils/logGenerator.util');
+const { MultipleValidationDataError } = require('../utils/customErrors.util');
 
 exports.userLogin = async (req, res, next) => {
-
     const errors = validationResult(req);
-  
-    if (!errors.isEmpty()) {
-
-      return res.status(400).json({ errors: errors.array() });
-    }
+    
+    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true)[0])));
 
     const { email, password } = req.body;
 
@@ -27,17 +24,10 @@ exports.userLogin = async (req, res, next) => {
 }
 
 exports.letsRefreshToken = async function(req, res, next) {
-    const errors = validationResult(req);
-  
-    if (!errors.isEmpty()) {
-
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    let refreshToken = req.body.refreshToken;
+    const refreshToken = req.body.refreshToken;
 
     try {      
-        let newToken = await loginService.letsRefreshToken(refreshToken);
+        const newToken = await loginService.letsRefreshToken(refreshToken);
         logGenerator(req);
         return res.json({token: newToken});  
     } catch(error) {
@@ -46,13 +36,7 @@ exports.letsRefreshToken = async function(req, res, next) {
 }
 
 exports.userLogout = async (req, res, next) => {
-    const errors = validationResult(req);
-  
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    let id = req.user._id;
+    const id = req.user._id;
     
     try {      
         await loginService.userLogout(id);

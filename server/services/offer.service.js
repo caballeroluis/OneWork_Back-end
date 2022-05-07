@@ -2,9 +2,8 @@ const Worker = require('../models/worker.model');
 const Recruiter = require('../models/recruiter.model');
 const Offer = require('../models/offer.model');
 const offerStateUtil = require('../utils/offerState.util');
-const { ErrorBDEntityNotFound, UnathorizedError, OfferStatusError } = require('../utils/customErrors.util');
-
-// TODO: Añadir el ID de worker y recruiter.
+const { ErrorBDEntityNotFound, UnathorizedError, 
+        OfferStatusError, InsufficientPermisionError } = require('../utils/customErrors.util');
 
 let createOffer = async function(idWorker, idRecruiter, body) {
 
@@ -86,7 +85,7 @@ let getOfferByID = async function(id) {
     }
 }
 
-let changeStateOffer = async function(id, userID, status) {
+let changeStateOffer = async function(id, userID, status, role) {
 
     try {
 
@@ -111,7 +110,7 @@ let changeStateOffer = async function(id, userID, status) {
                 if(!offerStateUtil.booleanTechnicianChecked(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
             case 'accepted':
-                // TODO: modificar offer accepted offerStateUtil
+                if(role !== 'recruiter') throw new UnathorizedError('You are not authorized to perform this action');
                 if(!offerStateUtil.booleanAccepted(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
             default:

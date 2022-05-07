@@ -19,13 +19,11 @@ exports.modifyImg = async (req, res, next) => {
 
 
 exports.getImg = async (req, res, next) => {
-
-    let id = req.params.id;
+    const id = req.params.id;
 
     try {
-
-        let img = await uploadService.getImg(id);
-        let pathFile = path.resolve(__dirname, `../../uploads/users/${ id }/${ img }`);
+        const img = await uploadService.getImg(id);
+        const pathFile = path.resolve(__dirname, `../../uploads/users/${ id }/${ img }`);
         logGenerator(req);
         if (fs.existsSync(pathFile) && img) {
             res.sendFile(pathFile);
@@ -39,7 +37,7 @@ exports.getImg = async (req, res, next) => {
 }
 
 exports.deleteImg = async (req, res, next) => {
-    let id = req.params.id;
+    const id = req.params.id;
     try {
         await uploadService.deleteImg(id);
         responseOkElementDeleted(req, res);

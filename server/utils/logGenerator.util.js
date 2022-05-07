@@ -1,7 +1,7 @@
 const winston = require('winston');
 const { combine, timestamp, printf, json } = winston.format;
 
-let loggerPack = {
+const loggerPack = {
   humanLogger: winston.createLogger({
     level: 'fatal',
     levels: {
@@ -81,10 +81,9 @@ let loggerPack = {
   }
 }
 
-winston.addColors(loggerPack.colors);
 
 module.exports = function logGenerator(req, error) {
-  let patterns = {
+  const patterns = {
     humanPattern: `${req.ip}, HTTP/${req.httpVersion}, ${req.headers['user-agent']}, ${req.method}, ${req.url}`,
     computerPattern: {
             ip: req.ip, 

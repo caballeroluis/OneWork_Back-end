@@ -1,16 +1,17 @@
 const express = require('express');
-const { check } = require('express-validator');
 
 const verifyToken = require('../middlewares/verifyAuth.middleware');
 const { verifyRecruiter } = require('../middlewares/verifyRole.middleware');
 const offerController = require('../controllers/offer.controller');
+const { offerValidator } = require('../middlewares/validators.middleware');
 
 const router = express.Router()
 
 router.post(
     '/worker/:idWorker/recruiter/:idRecruiter', 
     verifyToken,
-    verifyRecruiter, 
+    verifyRecruiter,
+    offerValidator, 
     offerController.createOffer
 )
 
@@ -33,6 +34,7 @@ router.patch(
 router.put(
     '/:id', 
     verifyToken,
+    offerValidator,
     offerController.updateOffer
 )
 
