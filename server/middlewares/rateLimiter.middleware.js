@@ -18,7 +18,7 @@ exports.globalLimiter = rateLimit({
 
 exports.authLimiter = rateLimit({
     windowMs: 30 * 60 * 1000,
-    max: 15, 
+    max: 50, 
     handler,
     standardHeaders: true,
     store: new MongoStore({

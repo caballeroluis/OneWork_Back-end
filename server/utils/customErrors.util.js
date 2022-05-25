@@ -39,7 +39,6 @@ class OfferStatusError extends Error {
     return this.status;
   }
 }
-
 class ErrorBDEntityFound extends Error {  
     constructor (...params) {
       super(...params)
@@ -53,7 +52,6 @@ class ErrorBDEntityFound extends Error {
       return this.status;
     }
 }
-
 class ValidationDataError extends Error {  
     constructor (...params) {
       super(...params)
@@ -94,7 +92,6 @@ class InsufficientPermisionError extends Error {
     return this.status;
   }
 }
-
 class UnathorizedError extends Error {  
   constructor (...params) {
     super(...params)
@@ -108,7 +105,6 @@ class UnathorizedError extends Error {
     return this.status;
   }
 }
-
 class ErrorLimitRateExceeded extends Error {  
   constructor (...params) {
     super(...params)

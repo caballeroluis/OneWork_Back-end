@@ -7,7 +7,7 @@ const { responseOkElementCreated, responseOk,
 exports.createOffer = async (req, res, next) => {
     const errors = validationResult(req);
 
-    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true)[0])));
+    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true))));
 
     const { idWorker, idRecruiter } = req.params;
     const body = req.body;

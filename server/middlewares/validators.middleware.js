@@ -25,7 +25,8 @@ exports.sessionValidator = [
 ]
 
 exports.offerValidator = [
-    check('salary', 'Enter a number').optional().isNumeric().escape(),
+    check('title', 'Enter a title').isString().escape(),
+    check('salary', 'Enter a number').isNumeric().escape(),
     check('requirements', 'Enter a valid requirements string').optional().escape(),
     check('workplaceAddress', 'Enter a valid address').optional().escape(),
     check('description', 'Enter a valid description').optional().escape(),
@@ -38,6 +39,6 @@ exports.offerValidator = [
                           .withMessage('Enter a correct date')
                           .custom(dateBeforePresentValidator)
                           .withMessage('Must be a value after actual date'),
-    check('videoCallLink', 'Enter a correct google meets link').optional().trim().escape(),
+    check('videoCallLink', 'Enter a correct google meets link').optional().trim(),
     check('technicianChecked', 'Enter true or false').optional().isBoolean().escape()
 ]
