@@ -38,6 +38,6 @@ exports.offerValidator = [
                           .withMessage('Enter a correct date')
                           .custom(dateBeforePresentValidator)
                           .withMessage('Must be a value after actual date'),
-    check('videoCallLink', 'Enter a correct google meets link').optional().trim().escape(),
+    check('videoCallLink', 'Enter a correct google meets link').optional().trim(),
     check('technicianChecked', 'Enter true or false').optional().isBoolean().escape()
 ]
