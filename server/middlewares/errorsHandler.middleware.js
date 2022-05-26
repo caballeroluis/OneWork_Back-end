@@ -24,8 +24,8 @@ module.exports = function(error, req, res, next) {
       case 'MultipleValidationDataError':
         res.status(error.status).json({errors: JSON.parse(error.message)});
         break;
-      case 'ValidationError:':
-        res.status(error.status).json({message: error.message});
+      case 'ValidationError':
+        res.status(400).json({message: error.message});
         break;
       case 'InsufficientPermisionError':
         res.status(error.status).json({message: error.message});
