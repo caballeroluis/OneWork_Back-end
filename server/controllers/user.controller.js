@@ -7,7 +7,7 @@ const { responseOkElementCreated, responseOk,
 exports.createUser = async (req, res, next) => {
     const errors = validationResult(req);
     
-    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true)[0])));
+    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true))));
 
     const body = req.body;
     const { email, password } = body;
@@ -23,7 +23,7 @@ exports.createUser = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
     const errors = validationResult(req);
     
-    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true)[0])));
+    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true))));
 
     const body = req.body;
     const role = req.user.role;
@@ -40,7 +40,7 @@ exports.updateUser = async (req, res, next) => {
 exports.getUsers = async (req, res, next) => {
     const errors = validationResult(req);
     
-    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true)[0])));
+    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true))));
     
     let role;
     

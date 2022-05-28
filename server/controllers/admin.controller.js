@@ -53,7 +53,7 @@ exports.changeStateOfferAdmin = async function(req, res, next) {
 exports.updateOfferAdmin = async function(req, res, next) {
     const errors = validationResult(req);
     
-    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true)[0])));
+    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true))));
 
     const id = req.params.id;
     const body = req.body; 
@@ -82,7 +82,7 @@ exports.deleteOfferAdmin = async function(req, res, next) {
 exports.createUserAdmin = async (req, res, next) => {
     const errors = validationResult(req);
     
-    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true)[0])));
+    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true))));
 
     const body = req.body;
     const {email, password} = body;
@@ -98,7 +98,7 @@ exports.createUserAdmin = async (req, res, next) => {
 exports.updateUserAdmin = async (req, res, next) => {
     const errors = validationResult(req);
     
-    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true)[0])));
+    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true))));
 
     const body = req.body;
     const role = req.user.role;

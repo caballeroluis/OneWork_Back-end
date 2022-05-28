@@ -44,7 +44,7 @@ exports.getOfferByID = async (req, res, next) => {
 exports.updateOffer = async (req, res, next) => {
     const errors = validationResult(req);
     
-    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true)[0])));
+    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true))));
 
     const id = req.params.id;
     const body = req.body;

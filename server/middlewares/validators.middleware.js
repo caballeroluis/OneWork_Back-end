@@ -1,7 +1,7 @@
 const { check } = require('express-validator');
 const { DNIValidator, dateBeforePresentValidator } = require('../utils/validators.util');
 
-// Establecer diferentes validadores
+// TODO: Establecer diferentes validadores
 exports.userValidator = [
     check('email', 'Enter a valid email').optional().normalizeEmail().isEmail().trim().escape(),
     check('password', 'Password must be a minimum of 8 characters').optional().isLength({

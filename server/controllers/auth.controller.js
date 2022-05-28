@@ -6,7 +6,7 @@ const { MultipleValidationDataError } = require('../utils/customErrors.util');
 exports.userLogin = async (req, res, next) => {
     const errors = validationResult(req);
     
-    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true)[0])));
+    if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true))));
 
     const { email, password } = req.body;
 
