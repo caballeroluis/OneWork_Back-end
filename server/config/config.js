@@ -1,6 +1,6 @@
 const express = require('express');
 
-const app = express()
+const app = express();
 
 // Establece el puerto a utilizar dependiendo de donde se ejecuta.
 // TODO: mover fichero .env
@@ -12,7 +12,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 // Establece un secreto provisional para JWT.
 
-process.env.SECRET = process.env.NODE_ENV || '';
+process.env.SECRET = process.env.SECRET || 'dwa';
 
 // Establece la política CORS siempre que el entorno sea de desarrollo.
 

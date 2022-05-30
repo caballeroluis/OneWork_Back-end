@@ -72,7 +72,6 @@ class MultipleValidationDataError extends Error {
     constructor (...params) {
       super(...params)
       Error.captureStackTrace(this, this.constructor);
-        
       this.name = this.constructor.name;
       this.status = 400;
     }
@@ -110,6 +109,20 @@ class UnathorizedError extends Error {
   }
 }
 
+class ErrorLimitRateExceeded extends Error {  
+  constructor (...params) {
+    super(...params)
+    Error.captureStackTrace(this, this.constructor);
+
+    this.name = this.constructor.name;
+    this.status = 429;
+  }
+
+  statusCode() {
+    return this.status;
+  }
+}
+
 module.exports = {
   MultipleValidationDataError,
   InsufficientPermisionError,
@@ -118,5 +131,6 @@ module.exports = {
   ErrorPwdOrUserNotFound,
   ErrorBDEntityNotFound,
   ErrorBDEntityFound,
-  ValidationDataError
+  ValidationDataError,
+  ErrorLimitRateExceeded
 }

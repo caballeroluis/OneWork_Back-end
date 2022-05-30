@@ -1,20 +1,26 @@
-exports.responseOkArray = (res, items) => {
+const logGenerator = require('../utils/logGenerator.util');
+
+exports.responseOkArray = (req, res, items) => {
+    logGenerator(req);
     return res.status(200).json({
         results: items
     });
 }
 
-exports.responseOk = (res, item) => {
+exports.responseOk = (req, res, item) => {
+    logGenerator(req);
     return res.status(200).json({
         result: item
     });
 }
 
-exports.responseOkElementDeleted = (res) => {
+exports.responseOkElementDeleted = (req, res) => {
+    logGenerator(req);
     return res.status(200).json({});
 }
 
-exports.responseOkElementCreated = (res, item) => {
+exports.responseOkElementCreated = (req, res, item) => {
+    logGenerator(req);
     return res.status(201).json({
         result: item
     });

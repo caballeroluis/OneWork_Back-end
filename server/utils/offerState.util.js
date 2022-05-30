@@ -35,8 +35,22 @@ let booleanVideoSet = function(offer) {
     return false;
 };
 
+let booleanTechnicianChecked = function(offer) {
+    if(offer.videoCallLink &&
+       offer.salary &&
+       offer.title &&
+       offer.requirements &&
+       offer.workplaceAddress &&
+       offer.description &&
+       offer.workerAssigned &&
+       offer.technicianChecked) {
+       return true;
+    }
+    return false;
+};
+
 let booleanAccepted = function(offer) {
-    if(offer.accepted) {
+    if(offer.status !== 'backlog') {
         return true;
     }
     return false;
@@ -54,6 +68,7 @@ module.exports = {
     booleanBacklog,
     booleanReady,
     booleanVideoSet,
+    booleanTechnicianChecked,
     booleanAccepted,
     booleanCheckOfferAssigned
 }

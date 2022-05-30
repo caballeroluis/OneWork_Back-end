@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+const logGenerator = require('../utils/logGenerator.util');
 
 module.exports = function(error, req, res, next) {
-    console.error(error);
+    logGenerator(req, error);
     switch(error.name) {
       case 'ErrorPwdOrUserNotFound':
         res.status(error.status).json({message: error.message});
@@ -20,8 +20,17 @@ module.exports = function(error, req, res, next) {
       break;
       case 'ValidationDataError':
         res.status(error.status).json({message: error.message});
-      break;
+        break;
+      case 'MultipleValidationDataError':
+        res.status(error.status).json({errors: JSON.parse(error.message)});
+        break;
+      case 'ValidationError':
+        res.status(400).json({message: error.message});
+        break;
       case 'InsufficientPermisionError':
+        res.status(error.status).json({message: error.message});
+      break;
+      case 'ErrorLimitRateExceeded':
         res.status(error.status).json({message: error.message});
       break;
       case 'MulterError':
@@ -36,10 +45,14 @@ module.exports = function(error, req, res, next) {
       case 'TokenExpiredError':
         res.status(401).json({message: error.message});
       break;
+      case 'JsonWebTokenError':
+        res.status(400).json({message: error.message});
+      break;
+      case 'NotBeforeError':
+        res.status(400).json({message: error.message});
+      break;
       default:
         res.status(500).json({message: 'Internal Server Error'});
       break;
-
     }
-
 }

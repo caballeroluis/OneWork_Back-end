@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const uploadService = require('../services/upload.service');
-const { responseOkElementCreated, responseOk, 
-        responseOkArray, responseOkElementDeleted } = require('../utils/customResponses.util');
+const { responseOk, responseOkElementDeleted } = require('../utils/customResponses.util');
+const logGenerator = require('../utils/logGenerator.util');
 
 const fs = require('fs');
 const path = require('path');
@@ -11,7 +11,7 @@ exports.modifyImg = async (req, res, next) => {
     const { id, type } = req.params;
     try {
         let user = await uploadService.modifyImg(fileName, id, type);
-        responseOk(res, user);
+        responseOk(req, res, user);
     } catch(error) {
         next(error);
     }
@@ -19,13 +19,12 @@ exports.modifyImg = async (req, res, next) => {
 
 
 exports.getImg = async (req, res, next) => {
-
-    let id = req.params.id;
+    const id = req.params.id;
 
     try {
-
-        let img = await uploadService.getImg(id);
-        let pathFile = path.resolve(__dirname, `../../uploads/users/${ id }/${ img }`);
+        const img = await uploadService.getImg(id);
+        const pathFile = path.resolve(__dirname, `../../uploads/users/${ id }/${ img }`);
+        logGenerator(req);
         if (fs.existsSync(pathFile) && img) {
             res.sendFile(pathFile);
         } else {
@@ -38,10 +37,10 @@ exports.getImg = async (req, res, next) => {
 }
 
 exports.deleteImg = async (req, res, next) => {
-    let id = req.params.id;
+    const id = req.params.id;
     try {
         await uploadService.deleteImg(id);
-        responseOkElementDeleted(res);
+        responseOkElementDeleted(req, res);
     } catch(error) {
         next(error);
     }

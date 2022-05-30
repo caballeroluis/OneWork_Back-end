@@ -22,7 +22,7 @@ let userLogin = async function(email, password) {
 
         //TODO: hay que registrar los secret de forma diferente con archivo .env
         let token = jwt.sign(payload, process.env.SECRET, {expiresIn: 300});
-        let refreshToken = jwt.sign({}, process.env.SECRET, {expiresIn: '4d'});
+        let refreshToken = jwt.sign({}, process.env.SECRET_REFRESH, {expiresIn: '4d'});
 
         if(refreshTokenDBExists) {
             refreshTokenDBExists.token = refreshToken;
@@ -43,14 +43,11 @@ let userLogin = async function(email, password) {
 let letsRefreshToken = async function(refreshToken) {
     try {      
         let refreshTokenExists = await refreshTokenModel.findOne({token: refreshToken});
-        console.log(refreshToken);
-        console.log(refreshTokenExists);
-        if(refreshTokenExists && jwt.verify(refreshToken, process.env.SECRET)) {
+        if(refreshTokenExists && jwt.verify(refreshToken, process.env.SECRET_REFRESH)) {
             let user = await User.findById(refreshTokenExists.user)
                                  .where({active: true})
                                  .select('-active -offers');
             if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
-            console.log(user);
             let payload = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName', 'corporationName']);
 
             let newToken = jwt.sign(payload, process.env.SECRET, {expiresIn: 1500});

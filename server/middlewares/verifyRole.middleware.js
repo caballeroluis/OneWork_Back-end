@@ -1,25 +1,21 @@
 const { InsufficientPermisionError } = require('../utils/customErrors.util');
 
 let verifyOwnId = (req, res, next) => {
+    const idProvided = req.params.id;
+    const user = req.user;
 
-    let idProvided = req.params.id;
-    let user = req.user;
-
-    if (idProvided === user._id) {
-        next();
-    } else {
-        return next(new InsufficientPermisionError('You are not authorized to perform this action'));
-    }
+    if (idProvided !== user._id) return next(new InsufficientPermisionError('You are not authorized to perform this action'));
+    else return next();
 }
 
 
-let verifyOwnIdOrRecruiter = (req, res, next) => {
+let verifyOwnIdOrRecruiter = (req, res, next) => {   
+    const idProvided = req.params.id;
+    const user = req.user;
+    const { role } = user;
     
-    let idProvided = req.params.id;
-    let user = req.user;
-
     if (idProvided === user._id ||
-        user.role === 'recruiter') {
+        role === 'recruiter') {
         next();
     } else {
         return next(new InsufficientPermisionError('You are not authorized to perform this action'));
@@ -27,36 +23,24 @@ let verifyOwnIdOrRecruiter = (req, res, next) => {
 }
 
 let verifyAdmin = (req, res, next) => {
+    const { role } = req.user;
 
-    let user = req.user;
-
-    if (user.role !== 'admin') {
-        return next(new InsufficientPermisionError('You are not authorized to perform this action'));
-    } else {
-        next();
-    }
+    if (role !== 'admin') return next(new InsufficientPermisionError('You are not authorized to perform this action'));
+    else return next();
 }
 
 let verifyWorker = (req, res, next) => {
+    const { role } = req.user;
 
-    let user = req.user;
-
-    if (user.role !== 'worker') {
-        return next(new InsufficientPermisionError('You are not authorized to perform this action'));
-    } else {
-        next();
-    }
+    if (role !== 'worker') return next(new InsufficientPermisionError('You are not authorized to perform this action'));
+    else return next();
 }
 
 let verifyRecruiter = (req, res, next) => {
+    const { role } = req.user;
 
-    let user = req.user;
-
-    if (user.role !== 'recruiter') {
-        return next(new InsufficientPermisionError('You are not authorized to perform this action'));
-    } else {
-        next();
-    }
+    if (role !== 'recruiter') return next(new InsufficientPermisionError('You are not authorized to perform this action'));
+    else next();
 }
 
 module.exports = {
