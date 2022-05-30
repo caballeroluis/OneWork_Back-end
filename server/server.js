@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 mongoose.connect('mongodb://localhost:27017/OneWork', { useNewUrlParser: true }, (error, res) => {
+// mongoose.connect('mongodb://localhost:27017/onework-pre', { useNewUrlParser: true }, (error, res) => {
   if( error ) throw error;
   console.log('Datebase is up!');
 })
