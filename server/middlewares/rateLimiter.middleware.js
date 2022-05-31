@@ -8,7 +8,7 @@ exports.globalLimiter = rateLimit({
     handler,
     standardHeaders: true,
     store: new MongoStore({
-        uri: 'mongodb://127.0.0.1:27017/test_db',
+        uri: process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/test_db',
         user: process.env.MONGO_USER || undefined,
         password: process.env.MONGO_PASS || undefined,
         expireTimeMs: 1 * 60 * 1000,
@@ -18,7 +18,7 @@ exports.globalLimiter = rateLimit({
 
 exports.authLimiter = rateLimit({
     windowMs: 30 * 60 * 1000,
-    max: 15, 
+    max: 150,
     handler,
     standardHeaders: true,
     store: new MongoStore({
