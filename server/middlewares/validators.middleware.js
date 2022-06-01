@@ -25,9 +25,26 @@ exports.sessionValidator = [
 ]
 
 exports.offerValidator = [
-    check('title', 'Enter a title').isString().escape(),
     check('salary', 'Enter a number').isNumeric().escape(),
-    check('requirements', 'Enter a valid requirements string').optional().escape(),
+    check('requirements', 'Enter a valid requirements string').isString().escape(),
+    check('workplaceAddress', 'Enter a valid address').optional().escape(),
+    check('description', 'Enter a valid description').optional().escape(),
+    check('workplaceAddress', 'Enter a valid address').optional().isLength({
+        max: 50
+    }).escape(),
+    check('videoCallDate').optional()
+                          .trim()
+                          .isISO8601()
+                          .withMessage('Enter a correct date')
+                          .custom(dateBeforePresentValidator)
+                          .withMessage('Must be a value after actual date'),
+    check('videoCallLink', 'Enter a correct google meets link').optional().trim(),
+    check('technicianChecked', 'Enter true or false').optional().isBoolean().escape()    
+]
+
+exports.offerModifyValidator = [
+    check('salary', 'Enter a number').optional().isNumeric().escape(),
+    check('requirements', 'Enter a valid requirements string').optional().isString().escape(),
     check('workplaceAddress', 'Enter a valid address').optional().escape(),
     check('description', 'Enter a valid description').optional().escape(),
     check('workplaceAddress', 'Enter a valid address').optional().isLength({

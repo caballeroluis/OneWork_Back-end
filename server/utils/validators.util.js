@@ -22,9 +22,9 @@ function DNIValidator(value) {
 function dateBeforePresentValidator(stringDate) {
     const dateObject = new Date(stringDate);
     const datePresent = new Date(); 
-    
-    const isDateAfterPresent = dateObject.getTime() <= datePresent.getTime() ?
-                               false : true;
+    console.log(dateObject.getTime() - datePresent.getTime());
+    const isDateAfterPresent = dateObject.getTime() >= datePresent.getTime() ?
+                               true : false;
 
     return isDateAfterPresent;
 }

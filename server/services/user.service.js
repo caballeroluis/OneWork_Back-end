@@ -72,7 +72,7 @@ let getUsers = async function(role = {}) {
     try {
         let user = await User.find(role)
                              .where({active: true})
-                             .select('_id name creationDate img corporationName descriptionCorporate recruiterName');
+                             .select('_id name creationDate img corporationName descriptionCorporate recruiterName verified');
         if (!user) throw new ErrorBDEntityNotFound(`There\'s no ${role} users on database`);
 
         return user;
