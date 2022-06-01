@@ -26,6 +26,10 @@ let userSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    verified: {
+        type: Boolean,
+        default: false
+    },
     offers: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'offer'
