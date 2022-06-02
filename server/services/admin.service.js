@@ -41,6 +41,7 @@ let createOfferAdmin = async function() {
             title: body.title,
             requirements: body.requirements,
             workplaceAddress: body.workplaceAddress,
+            offerLink: body.offerLink,
             description: body.description,
             workerAssigned: worker._id,
             recruiterAssigned: recruiter._id

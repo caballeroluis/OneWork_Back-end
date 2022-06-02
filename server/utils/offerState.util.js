@@ -3,6 +3,7 @@ let booleanBacklog = function(offer) {
        !offer.title ||
        !offer.requirements ||
        !offer.workplaceAddress ||
+       !offer.offerLink ||
        !offer.description ||
        !offer.workerAssigned) {
        return true;
@@ -15,6 +16,7 @@ let booleanReady = function(offer) {
         offer.title &&
         offer.requirements &&
         offer.workplaceAddress &&
+        offer.offerLink &&
         offer.description &&
         offer.workerAssigned) {
         return true;
@@ -28,6 +30,7 @@ let booleanVideoSet = function(offer) {
        offer.title &&
        offer.requirements &&
        offer.workplaceAddress &&
+       offer.offerLink &&
        offer.description &&
        offer.workerAssigned) {
        return true;
@@ -41,6 +44,7 @@ let booleanTechnicianChecked = function(offer) {
        offer.title &&
        offer.requirements &&
        offer.workplaceAddress &&
+       offer.offerLink &&
        offer.description &&
        offer.workerAssigned &&
        offer.technicianChecked) {

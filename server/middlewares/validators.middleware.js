@@ -26,6 +26,7 @@ exports.offerValidator = [
     check('salary', 'Enter a number').isNumeric().escape(),
     check('requirements', 'Enter a valid requirements string').isString().escape(),
     check('workplaceAddress', 'Enter a valid address').optional().escape(),
+    check('offerLink', 'Enter a correct job offer link').optional().trim(),
     check('description', 'Enter a valid description').optional().escape(),
     check('workplaceAddress', 'Enter a valid address').optional().isLength({
         max: 50
@@ -44,6 +45,7 @@ exports.offerModifyValidator = [
     check('salary', 'Enter a number').optional().isNumeric().escape(),
     check('requirements', 'Enter a valid requirements string').optional().isString().escape(),
     check('workplaceAddress', 'Enter a valid address').optional().escape(),
+    check('offerLink', 'Enter a correct job offer link').optional().trim(),
     check('description', 'Enter a valid description').optional().escape(),
     check('workplaceAddress', 'Enter a valid address').optional().isLength({
         max: 50

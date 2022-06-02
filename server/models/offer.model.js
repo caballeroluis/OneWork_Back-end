@@ -28,6 +28,9 @@ let offerSchema = new Schema({
     workplaceAddress: {
         type: String
     },
+    offerLink: {
+        type: String
+    },
     description: {
         type: String
     },

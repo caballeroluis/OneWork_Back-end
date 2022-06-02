@@ -24,6 +24,7 @@ let createOffer = async function(idWorker, idRecruiter, body) {
             title: body.title,
             requirements: body.requirements,
             workplaceAddress: body.workplaceAddress,
+            offerLink: body.offerLink,
             description: body.description,
             workerAssigned: worker._id,
             recruiterAssigned: recruiter._id,
@@ -143,6 +144,7 @@ let updateOffer = async function(id, userID, body) {
         offer.title = body.title || offer.title;
         offer.requirements = body.requirements || offer.requirements;
         offer.workplaceAddress = body.workplaceAddress || offer.workplaceAddress;
+        offer.offerLink = body.offerLink || offer.offerLink;
         offer.description = body.description || offer.description;
         offer.workerAssigned = body.workerAssigned || offer.workerAssigned._id;
         offer.videoCallDate = body.videoCallDate || offer.videoCallDate;
