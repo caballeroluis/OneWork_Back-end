@@ -19,7 +19,6 @@ router.patch(
   '/:id',
   verifyToken,
   verifyOwnId,
-  userValidator,
   userController.updateUser
   )
   
