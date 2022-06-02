@@ -144,7 +144,7 @@ let deleteOfferAdmin = async function(id) {
 let createUserAdmin = async function(email, password, body) {
     try {
         let user = await User.findOne({ email });
-        if (user) throw new ErrorBDEntityFound('Email already exists on database');
+        if (user) throw new ErrorBDEntityFound('Username already exists on database');
 
         if (body.role === 'worker') {
             user = new Worker(body);

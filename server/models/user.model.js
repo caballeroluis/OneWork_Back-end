@@ -12,7 +12,7 @@ let userSchema = new mongoose.Schema({
     email: {
         type: String,
         unique: true,
-        required: [true, 'Enter the email is mandatory']
+        required: [true, 'Enter the username is mandatory']
     },
     password: {
         type: String,

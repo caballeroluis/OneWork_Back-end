@@ -12,7 +12,7 @@ const crypto = require('crypto');
 let createUser = async function(email, password, body) {
     try {
         let user = await User.findOne({ email });
-        if (user) throw new ErrorBDEntityFound('Email already exists on database');
+        if (user) throw new ErrorBDEntityFound('Username already exists on database');
 
         if (body.role === 'worker') {
             user = new Worker(body)
@@ -43,7 +43,7 @@ let updateUser = async function(body, id, role) {
 
         if(body.email) {
             user = await User.findOne({email: body.email});
-            if (user) throw new ErrorBDEntityFound('This email exists, please change the email provided');
+            if (user) throw new ErrorBDEntityFound('This Username exists, please change the Username provided');
         }
 
         if(body.password) {

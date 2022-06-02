@@ -3,7 +3,7 @@ const { DNIValidator, dateBeforePresentValidator } = require('../utils/validator
 
 // TODO: Establecer diferentes validadores
 exports.userValidator = [
-    check('email', 'Enter a valid email').optional().normalizeEmail().isEmail().trim().escape(),
+    check('email', 'Enter a valid username').optional().trim().escape(),
     check('password', 'Password must be a minimum of 8 characters').optional().isLength({
         min: 8,
         max: 20
@@ -17,7 +17,7 @@ exports.userValidator = [
 ]
 
 exports.sessionValidator = [
-    check('email', 'Enter a valid email').optional().normalizeEmail().isEmail().trim().escape(),
+    check('email', 'Enter a valid username').optional().trim().escape(),
     check('password', 'Password must be a minimum of 8 characters').optional().isLength({
         min: 8,
         max: 20
