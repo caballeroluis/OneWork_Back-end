@@ -10,9 +10,7 @@ exports.userValidator = [
     }).contains().trim().escape(),
     check('age', 'Enter a number').optional().isNumeric().escape(),
     check('DNI', 'Please check the DNI or NIE introduced').optional().trim().escape().custom(DNIValidator),
-    check('name', 'Enter a name').optional().isAlpha().escape(),
-    check('surname', 'Enter a surname').optional().isAlpha().escape(),
-    check('surname1', 'Enter a surname 2').optional().isAlpha().escape()
+    check('name', 'Enter a pseudonym').isAlpha().escape(),
 
 ]
 
