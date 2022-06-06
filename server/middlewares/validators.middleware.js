@@ -11,6 +11,9 @@ exports.userValidator = [
     check('age', 'Enter a number').optional().isNumeric().escape(),
     check('DNI', 'Please check the DNI or NIE introduced').optional().trim().escape().custom(DNIValidator),
     check('name', 'Enter a pseudonym').optional().isAlpha().trim().escape(),
+    check('verified', 'You cannot modify this attribute, please contact with an admin').optional()
+                                                                                       .isBoolean()
+                                                                                       .custom(bool => {return !bool})
 
 ]
 
@@ -57,5 +60,6 @@ exports.offerModifyValidator = [
                           .custom(dateBeforePresentValidator)
                           .withMessage('Must be a value after actual date'),
     check('videoCallLink', 'Enter a correct google meets link').optional().trim(),
-    check('technicianChecked', 'Enter true or false').optional().isBoolean().escape()
+    check('technicianChecked', 'Enter true or false').optional().isBoolean().escape(),
+    
 ]
