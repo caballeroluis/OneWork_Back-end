@@ -81,12 +81,24 @@ const loggerPack = {
   }
 }
 
-
 module.exports = function logGenerator(req, error) {
   const patterns = {
     humanPattern: `${req.ip}, HTTP/${req.httpVersion}, ${req.headers['user-agent']}, ${req.method}, ${req.url}`,
     computerPattern: {
-            ip: req.ip, 
+            // ip: req.ip,
+            ip: req.ip.replaceAll(':', '').replaceAll('.', '').substring(
+              req.ip.replaceAll(':', '').replaceAll('.', '').length -3,
+              req.ip.replaceAll(':', '').replaceAll('.', '').length
+            ), 
+            // ip: () => { // TODO: que la ip sea la ip menos las posiciones impares y así es media ip
+            //   var arrayOutput;
+            //   for (let index = 0; index < req.ip.length; index++) {
+            //     if (index % 0) {
+            //       arrayOutput = req.ip[index];
+            //     }      
+            //   }
+            //   return arrayOutput;
+            // },
             httpVersion: req.httpVersion, 
             userAgent: req.headers['user-agent'], 
             requestedMethod: req.method, 
