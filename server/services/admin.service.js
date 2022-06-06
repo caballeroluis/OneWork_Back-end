@@ -214,7 +214,7 @@ let getUserByIDAdmin = async function(id) {
     }
 }
 
-let deleteUserAdmin = async function() {
+let deleteUserAdmin = async function(id) {
     try {
         let user = await User.findById(id)
                              .populate('offers');
