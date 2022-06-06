@@ -16,7 +16,7 @@ let userLogin = async function(email, password) {
         const correctPassword = await bcryptjs.compare(password, user.password);
         if(!correctPassword) throw new ErrorPwdOrUserNotFound('Password or user is incorrect');
         
-        let refreshTokenDBExists = await refreshTokenModel.findOne(user._id);
+        let refreshTokenDBExists = await refreshTokenModel.findOne({user: user._id});
 
         let payload = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName', 'corporationName']);
 
