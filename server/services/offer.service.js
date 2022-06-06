@@ -102,7 +102,7 @@ let changeStateOffer = async function(id, userID, status, role) {
                 if(!offerStateUtil.booleanReady(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
             case 'inProgress':
-
+                if(!offerStateUtil.booleanReady(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
             break;
             case 'videoSet':
                 if(!offerStateUtil.booleanVideoSet(offer)) throw new OfferStatusError('Requirements to change status are not accomplished');
