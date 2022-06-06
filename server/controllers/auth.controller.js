@@ -29,7 +29,7 @@ exports.letsRefreshToken = async function(req, res, next) {
     try {      
         const newToken = await loginService.letsRefreshToken(refreshToken);
         logGenerator(req);
-        return res.json({token: newToken});  
+        return res.json({token: newToken, refreshToken});  
     } catch(error) {
         next(error);
     }
