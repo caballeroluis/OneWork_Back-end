@@ -13,8 +13,7 @@ exports.userValidator = [
     check('name', 'Enter a pseudonym').optional().isAlpha().trim().escape(),
     check('verified', 'You cannot modify this attribute, please contact with an admin').optional()
                                                                                        .isBoolean()
-                                                                                       .custom(bool => {return !bool})
-
+                                                                                       .custom(bool => !bool)
 ]
 
 exports.sessionValidator = [

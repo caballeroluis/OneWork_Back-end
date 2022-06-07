@@ -11,7 +11,6 @@ const bcryptjs = require('bcryptjs');
 let deleteRefreshToken = async function(id) {
     try {
         let refreshToken = await refreshTokenModel.findOne({user: id});
-        // Cambiar error.
         if (!refreshToken) throw new ErrorBDEntityNotFound('This refreshToken doesn\'t exist');
         refreshToken.token = undefined;
         await refreshToken.save();
@@ -19,7 +18,6 @@ let deleteRefreshToken = async function(id) {
     } catch(error) {
         throw error;
     }
-
 }
 
 let createOfferAdmin = async function() {
@@ -44,10 +42,13 @@ let createOfferAdmin = async function() {
             offerLink: body.offerLink,
             description: body.description,
             workerAssigned: worker._id,
-            recruiterAssigned: recruiter._id
+            recruiterAssigned: recruiter._id,
+            videoCallDate: body.videoCallDate,
+            videoCallLink: body.videoCallLink,
+            technicianChecked: body.technicianChecked
         });
 
-        if(offerStateUtil.booleanready(offer)) {
+        if(offerStateUtil.booleanReady(offer)) {
             offer.status = 'ready';
         } else {
             offer.status = 'backlog';
@@ -68,7 +69,6 @@ let createOfferAdmin = async function() {
     } catch(error) {
         throw error;
     }
-
 }
 
 let getOffersAdmin = async function() {
@@ -97,9 +97,16 @@ let getOfferByIDAdmin = async function(id) {
 
 let changeStateOfferAdmin = async function(id, status) {
     try {
-        // TODO: implementar lógica
         let offer = await Offer.findById(id);
         if(!offer) throw new ErrorBDEntityNotFound('This offer doesn\'t exist');
+        
+        const validStatus = ['backlog', 'ready', 'inProgress', 'videoSet', 'technicianChecked', 'accepted'];
+
+        if(!validStatus.includes(status)) throw new OfferStatusError('The status introduced is incorrect');
+        offer.status = status;
+
+        await offer.save();
+        return offer;
     } catch(error) {
         throw error;
     }
