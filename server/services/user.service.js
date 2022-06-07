@@ -61,7 +61,6 @@ let updateUser = async function(body, id, role) {
         if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
 
         return user;
-
     } catch(error) {
         throw error;
     }
