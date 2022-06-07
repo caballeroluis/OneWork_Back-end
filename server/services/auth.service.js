@@ -20,7 +20,6 @@ let userLogin = async function(email, password) {
 
         let payload = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName', 'corporationName']);
 
-        //TODO: hay que registrar los secret de forma diferente con archivo .env
         let token = jwt.sign(payload, process.env.SECRET, {expiresIn: 300});
         let refreshToken = jwt.sign({}, process.env.SECRET_REFRESH, {expiresIn: '4d'});
 

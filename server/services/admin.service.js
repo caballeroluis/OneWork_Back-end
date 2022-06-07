@@ -164,9 +164,7 @@ let createUserAdmin = async function(email, password, body) {
             throw new ValidationDataError('The role of the user is incorrect');
         }
         
-        // TODO: generar salt en variables de entorno.
-    
-        const salt = await bcryptjs.genSalt(11);
+        const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
         user.password = await bcryptjs.hash(password, salt);
         
         await user.save();
@@ -182,6 +180,17 @@ let updateUserAdmin = async function(body, id, role) {
     try {
 
         let user;
+
+        if(body.email) {
+            user = await User.findOne({email: body.email});
+            if (user) throw new ErrorBDEntityFound('This Username exists, please change the Username provided');
+        }
+
+        if(body.password) {
+            const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
+            body.password = await bcryptjs.hash(body.password, salt);
+        }
+
 
         if(role === 'worker') {
             user  = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true})

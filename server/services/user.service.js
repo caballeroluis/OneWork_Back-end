@@ -24,7 +24,7 @@ let createUser = async function(email, password, body) {
         
         // TODO: generar salt en variables de entorno.
     
-        const salt = await bcryptjs.genSalt(11);
+        const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
         user.password = await bcryptjs.hash(password, salt);
         
         await user.save();
@@ -47,8 +47,7 @@ let updateUser = async function(body, id, role) {
         }
 
         if(body.password) {
-            //TODO: cambiar salt y además se debería cambiar la contraseña del Token
-            const salt = await bcryptjs.genSalt(11);
+            const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
             body.password = await bcryptjs.hash(body.password, salt);
         }
 

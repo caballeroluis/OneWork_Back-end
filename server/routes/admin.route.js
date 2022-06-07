@@ -8,7 +8,6 @@ const { verifyAdmin } = require('../middlewares/verifyRole.middleware');
 const router = express.Router()
 
 /* Session */
-
 router.delete(
     '/session/:id', 
     verifyToken,
@@ -17,7 +16,6 @@ router.delete(
 )
 
 /* Offers */
-
 router.post(
     '/worker/:idWorker/recruiter/:idRecruiter', 
     verifyToken,
@@ -83,7 +81,7 @@ router.get(
     adminController.getUserByIDAdmin
 )
 
-router.put(
+router.patch(
     '/users/:id', 
     verifyToken,
     verifyAdmin,
