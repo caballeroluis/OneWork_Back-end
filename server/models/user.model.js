@@ -4,7 +4,6 @@ const uniqueValidator = require('mongoose-unique-validator');
 let options = {collection: 'users', discriminatorKey: 'role'};
 
 let userSchema = new mongoose.Schema({
-
     creationDate: {
         type: Date,
         default: Date.now

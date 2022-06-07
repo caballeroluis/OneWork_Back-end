@@ -22,8 +22,7 @@ let createUser = async function(email, password, body) {
             throw new ValidationDataError('The role of the user is incorrect');
         }
         
-        // TODO: generar salt en variables de entorno.
-    
+        
         const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
         user.password = await bcryptjs.hash(password, salt);
         

@@ -101,8 +101,8 @@ exports.updateUserAdmin = async (req, res, next) => {
     if(!errors.isEmpty()) return next(new MultipleValidationDataError(JSON.stringify(errors.array(true))));
 
     const body = req.body;
-    const role = req.user.role;
     const id = req.params.id;
+    const role = body.role;
 
     try {
         const user = await adminService.updateUserAdmin(body, id, role);
