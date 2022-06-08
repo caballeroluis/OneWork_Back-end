@@ -11,12 +11,12 @@ let createOffer = async function(idWorker, idRecruiter, body) {
         
         let recruiter = await Recruiter.findById(idRecruiter)
                                        .where({active: true})
-                                       .select('-active -email');
+                                       .select('-active');
         if(!recruiter) throw new ErrorBDEntityNotFound('This recruiter doesn\'t exist');
 
         let worker = await Worker.findById(idWorker)
                                  .where({active: true})
-                                 .select('-active -email');
+                                 .select('-active');
         if(!worker) throw new ErrorBDEntityNotFound('This worker doesn\'t exist');
         
         let offer = new Offer({
