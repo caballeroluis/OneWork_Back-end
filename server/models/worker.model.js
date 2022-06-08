@@ -21,7 +21,10 @@ let Worker = User.discriminator('worker', new mongoose.Schema({
     },
     contactData: {
         type: String
-    }})
-)
+    },
+    skills: {
+        type: String
+    }
+}))
 
 module.exports = Worker;

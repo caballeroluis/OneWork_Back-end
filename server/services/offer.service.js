@@ -63,7 +63,7 @@ let getOffers = async function() {
                                .where({abandoned: false})
                                .select('-abandoned')
                                .populate({path:'workerAssigned', select: '_id name email creationDate img', select: '-offers -active'})
-                               .populate({path:'recruiterAssigned', select: '_id email corporationName international descriptionCorporate recruiterName', select: '-offers -active'})
+                               .populate({path:'recruiterAssigned', select: '_id email corporationName international descriptionCorporate recruiterName skills', select: '-offers -active'})
         if(!offer) throw new ErrorBDEntityNotFound('There\'s no offers on database');
         return offer;
     } catch(error) {
@@ -78,7 +78,7 @@ let getOfferByID = async function(id) {
                                .where({abandoned: false})
                                .select('-abandoned')
                                .populate({path:'workerAssigned', select: '_id name email creationDate img', select: '-offers -active'})
-                               .populate({path:'recruiterAssigned', select: '_id email corporationName international descriptionCorporate recruiterName', select: '-offers -active'})
+                               .populate({path:'recruiterAssigned', select: '_id email corporationName international descriptionCorporate recruiterName skills', select: '-offers -active'})
         if(!offer) throw new ErrorBDEntityNotFound('There\'s no offer on database with the ID');
         return offer;
     } catch(error) {
