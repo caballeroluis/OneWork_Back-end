@@ -164,7 +164,9 @@ let createUserAdmin = async function(email, password, body) {
             throw new ValidationDataError('The role of the user is incorrect');
         }
         
-        const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
+        // TODO: generar salt en variables de entorno.
+    
+        const salt = await bcryptjs.genSalt(11);
         user.password = await bcryptjs.hash(password, salt);
         
         await user.save();
@@ -181,29 +183,17 @@ let updateUserAdmin = async function(body, id, role) {
 
         let user;
 
-        if(body.email) {
-            user = await User.findOne({email: body.email});
-            if (user) throw new ErrorBDEntityFound('This Username exists, please change the Username provided');
-        }
-
-        if(body.password) {
-            const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
-            body.password = await bcryptjs.hash(body.password, salt);
-        }
-
         if(role === 'worker') {
-            user = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true})
+            user  = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true})
         } else if(role === 'recruiter') {
-            user = await Recruiter.findByIdAndUpdate(id, body, {new: true, runValidators: true})      
+            user  = await Recruiter.findByIdAndUpdate(id, body, {new: true, runValidators: true})      
         } else if(role === 'admin') {
             user = await Admin.findByIdAndUpdate(id, body, {new: true, runValidators: true})
         } else {
             throw new ValidationDataError('The role of the user is incorrect');
         }
-
         if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
 
-        return user;
     } catch(error) {
         throw error;
     }

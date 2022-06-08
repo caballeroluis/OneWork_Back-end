@@ -22,8 +22,9 @@ let createUser = async function(email, password, body) {
             throw new ValidationDataError('The role of the user is incorrect');
         }
         
-        
-        const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
+        // TODO: generar salt en variables de entorno.
+    
+        const salt = await bcryptjs.genSalt(11);
         user.password = await bcryptjs.hash(password, salt);
         
         await user.save();
@@ -46,7 +47,8 @@ let updateUser = async function(body, id, role) {
         }
 
         if(body.password) {
-            const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
+            //TODO: cambiar salt y además se debería cambiar la contraseña del Token
+            const salt = await bcryptjs.genSalt(11);
             body.password = await bcryptjs.hash(body.password, salt);
         }
 
@@ -60,6 +62,7 @@ let updateUser = async function(body, id, role) {
         if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
 
         return user;
+
     } catch(error) {
         throw error;
     }
@@ -69,7 +72,7 @@ let getUsers = async function(role = {}) {
     try {
         let user = await User.find(role)
                              .where({active: true})
-                             .select('_id name email creationDate img corporationName international descriptionCorporate recruiterName verified');
+                             .select('_id name email creationDate img corporationName descriptionCorporate recruiterName verified');
         if (!user) throw new ErrorBDEntityNotFound(`There\'s no ${role} users on database`);
 
         return user;
