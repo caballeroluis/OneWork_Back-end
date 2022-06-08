@@ -166,7 +166,7 @@ let createUserAdmin = async function(email, password, body) {
         
         // TODO: generar salt en variables de entorno.
     
-        const salt = await bcryptjs.genSalt(11);
+        const salt = await bcryptjs.genSalt('hfyH(·/FOYFY(F3fgo37?`+?+`?+"!!"`+ñ+GYKJDFGHFSIS/EFY(T&(F/F)/367836f973t7');
         user.password = await bcryptjs.hash(password, salt);
         
         await user.save();
