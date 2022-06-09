@@ -2,7 +2,7 @@ const bcryptjs = require('bcryptjs');
 const _ = require('underscore');
 const jwt = require('jsonwebtoken');
 const { ErrorPwdOrUserNotFound, ErrorBDEntityNotFound, UnathorizedError } = require('../utils/customErrors.util');
-
+const config = require('../config/env.config');
 const { User } = require('../models/user.model');
 const refreshTokenModel = require('../models/refreshToken.model');
 
@@ -20,8 +20,8 @@ let userLogin = async function(email, password) {
 
         let payload = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName', 'corporationName', 'international']);
 
-        let token = jwt.sign(payload, process.env.SECRET, {expiresIn: 300});
-        let refreshToken = jwt.sign({}, process.env.SECRET_REFRESH, {expiresIn: '4d'});
+        let token = jwt.sign(payload, config.SECRET, {expiresIn: 300});
+        let refreshToken = jwt.sign({}, config.SECRET_REFRESH, {expiresIn: '4d'});
 
         if(refreshTokenDBExists) {
             refreshTokenDBExists.token = refreshToken;
@@ -42,14 +42,14 @@ let userLogin = async function(email, password) {
 let letsRefreshToken = async function(refreshToken) {
     try {      
         let refreshTokenExists = await refreshTokenModel.findOne({token: refreshToken});
-        if(refreshTokenExists && jwt.verify(refreshToken, process.env.SECRET_REFRESH)) {
+        if(refreshTokenExists && jwt.verify(refreshToken, config.SECRET_REFRESH)) {
             let user = await User.findById(refreshTokenExists.user)
                                  .where({active: true})
                                  .select('-active -offers');
             if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
             let payload = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName', 'corporationName', 'international']);
 
-            let newToken = jwt.sign(payload, process.env.SECRET, {expiresIn: 1500});
+            let newToken = jwt.sign(payload, config.SECRET, {expiresIn: 1500});
             return newToken;
         } else {
             throw new UnathorizedError('RefreshToken has been expired or doesn\'t exist');

@@ -61,7 +61,7 @@ let getOffers = async function() {
     try {
         let offer = await Offer.find({})
                                .where({abandoned: false})
-                               .select('-abandoned')
+                               .select('-abandoned -videoCallLink -videoCallDate')
                                .populate({path:'workerAssigned', select: '_id name email creationDate img', select: '-offers -active'})
                                .populate({path:'recruiterAssigned', select: '_id email corporationName international descriptionCorporate recruiterName', select: '-offers -active'})
         if(!offer) throw new ErrorBDEntityNotFound('There\'s no offers on database');
@@ -167,11 +167,13 @@ let updateOffer = async function(id, userID, body) {
 
 let deleteOffer = async function(id, userID) {
     try {
-        let offer = await Offer.findByIdAndUpdate(id, {abandoned: true}, {new: true, runValidators: true})
-                               .where({abandoned: false});
+        let offer = await Offer.findById(id)
+                               .where({abandoned: false})
+                               .select('-abandoned');
         if(!offer) throw new ErrorBDEntityNotFound('This offer doesn\'t exist');
         if(!offerStateUtil.booleanCheckOfferAssigned(userID, offer)) throw new UnathorizedError('You are not authorized to perform this action');
         
+        offer.save();
         return offer;
     } catch(error) {
         throw error;

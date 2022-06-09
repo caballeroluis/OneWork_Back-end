@@ -5,6 +5,7 @@ const Offer = require('../models/offer.model');
 const refreshTokenModel = require('../models/refreshToken.model');
 const { deleteFolder, deleteFile } = require('../utils/files.util');
 const { ErrorBDEntityNotFound, ValidationDataError } = require('../utils/customErrors.util');
+const config = require('../config/env.config');
 
 const bcryptjs = require('bcryptjs');
 
@@ -164,7 +165,7 @@ let createUserAdmin = async function(email, password, body) {
             throw new ValidationDataError('The role of the user is incorrect');
         }
         
-        const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
+        const salt = await bcryptjs.genSalt(config.TOKEN_SALT);
         user.password = await bcryptjs.hash(password, salt);
         
         await user.save();
@@ -187,7 +188,7 @@ let updateUserAdmin = async function(body, id, role) {
         }
 
         if(body.password) {
-            const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
+            const salt = await bcryptjs.genSalt(config.TOKEN_SALT);
             body.password = await bcryptjs.hash(body.password, salt);
         }
 

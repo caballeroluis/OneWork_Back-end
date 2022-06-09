@@ -7,6 +7,7 @@ const { ErrorBDEntityFound, ErrorBDEntityNotFound, ValidationDataError } = requi
 
 const bcryptjs = require('bcryptjs');
 const crypto = require('crypto');
+const config = require('../config/env.config');
 
 
 let createUser = async function(email, password, body) {
@@ -23,7 +24,7 @@ let createUser = async function(email, password, body) {
         }
         
         
-        const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
+        const salt = await bcryptjs.genSalt(config.TOKEN_SALT);
         user.password = await bcryptjs.hash(password, salt);
         
         await user.save();
@@ -46,7 +47,7 @@ let updateUser = async function(body, id, role) {
         }
 
         if(body.password) {
-            const salt = await bcryptjs.genSalt(process.env.TOKEN_SALT);
+            const salt = await bcryptjs.genSalt(config.TOKEN_SALT);
             body.password = await bcryptjs.hash(body.password, salt);
         }
 
