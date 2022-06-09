@@ -61,7 +61,7 @@ let getOffers = async function() {
     try {
         let offer = await Offer.find({})
                                .where({abandoned: false})
-                               .select('-abandoned -videoCallLink -videoCallDate')
+                               .select('-abandoned -videoCallLink')
                                .populate({path:'workerAssigned', select: '_id name email creationDate img', select: '-offers -active'})
                                .populate({path:'recruiterAssigned', select: '_id email corporationName international descriptionCorporate recruiterName skills', select: '-offers -active'})
         if(!offer) throw new ErrorBDEntityNotFound('There\'s no offers on database');

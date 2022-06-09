@@ -10,14 +10,14 @@ const router = express.Router();
 /* POST /api/users/login  */
 router.post(
     '/login',
-    // authLimiter,
+    // authLimiter, // TODO: rollback
     sessionValidator,
     authController.userLogin
 );
 
 router.post(
     '/refreshToken',
-    // authLimiter,
+    // authLimiter, // TODO: rollback
     authController.letsRefreshToken
 );
 
