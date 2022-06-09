@@ -167,13 +167,22 @@ let updateOffer = async function(id, userID, body) {
 
 let deleteOffer = async function(id, userID) {
     try {
-        let offer = await Offer.findById(id)
-                               .where({abandoned: false})
-                               .select('-abandoned');
+        const offer = await Offer.findById(id)
+                                 .where({abandoned: false})
+                                 .select('-abandoned')
+                                 .populate({path:'workerAssigned'})
+                                 .populate({path:'recruiterAssigned'});
         if(!offer) throw new ErrorBDEntityNotFound('This offer doesn\'t exist');
         if(!offerStateUtil.booleanCheckOfferAssigned(userID, offer)) throw new UnathorizedError('You are not authorized to perform this action');
         
-        offer.save();
+        const indexOfferOnRecruiter = offer.recruiterAssigned.offers.indexOf(id);
+        const indexOfferOnWorker = offer.workerAssigned.offers.indexOf(id);
+
+        if (indexOfferOnRecruiter > -1) offer.recruiterAssigned.offers.splice(indexOfferOnRecruiter, 1);
+        if (indexOfferOnWorker > -1) offer.workerAssigned.offers.splice(indexOfferOnWorker, 1);
+
+        await Promise.all([offer.workerAssigned.save(), offer.recruiterAssigned.save(), offer.remove()]);
+        
         return offer;
     } catch(error) {
         throw error;

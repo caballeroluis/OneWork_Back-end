@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { ValidationDataError } = require('../utils/customErrors.util');
+const config = require('../config/env.config')
 
 let verifyToken = (req, res, next) => {
 
@@ -12,7 +13,7 @@ let verifyToken = (req, res, next) => {
         return next(new ValidationDataError('The token is not provided or is invalid'));
     }
     
-    jwt.verify(token, process.env.SECRET, (error, decoded) => {
+    jwt.verify(token, config.SECRET, (error, decoded) => {
         if (error) return next(error);
         req.user = decoded;
         next();

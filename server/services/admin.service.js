@@ -123,8 +123,6 @@ let updateOfferAdmin = async function(id, body) {
     }
 }
 
-// TODO: pendiente de hacer la lógica.
-
 let deleteOfferAdmin = async function(id) {
     try {
         let offer = await Offer.findById(id)
@@ -132,15 +130,11 @@ let deleteOfferAdmin = async function(id) {
                                .populate({path:'recruiterAssigned'})
         if(!offer) throw new ErrorBDEntityNotFound('This offer doesn\'t exist');
 
-        let indexOfferOnRecruiter = offer.recruiterAssigned.offers.indexOf(id);
-        let indexOfferOnWorker = offer.workerAssigned.offers.indexOf(id);
+        const indexOfferOnRecruiter = offer.recruiterAssigned.offers.indexOf(id);
+        const indexOfferOnWorker = offer.workerAssigned.offers.indexOf(id);
 
-        if (indexOfferOnRecruiter > -1) {
-            offer.recruiterAssigned.offers.splice(indexOfferOnRecruiter, 1);
-        }
-        if (indexOfferOnWorker > -1) {
-              offer.workerAssigned.offers.splice(indexOfferOnWorker, 1);
-        }
+        if (indexOfferOnRecruiter > -1) offer.recruiterAssigned.offers.splice(indexOfferOnRecruiter, 1);
+        if (indexOfferOnWorker > -1) offer.workerAssigned.offers.splice(indexOfferOnWorker, 1);
 
         await Promise.all([offer.workerAssigned.save(), offer.recruiterAssigned.save(), offer.remove()]);
         
