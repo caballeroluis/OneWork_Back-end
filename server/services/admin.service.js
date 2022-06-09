@@ -193,18 +193,16 @@ let updateUserAdmin = async function(body, id, role) {
         }
 
         if(role === 'worker') {
-            user = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true})
+            user  = await Worker.findByIdAndUpdate(id, body, {new: true, runValidators: true})
         } else if(role === 'recruiter') {
-            user = await Recruiter.findByIdAndUpdate(id, body, {new: true, runValidators: true})      
+            user  = await Recruiter.findByIdAndUpdate(id, body, {new: true, runValidators: true})      
         } else if(role === 'admin') {
             user = await Admin.findByIdAndUpdate(id, body, {new: true, runValidators: true})
         } else {
             throw new ValidationDataError('The role of the user is incorrect');
         }
-
         if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
 
-        return user;
     } catch(error) {
         throw error;
     }

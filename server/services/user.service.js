@@ -61,6 +61,7 @@ let updateUser = async function(body, id, role) {
         if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
 
         return user;
+
     } catch(error) {
         throw error;
     }
@@ -70,7 +71,7 @@ let getUsers = async function(role = {}) {
     try {
         let user = await User.find(role)
                              .where({active: true})
-                             .select('_id name email creationDate img corporationName international descriptionCorporate recruiterName verified');
+                             .select('_id name email creationDate img corporationName descriptionCorporate recruiterName verified skills');
         if (!user) throw new ErrorBDEntityNotFound(`There\'s no ${role} users on database`);
 
         return user;

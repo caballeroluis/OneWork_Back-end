@@ -18,7 +18,7 @@ let userLogin = async function(email, password) {
         
         let refreshTokenDBExists = await refreshTokenModel.findOne({user: user._id});
 
-        let payload = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName', 'corporationName', 'international']);
+        let payload = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName', 'corporationName', 'international', 'skills']);
 
         let token = jwt.sign(payload, config.SECRET, {expiresIn: 300});
         let refreshToken = jwt.sign({}, config.SECRET_REFRESH, {expiresIn: '4d'});
@@ -47,7 +47,7 @@ let letsRefreshToken = async function(refreshToken) {
                                  .where({active: true})
                                  .select('-active -offers');
             if (!user) throw new ErrorBDEntityNotFound('User doesn\'t exist');
-            let payload = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName', 'corporationName', 'international']);
+            let payload = _.pick(user, ['_id', 'img', 'email', 'role', 'name', 'recruiterName', 'corporationName', 'international', 'skills']);
 
             let newToken = jwt.sign(payload, config.SECRET, {expiresIn: 1500});
             return newToken;
