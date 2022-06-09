@@ -75,6 +75,7 @@ let createOfferAdmin = async function() {
 let getOffersAdmin = async function() {
     try {
         let offer = await Offer.find({})
+                               .select('-abandoned -videoCallLink')
                                .populate({path:'workerAssigned', select: '-offers'})
                                .populate({path:'recruiterAssigned', select: '-offers'})
         if(!offer) throw new ErrorBDEntityNotFound('There\'s no offers on database');
