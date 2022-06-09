@@ -2,7 +2,7 @@ const express = require('express');
 
 const authController = require('../controllers/auth.controller');
 const verifiyToken = require('../middlewares/verifyAuth.middleware');
-const { authLimiter } = require('../middlewares/rateLimiter.middleware');
+// const { authLimiter } = require('../middlewares/rateLimiter.middleware');
 const { sessionValidator } = require('../middlewares/validators.middleware');
 
 const router = express.Router();
@@ -10,14 +10,14 @@ const router = express.Router();
 /* POST /api/users/login  */
 router.post(
     '/login',
-    authLimiter,
+    // authLimiter,
     sessionValidator,
     authController.userLogin
 );
 
 router.post(
     '/refreshToken',
-    authLimiter,
+    // authLimiter,
     authController.letsRefreshToken
 );
 

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./config/env.config');
 
-const { globalLimiter } = require('./middlewares/rateLimiter.middleware');
+// const { globalLimiter } = require('./middlewares/rateLimiter.middleware');
 
 const app = express();
 
@@ -18,7 +18,7 @@ mongoose.connect(config.MONGO_URI, { useNewUrlParser: true }, (error, res) => {
 })
 
 app.use(express.json({ limit: 10 }));
-app.use(globalLimiter);
+// app.use(globalLimiter);
 
 app.use('/api/users', require('./routes/user.route'));
 app.use('/api/session', require('./routes/session.route'));
