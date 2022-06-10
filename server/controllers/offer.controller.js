@@ -1,3 +1,4 @@
+const { eventEmitter } = require('../sockets/index');
 const offerService = require('../services/offer.service');
 const { validationResult } = require('express-validator');
 const { MultipleValidationDataError } = require('../utils/customErrors.util');
@@ -14,7 +15,9 @@ exports.createOffer = async (req, res, next) => {
     if(body.videoCallDate) body.videoCallDate = new Date(body.videoCallDate);
 
     try {
-        let offer = await offerService.createOffer(idWorker, idRecruiter, body);
+        const offer = await offerService.createOffer(idWorker, idRecruiter, body);
+        
+        eventEmitter.emit('innerNewOffer', {result: offer});
         responseOkElementCreated(req, res, offer);
     } catch(error) {
         next(error);
@@ -65,9 +68,11 @@ exports.changeStateOffer = async (req, res, next) => {
     const id = req.params.id;
     const status = req.body.status;
     const role = req.user.role;
-    
+
     try {
         const offer = await offerService.changeStateOffer(id, req.user._id, status, role);
+        
+        eventEmitter.emit('innerChangeStateOffer', {result: offer})
         responseOk(req, res, offer);
     } catch(error) {
         next(error);
@@ -80,7 +85,9 @@ exports.changeStateOffer = async (req, res, next) => {
 exports.deleteOffer = async (req, res, next) => {
     const id = req.params.id;
     try {
-        await offerService.deleteOffer(id, req.user._id);
+        const offer = await offerService.deleteOffer(id, req.user._id);
+
+        eventEmitter.emit('innerDeleteOffer', {result: offer})
         responseOkElementDeleted(req, res);
     } catch (error) {
         next(error);
