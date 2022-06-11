@@ -5,12 +5,12 @@ const socketRoutes = (io) => {
     socket.emit('offers', await offerService.getOffers());
 
     socket.on('connect_error', function(error) {
-      console.log('adios que hase');
+      console.log('ws connect_error');
       logGenerator()
     })
 
     socket.on('disconnect', function() {
-      console.log('adios que hase');
+      console.log('ws disconnect');
     });
   });
 }

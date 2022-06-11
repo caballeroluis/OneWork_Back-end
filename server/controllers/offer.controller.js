@@ -55,7 +55,7 @@ exports.updateOffer = async (req, res, next) => {
 
     try {   
         const offer = await offerService.updateOffer(id, req.user._id, body);
-        req.io.emit('changeStateOffer', {result: offer});
+        req.io.emit('updateOffer', {result: offer});
         
         responseOk(req, res, offer);
     } catch(error) {
