@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./config/env.config');
 const cors = require('./config/cors.config');
-const socketRoutes = require('./sockets/index');
+const socketRoutes = require('./sockets/routes');
 // const { globalLimiter } = require('./middlewares/rateLimiter.middleware');
 const app = express();
 
