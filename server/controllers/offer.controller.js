@@ -14,7 +14,9 @@ exports.createOffer = async (req, res, next) => {
     if(body.videoCallDate) body.videoCallDate = new Date(body.videoCallDate);
 
     try {
-        let offer = await offerService.createOffer(idWorker, idRecruiter, body);
+        const offer = await offerService.createOffer(idWorker, idRecruiter, body);
+        req.io.emit('newOffer', {result: offer});
+        
         responseOkElementCreated(req, res, offer);
     } catch(error) {
         next(error);
@@ -53,6 +55,8 @@ exports.updateOffer = async (req, res, next) => {
 
     try {   
         const offer = await offerService.updateOffer(id, req.user._id, body);
+        req.io.emit('updateOffer', {result: offer});
+        
         responseOk(req, res, offer);
     } catch(error) {
         next(error);
@@ -65,9 +69,11 @@ exports.changeStateOffer = async (req, res, next) => {
     const id = req.params.id;
     const status = req.body.status;
     const role = req.user.role;
-    
+
     try {
         const offer = await offerService.changeStateOffer(id, req.user._id, status, role);
+        req.io.emit('changeStateOffer', {result: offer});
+
         responseOk(req, res, offer);
     } catch(error) {
         next(error);
@@ -80,7 +86,9 @@ exports.changeStateOffer = async (req, res, next) => {
 exports.deleteOffer = async (req, res, next) => {
     const id = req.params.id;
     try {
-        await offerService.deleteOffer(id, req.user._id);
+        const offer = await offerService.deleteOffer(id, req.user._id);
+        req.io.emit('deleteOffer', {result: offer});
+
         responseOkElementDeleted(req, res);
     } catch (error) {
         next(error);
