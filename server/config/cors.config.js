@@ -13,4 +13,16 @@ if(config.NODE_ENV === 'dev') {
     })
 }
 
+if(process.env.NODE_ENV === 'pre') {
+  app.use(function(req, res, next) {
+    next();
+  })
+}
+
+if(process.env.NODE_ENV === 'pro') {
+  app.use(function(req, res, next) {
+    next();
+  })
+}
+
 module.exports = app;
