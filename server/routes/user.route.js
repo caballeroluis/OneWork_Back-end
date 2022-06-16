@@ -32,8 +32,8 @@ router.get(
 /* GET /api/users/:id  */
 router.get(
   '/:id',
-  verifyToken,
-  verifyOwnIdOrRecruiter,
+  // verifyToken,
+  // verifyOwnIdOrRecruiter, // Todo: rollback front 4388e83dfe9fdc4d067f0a959be214f25f803783
   userController.getUserByID
 )
 

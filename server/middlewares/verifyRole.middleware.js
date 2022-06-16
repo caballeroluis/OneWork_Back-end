@@ -1,6 +1,6 @@
 const { InsufficientPermisionError } = require('../utils/customErrors.util');
 
-let verifyOwnId = (req, res, next) => {
+const verifyOwnId = (req, res, next) => {
     const idProvided = req.params.id;
     const user = req.user;
 
@@ -9,7 +9,7 @@ let verifyOwnId = (req, res, next) => {
 }
 
 
-let verifyOwnIdOrRecruiter = (req, res, next) => {   
+const verifyOwnIdOrRecruiter = (req, res, next) => {   
     const idProvided = req.params.id;
     const user = req.user;
     const { role } = user;
@@ -22,21 +22,21 @@ let verifyOwnIdOrRecruiter = (req, res, next) => {
     }
 }
 
-let verifyAdmin = (req, res, next) => {
+const verifyAdmin = (req, res, next) => {
     const { role } = req.user;
 
     if (role !== 'admin') return next(new InsufficientPermisionError('You are not authorized to perform this action'));
     else return next();
 }
 
-let verifyWorker = (req, res, next) => {
+const verifyWorker = (req, res, next) => {
     const { role } = req.user;
 
     if (role !== 'worker') return next(new InsufficientPermisionError('You are not authorized to perform this action'));
     else return next();
 }
 
-let verifyRecruiter = (req, res, next) => {
+const verifyRecruiter = (req, res, next) => {
     const { role } = req.user;
 
     if (role !== 'recruiter') return next(new InsufficientPermisionError('You are not authorized to perform this action'));
