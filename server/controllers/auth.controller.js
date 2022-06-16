@@ -39,7 +39,7 @@ exports.userLogout = async (req, res, next) => {
     const id = req.user._id;
     
     try {      
-        await loginService.userLogout(id);
+        if(id !== undefined) await loginService.userLogout(id);
         logGenerator(req);
         return res.json({});  
     } catch(error) {

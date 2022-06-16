@@ -23,7 +23,6 @@ router.post(
 
 router.post(
     '/logout',
-    verifiyToken,
     authController.userLogout
 );
 
