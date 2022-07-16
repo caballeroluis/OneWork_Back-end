@@ -18,7 +18,12 @@ mongoose.connect(config.MONGO_URI, { useNewUrlParser: true }, (error, res) => {
   console.log('Datebase is up!');
 });
 const server = app.listen(config.PORT, () => console.log('Listening at port: ' + config.PORT));
-const io = require('socket.io')(server);
+const io = require('socket.io')(server,
+  {
+    allowEIO3: true
+  }  
+);
+
 socketRoutes(io);
 
 app.use((req, res, next) => {
