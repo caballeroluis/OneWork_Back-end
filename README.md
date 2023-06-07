@@ -9,8 +9,6 @@ Version control was managed with Git, and project management was done with GitLa
 
 The homemade server was programmed to save power by automatically shutting down each night. This was achieved through a Ubuntu Server configuration and settings in the BIOS.
 
-When the Web App was in production, no user registered except me 'xD but it helped me to keep track of my job offers and also to keep everyone who was interested in my profile informed about the status of my job search.
-
 It's highly likely that the no-ip URLs for the pre-production and production environments are no longer related to this project or do not exist.
 
 [Alberto]: <https://github.com/Elminsterio>
