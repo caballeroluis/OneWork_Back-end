@@ -99,11 +99,11 @@ Run `npm start` for a dev server.
 
 # Installation (Front-end)
 
-For more help on the API of this project, see the [OneWork_Front-end repository](https://github.com/Elminsterio/OneWork_Front-end) which can be found at [Alberto's account](https://github.com/Elminsterio?tab=repositories)
+For more help on the User Interface of this project, see the [OneWork_Front-end repository](https://github.com/Elminsterio/OneWork_Front-end) which can be found at [Alberto's account](https://github.com/Elminsterio?tab=repositories)
 
 or
 
-For more help on the API of this project, see the [OneWork_Front-end repository](https://github.com/caballeroluis/OneWork_Front-end) which can be found at [Luis's account](https://github.com/caballeroluis?tab=repositories).
+For more help on the User Interface of this project, see the [OneWork_Front-end repository](https://github.com/caballeroluis/OneWork_Front-end) which can be found at [Luis's account](https://github.com/caballeroluis?tab=repositories).
 
 ## License
 
