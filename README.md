@@ -22,6 +22,8 @@ With this tool, users will be able to:
 - Post job Offers.
 - View the Offers on a fully public Kanban board.
 
+_Additionally, there was a plan to create a video call system using WebRTC for conducting interviews, but it was never implemented._
+
 
 ## Tech (Server software)
 
@@ -51,18 +53,12 @@ Deployed on these technologies:
 
 ## Tech (Server ardware)
 
-- Processor: AMD Ryzen 5 1600 Stepping AF 3.6GHz
-- Storage: WD Green 3D SSD 120GB SATA3
-- Memory (x2): Corsair Value Select DDR4 2133 PC4-17000 8GB CL15
-- Motherboard: MSI A320M-A PRO
-- Graphics: Zotac GeForce GT710 1GB GDDR3
-- Case: Tacens Anima AC016 USB 3.0
-- Extra fan: Tacens Aura II 80x80
-- PSU: Corsair VS450 450W 80 Plus
-- Tools: Crimper
-- Tools: UTP CAT6 cable
-- Tools: UTP Cat.6 RJ45 connector
- 
+<div align="left">
+
+| - Processor: AMD Ryzen 5 1600 Stepping AF 3.6GHz<br>- Storage: WD Green 3D SSD 120GB SATA3<br>- Memory (x2): Corsair Value Select DDR4 2133 PC4-17000 8GB CL15<br>- Motherboard: MSI A320M-A PRO<br>- Graphics: Zotac GeForce GT710 1GB GDDR3<br>- Case: Tacens Anima AC016 USB 3.0<br>- Extra fan: Tacens Aura II 80x80<br>- PSU: Corsair VS450 450W 80 Plus<br>- Tools: Crimper<br>- Tools: UTP CAT6 cable<br>- Tools: UTP Cat.6 RJ45 connector | <img height="250px" alt="Screenshot 2023-06-08 at 11 27 17" src="https://github.com/caballeroluis/OneWork_Front-end/assets/111797757/fcbaefe0-3a60-4960-857d-cc4398d87016"> |
+| --- | --- |
+
+</div>
 
 # User interface demo
 
@@ -93,11 +89,21 @@ Deployed on these technologies:
 
 # Installation (Back-end)
 
-[...
+## Dependencies
+
+Run `npm install` for get dependencies.
+
+## Development server
+
+Run `npm start` for a dev server.
 
 # Installation (Front-end)
 
-For more help on the API of this project, see the [OneWork_Front-end repository](https://github.com/caballeroluis/OneWork_Front-end) which can be found at [Luis's account](https://github.com/caballeroluis).
+For more help on the API of this project, see the [OneWork_Front-end repository](https://github.com/Elminsterio/OneWork_Front-end) which can be found at [Alberto's account](https://github.com/Elminsterio?tab=repositories)
+
+or
+
+For more help on the API of this project, see the [OneWork_Front-end repository](https://github.com/caballeroluis/OneWork_Front-end) which can be found at [Luis's account](https://github.com/caballeroluis?tab=repositories).
 
 ## License
 
