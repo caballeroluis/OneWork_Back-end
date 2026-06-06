@@ -5,6 +5,11 @@
 
 OneWork was a project made by [Alberto] and [Luis] and deployed in a homemade environment, in order to add precision and agility to their hiring process work and that of their friends and above all to practice. Nonprofit.
 
+## Project Motivation & Leadership
+* **Anti-Spam Focus:** This platform was engineered from scratch to build a dedicated, independent process manager, born out of frustration with automated recruiter spam and clunky filtering systems on professional networks like LinkedIn.
+
+* **Technical Mentorship:** The project served as a real-world training ground. [Luis] acted as the Tech Lead/Architect—designing the system architecture, managing the infrastructure deployment, and handling the complex reactive frontend—while providing continuous mentorship and guidance to [Alberto] (a junior backend developer) during the API and database implementation.
+
 Version control was managed with Git, and project management was done with GitLab.
 
 The homemade server was programmed to save power by automatically shutting down each night. This was achieved through a Ubuntu Server configuration and settings in the BIOS.
